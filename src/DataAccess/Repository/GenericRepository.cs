@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using SharedKernel.BaseEntity;
 using SharedKernel.Repository;
 
-namespace DataAccess;
+namespace DataAccess.Repository;
 
 public class GenericRepository<T> : IRepository<T> where T : class, IEntity
 {
