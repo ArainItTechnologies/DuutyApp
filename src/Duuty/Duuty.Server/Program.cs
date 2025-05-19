@@ -1,19 +1,25 @@
 using Application;
 using Infrastructure;
 using DataAccess;
+using FastEndpoints;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddHealthChecks();
+builder.Services.AddFastEndpoints();
+
 builder.Services
     .AddApplicationServices()
-    .AddInfrastructureServices()
+    .AddInfrastructureServices(builder.Configuration)
     .AddDataAccessServices(builder.Configuration);
 
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddAuthentication()
+    .AddBearerToken(IdentityConstants.BearerScheme);
 
 var app = builder.Build();
 
@@ -27,12 +33,14 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.MapHealthChecks("/health");
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 
-app.MapControllers();
-
 app.MapFallbackToFile("/index.html");
 
+app.UseFastEndpoints();
 app.Run();

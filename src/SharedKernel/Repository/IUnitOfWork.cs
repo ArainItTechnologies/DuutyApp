@@ -1,7 +1,8 @@
 ﻿namespace SharedKernel.Repository;
-public interface IUnitOfWork
+public interface IUnitOfWork : IDisposable
 {
-    int Commit(bool useBulkSave = false);
-    Task<int> CommitAsync(bool useBulkSave = false);
+    Task<int> CommitAsync(CancellationToken cancellationToken = default);
+    int Commit();
     void SetTrackChanges(bool trackChanges);
 }
+

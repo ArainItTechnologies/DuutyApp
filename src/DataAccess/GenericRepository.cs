@@ -5,13 +5,12 @@ using SharedKernel.Repository;
 
 namespace DataAccess;
 
-
 public class GenericRepository<T> : IRepository<T> where T : class, IEntity
 {
-    private readonly AppDbContext _context;
+    private readonly ApplicationDbContext _context;
     private readonly DbSet<T> _dbSet;
 
-    public GenericRepository(AppDbContext context)
+    public GenericRepository(ApplicationDbContext context)
     {
         _context = context;
         _dbSet = context.Set<T>();
@@ -28,21 +27,21 @@ public class GenericRepository<T> : IRepository<T> where T : class, IEntity
         return predicate == null ? query : query.Where(predicate);
     }
 
-    public IEnumerable<U> FindPartialBy<U>(Expression<Func<T, U>> columns, Expression<Func<T, bool>>? predicate = null)
-    {
-        var query = _dbSet.AsQueryable();
-        if (predicate != null)
-            query = query.Where(predicate);
-        return query.Select(columns).ToList();
-    }
-
     public T Add(T entity)
     {
         _dbSet.Add(entity);
         return entity;
     }
 
+    public async Task<T> AddAsync(T entity)
+    {
+        await _dbSet.AddAsync(entity);
+        return entity;
+    }
+
     public void Add(List<T> entityList) => _dbSet.AddRange(entityList);
+
+    public async Task AddAsync(List<T> entityList) => await _dbSet.AddRangeAsync(entityList);
 
     public T Delete(T entity)
     {
@@ -60,12 +59,12 @@ public class GenericRepository<T> : IRepository<T> where T : class, IEntity
             _context.Entry(entity).State = EntityState.Modified;
     }
 
-    public void Save(bool useBulkSave = false)
+    public void Save()
     {
         _context.SaveChanges();
     }
 
-    public async Task<int> SaveAsync(bool useBulkSave = false)
+    public async Task<int> SaveAsync()
     {
         return await _context.SaveChangesAsync();
     }
