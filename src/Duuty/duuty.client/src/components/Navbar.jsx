@@ -62,9 +62,9 @@ export default function Navbar() {
                 <Link to="/job-listing" className="mb-2 block p-2 px-3 font-medium bg-[#f5f5fc] text-gray-900 hover:bg-[#EDEBFF] hover:text-indigo-600 rounded-[6px]">
                   Hire Now
                 </Link>
-                <Link to="/pricing" className="mb-2 block p-2 px-3 font-medium bg-[#f5f5fc] text-gray-900 hover:bg-[#EDEBFF] hover:text-indigo-600 rounded-[6px]">
-                  Pricing
-                </Link>
+                {/*<Link to="/pricing" className="mb-2 block p-2 px-3 font-medium bg-[#f5f5fc] text-gray-900 hover:bg-[#EDEBFF] hover:text-indigo-600 rounded-[6px]">*/}
+                {/*  Pricing*/}
+                {/*</Link>*/}
               </div>
             </div>
           </DialogPanel>
@@ -114,9 +114,9 @@ export default function Navbar() {
                 {/* Desktop navigation buttons */}
                 <div className="flex h-full space-x-8 mr-[40px]">
                     <div className="relative flex">
-                      <Link to="/pricing" className="cursor-pointer text-[16px] relative z-10 -mb-px flex items-center border-b-2 pt-px text-sm font-medium transition-colors duration-200 ease-out border-transparent text-gray-700 hover:text-indigo-600">
-                        Pricing
-                      </Link>
+                      {/*<Link to="/pricing" className="cursor-pointer text-[16px] relative z-10 -mb-px flex items-center border-b-2 pt-px text-sm font-medium transition-colors duration-200 ease-out border-transparent text-gray-700 hover:text-indigo-600">*/}
+                      {/*  Pricing*/}
+                      {/*</Link>*/}
                     </div>
                 </div>
 
