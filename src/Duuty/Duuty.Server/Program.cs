@@ -11,7 +11,7 @@ builder.Services.AddHealthChecks();
 builder.Services.AddFastEndpoints();
 
 builder.Services
-    .AddApplicationServices()
+    .AddApplicationServices(builder.Configuration)
     .AddInfrastructureServices(builder.Configuration)
     .AddDataAccessServices(builder.Configuration);
 
