@@ -26,13 +26,13 @@ export const Home = () => {
             <div id="overview" className="banner-section px-3 sm:px-6 py-6 pb-[50px] sm:pb-[70px] md:pb-[100px] mx-auto bg-linear-[180deg,#F4F3FF,#FFFFFF]">
                 <div className="container-wrapper items-center lg:items-start flex flex-col lg:flex-row justify-center sm:gap-[50px] xl:gap-[100px] ">
                     <div className="block sm:hidden text-center relative w-full">
-                        <h1 className="text-[30px] lg:text-[40px] xl:text-[47px] font-[AvenirNextBold] pt-0 pb-6 font-bold">Where Culinary Passion Meets Opportunity for Effortless Hiring & Job Search.</h1>
                         <img className="w-full h-auto" src={BannerImageMob} alt="Duuty banner image" />
+                        <h1 className="text-[30px] lg:text-[40px] xl:text-[47px] font-[AvenirNextBold] pt-0 pb-6 font-bold">Connecting Great Kitchens With Great Talent</h1>
                     </div>
                     <div className="hidden sm:block w-full lg:mt-0 lg:w-1/2 xl:w-3/5 max-w-[500px] lg:max-w-[700px] text-center lg:max-w-[600px] lg:text-left">
                         <img className="w-full h-full lg:max-w-3xl" src={BannerImage} alt="Duuty banner image" />
-                        <span className="md:text-[27px] font-medium text-(--teritary-text-color)">Connecting great kitchens with great talent</span>
-                        <h1 className="text-[32px] lg:text-[40px] xl:text-[47px] font-[AvenirNextBold] pt-3 pb-3 font-bold">Where Culinary Passion Meets Opportunity for Effortless Hiring & Job Search.</h1>
+                        {/* <span className="md:text-[27px] font-medium text-(--teritary-text-color)">Connecting great kitchens with great talent</span> */}
+                        <h1 className="text-[32px] lg:text-[40px] xl:text-[47px] font-[AvenirNextBold] pt-3 pb-3 font-bold">Connecting Great Kitchens With Great Talent</h1>
                         <p className="text-(--secondary-text-color) mb-[22px]">
                             Whether you're a restaurant owner seeking reliable kitchen staff or a talented individual looking for your next culinary adventure, Duuty has you covered.
                         </p>
@@ -46,7 +46,7 @@ export const Home = () => {
                             to="/job-listing" 
                             className="hidden hover:bg-[#ECEFFF] text-[15px] text-[#3B31FF] font-medium sm:inline-block rounded-[11px] px-[25px] py-[15px] border-1 border-[#ECEFFF"
                         >
-                          Hire us
+                          Hire Now
                         </Link>
 
                     </div>
@@ -126,7 +126,7 @@ export const Home = () => {
                         <p className="text-[var(--secondary-text-color)] mt-[18px] mb-[35px]">At Duuty, we make kitchen hiring effortless. Access a pool of pre-vetted culinary professionals, from line cooks to head chefs. Post jobs in minutes, connect with top talent, and fill your kitchen roles faster—with less hassle and better results.</p>
                         <div className="employer-card-wrapper flex flex-wrap gap-x-[30px] sm:gap-y-[50px] gap-y-[30px] justify-center lg:justify-start">
                             <div className="employer-card w-[255px] xl:w-[275px] flex items-center justify-center gap-[15px] rounded-[16px] py-[12px] px-[26px] border-[1px] border-[var(--neutral-black)] bg-[var(--employee-card-bg)] shadow-[8px_8px_0_var(--employee-card-border)]">
-                                <span className="text-[22px] font-semibold">351K</span>
+                                <span className="text-[22px] font-semibold">10K</span>
                                 <p className="text-[14px] text-left text-[var(--secondary-text-color)]">Culinary professionals actively using Duuty to find jobs.</p>
                             </div>
                             <div className="employer-card w-[255px] xl:w-[275px] flex items-center justify-center gap-[15px] rounded-[16px] py-[12px] px-[26px] border-[1px] border-[var(--neutral-black)] bg-[var(--employee-card-child1)] shadow-[8px_8px_0_var(--employee-card-border)]">
@@ -150,7 +150,7 @@ export const Home = () => {
             <div id="trusted-companies" className="trusted-brands-wrapper lg:pt-[70px] lg:pb-[70px] overflow-hidden">
                 <div className="container-wrapper">
                     <h2 className="text-[28px] lg:text-[34px] xl:text-[40px] font-[AvenirNextBold] text-center">
-                        Trusted by 25+ Popular Companies
+                        Trusted by 25+ Restaurants
                     </h2>
                     <div className="mt-[50px] relative overflow-hidden">
                         <div className="flex items-center gap-x-[50px] lg:gap-x-[60px] xl:gap-x-[75px] 2xl:gap-x-[100px] animate-scroll whitespace-nowrap w-max">
@@ -307,15 +307,15 @@ export const Home = () => {
                     <defs>
                         <linearGradient id="paint0_linear_3410_637" x1="0.992909" y1="6.99981" x2="70.3198" y2="7.41987" gradientUnits="userSpaceOnUse">
                             <stop stop-color="#3B31FF" />
-                            <stop offset="1" stop-color="#9239FF" />
+                            <stop offset="1" stopColor="#9239FF" />
                         </linearGradient>
                         <linearGradient id="paint1_linear_3410_637" x1="32.4079" y1="34.5441" x2="33.5455" y2="36.8251" gradientUnits="userSpaceOnUse">
                             <stop stop-color="#747DEF" />
-                            <stop offset="1" stop-color="#5E3BE1" />
+                            <stop offset="1" stopColor="#5E3BE1" />
                         </linearGradient>
                         <linearGradient id="paint2_linear_3410_637" x1="32.9024" y1="35.4017" x2="33.5065" y2="36.5259" gradientUnits="userSpaceOnUse">
                             <stop stop-color="#747DEF" />
-                            <stop offset="1" stop-color="#5E3BE1" />
+                            <stop offset="1" stopColor="#5E3BE1" />
                         </linearGradient>
                     </defs>
                 </svg>

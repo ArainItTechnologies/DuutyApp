@@ -13,6 +13,8 @@ import bakery from "../assets/bakery.jpeg";
 import kitchen from "../assets/kitcher-helpers.jpeg";
 import juice from "../assets/juice-master.jpeg";
 import bajji from "../assets/bajji-master.jpeg";
+import shawarma from "../assets/shawarma-master.jpg";
+import dhaba from "../assets/dhaba-master.jpg";
 
 const SelectRole = ({ onClose, onRoleSelect, selectedRole }) => {
     const [activeRole, setActiveRole] = useState(selectedRole || null);
@@ -49,20 +51,21 @@ const SelectRole = ({ onClose, onRoleSelect, selectedRole }) => {
                     <div className="grid grid-cols-2 justify-items-center sm:grid-cols-2 sm:justify-center sm:max-w-[400px] sm:m-auto lg:max-w-[100%] lg:grid-cols-4 lg:justify-start gap-4">
                         {[
                             { id: "chef", label: "Chef", image: chef },
-                            { id: "Shawarma Master", label: "Shawarma Master", image: chinese },
-                            { id: "Chat Master", label: "Chat Master", image: chat },
-                            { id: "Tandoor Master", label: "Tandoor Master", image: tandoor },
-                            { id: "Chettinad Master", label: "Chettinad Master", image: chettinad },
-                            { id: "Kitchen Helpers", label: "Kitchen Helpers", image: kitchen },
-                            { id: "Bakery Masters", label: "Bakery Masters", image: bakery },
+                            { id: "Shawarma Master", label: "Shawarma Master", image: shawarma },
+                            { id: "Chaat Master", label: "Chaat Master", image: chat },
+                            { id: "Grill Master", label: "Grill Master", image: tandoor },
+                            { id: "Chettinadu Master", label: "Chettinadu Master", image: chettinad },
+                            { id: "Kitchen Helper", label: "Kitchen Helper", image: kitchen },
+                            { id: "Bakery Master", label: "Bakery Master", image: bakery },
                             { id: "Biriyani Master", label: "Biriyani Master", image: biryani },
                             { id: "Tea Master", label: "Tea Master", image: teamaster },
-                            { id: "Parotta Master", label: "Dosa Master", image: barota },
-                            { id: "South Indian Master", label: "South Indian Master", image: southindian },
-                            { id: "North Indian Master", label: "North Indian Master", image: northindian },
+                            { id: "Parotta/Dosa Master", label: "Parotta / Dosa Master", image: barota },
+                            { id: "South Indian Master", label: "South Indian Thali Master", image: southindian },
+                            { id: "North Indian Master", label: "North Indian Thali Master", image: northindian },
                             { id: "Chinese Master", label: "Chinese Master", image: chinese },
                             { id: "Juice Master", label: "Juice Master", image: juice },
-                            { id: "Bajji Master", label: "Bajji Master", image: bajji }
+                            { id: "Bajji Master", label: "Bajji Master", image: bajji },
+                            { id: "Dhaba Master", label: "Dhaba Master", image: dhaba }
                         ].map((role) => (
                             <div
                                 key={role.id}

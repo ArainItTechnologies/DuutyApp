@@ -120,12 +120,12 @@ const Login = () => {
           </form>
 
           <p className="mt-10 text-center text-sm/6 text-gray-500">
-            Not a member?{" "}
+            New to Duuty?{" "}
             <Link
               to="/register"
               className="font-semibold text-indigo-600 hover:text-indigo-500"
             >
-              Create Account
+              Signup
             </Link>
           </p>
         </div>
