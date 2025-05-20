@@ -59,13 +59,16 @@ const Footer = () => {
                         <p className="mb-4">
                             <Link to="/privacy">Privacy Policy</Link>
                         </p>
+                        <p className="mb-4">
+                            <Link to="find-job">Careers</Link>
+                        </p>
                     </div>
                     <div>
                         <h6 className="mb-4 flex justify-center font-bold md:justify-start">
                             Contact
                         </h6>
                         <p className="mb-4">
-                            <Link to="/faq">Help/FAQ</Link>
+                            <Link to="faq">Help/FAQ</Link>
                         </p>
                         <p className="mb-4">
                             <Link to="contact-us">Contact Us</Link>

@@ -8,7 +8,11 @@ import {
 } from '@headlessui/react'
 import {
   Bars3Icon,
-  MagnifyingGlassIcon,
+  UserIcon,
+  BriefcaseIcon,
+  BuildingOfficeIcon,
+  CurrencyDollarIcon,
+  HomeIcon,
   UserCircleIcon,
   ArrowRightStartOnRectangleIcon,
   Cog6ToothIcon,
@@ -29,47 +33,83 @@ export default function Navbar() {
     <div className="bg-[#F4F3FF] sticky top-0 z-5">
       {/* Mobile menu */}
       <Dialog open={open} onClose={setOpen} className="relative z-40 lg:hidden">
-        <DialogBackdrop
+      <DialogBackdrop
+        transition
+        className="fixed inset-0 bg-black/25 transition-opacity duration-300 ease-linear data-closed:opacity-0"
+      />
+
+      <div className="fixed inset-0 z-40 flex justify-end">
+        <DialogPanel
           transition
-          className="fixed inset-0 bg-black/25 transition-opacity duration-300 ease-linear data-closed:opacity-0"
-        />
-
-        <div className="fixed inset-0 z-40 flex justify-end">
-          <DialogPanel
-            transition
-            className="relative flex w-full max-w-xs flex-col overflow-y-auto bg-white pb-12 shadow-xl transition duration-300 ease-in-out data-closed:translate-x-full"
-          >
-            <div className="flex px-4 pt-3 pb-3">
-              <button
-                type="button"
-                onClick={() => setOpen(false)}
-                className="relative -m-2 inline-flex items-center justify-center rounded-md p-2 text-gray-400 ml-auto cursor-pointer"
-              >
-                <span className="absolute -inset-0.5" />
-                <span className="sr-only">Close menu</span>
-                <XMarkIcon aria-hidden="true" className="size-6" />
-              </button>
-            </div>
-
-            <div className="space-y-6 border-t border-gray-200 px-3 py-3">
-              <div className="flow-root">
-                <Link to="/login" className="mb-2 block p-2 px-3 font-medium bg-[#f5f5fc] text-gray-900 hover:bg-[#EDEBFF] hover:text-indigo-600 rounded-[6px]">
-                  Sign in
-                </Link>
-                <Link to="/find-job" className="mb-2 block p-2 px-3 font-medium bg-[#f5f5fc] text-gray-900 hover:bg-[#EDEBFF] hover:text-indigo-600 rounded-[6px]">
-                Find a Job
-                </Link>
-                <Link to="/job-listing" className="mb-2 block p-2 px-3 font-medium bg-[#f5f5fc] text-gray-900 hover:bg-[#EDEBFF] hover:text-indigo-600 rounded-[6px]">
-                  Hire Now
-                </Link>
-                {/*<Link to="/pricing" className="mb-2 block p-2 px-3 font-medium bg-[#f5f5fc] text-gray-900 hover:bg-[#EDEBFF] hover:text-indigo-600 rounded-[6px]">*/}
-                {/*  Pricing*/}
-                {/*</Link>*/}
+          className="relative flex w-full max-w-xs flex-col overflow-y-auto bg-white pb-12 shadow-xl transition duration-300 ease-in-out data-closed:translate-x-full"
+        >
+          {/* Logo Section */}
+          <div className="flex px-4 pt-5 pb-2 items-center justify-between">
+            <div className="flex items-center">
+              <div className="h-8 w-auto">
+                <img 
+                   src={LogoSrc}
+                  alt="Duuty Logo" 
+                  className="h-8"
+                />
               </div>
             </div>
-          </DialogPanel>
-        </div>
-      </Dialog>
+            <button
+              type="button"
+              onClick={() => setOpen(false)}
+              className="relative -m-2 inline-flex items-center justify-center rounded-md p-2 text-gray-400 cursor-pointer"
+            >
+              <span className="absolute -inset-0.5" />
+              <span className="sr-only">Close menu</span>
+              <XMarkIcon aria-hidden="true" className="size-6" />
+            </button>
+          </div>
+
+          <div className="space-y-6 border-t border-gray-200 px-3 py-3">
+            <div className="flow-root">
+                    <Link to="/" className="flex items-center p-3 font-medium text-gray-900 hover:bg-[#EDEBFF] hover:text-indigo-600 rounded-lg transition-colors">
+                <HomeIcon className="h-5 w-5 mr-3 text-primary" />
+                <span>Home</span>
+              </Link>
+              <Link to="/login" className="flex items-center p-3 font-medium text-gray-900 hover:bg-[#EDEBFF] hover:text-indigo-600 rounded-lg transition-colors">
+                <UserIcon className="h-5 w-5 mr-3 text-primary" />
+                <span>Sign in</span>
+              </Link>
+              <Link to="/find-job" className="flex items-center p-3 font-medium text-gray-900 hover:bg-[#EDEBFF] hover:text-indigo-600 rounded-lg transition-colors">
+                <BriefcaseIcon className="h-5 w-5 mr-3 text-primary" />
+                <span>Find a Job</span>
+              </Link>
+              <Link to="/job-listing" className="flex items-center p-3 font-medium text-gray-900 hover:bg-[#EDEBFF] hover:text-indigo-600 rounded-lg transition-colors">
+                <BuildingOfficeIcon className="h-5 w-5 mr-3 text-primary" />
+                <span>Hire Now</span>
+              </Link>
+              {/*<Link to="/pricing" className="flex items-center p-3 font-medium text-gray-900 hover:bg-[#EDEBFF] hover:text-indigo-600 rounded-lg transition-colors">
+                <CurrencyDollarIcon className="h-5 w-5 mr-3 text-primary" />
+                <span>Pricing</span>
+              </Link>*/}
+            </div>
+          </div>
+
+          {/* Profile Section with Horizontal Line */}
+          <div className="mt-auto">
+            <div className="border-t border-gray-200 w-full"></div>
+            <div className="px-4 py-4">
+              <div className="flex items-center">
+                <div className="flex-shrink-0">
+                  <div className="h-10 w-10 rounded-full bg-primary flex items-center justify-center text-white">
+                    <span className="text-sm font-medium">JD</span>
+                  </div>
+                </div>
+                <div className="ml-3">
+                  <p className="text-base font-medium text-primary">John Doe</p>
+                  <p className="text-sm text-heading">{user.name}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </DialogPanel>
+      </div>
+    </Dialog>
 
       <header className="relative bg-white">
         {/* <p className="flex h-10 items-center justify-center bg-primary px-4 text-sm font-medium text-white sm:px-6 lg:px-8">
