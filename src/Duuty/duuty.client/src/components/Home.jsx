@@ -2,9 +2,9 @@ import {Link} from "react-router-dom";
 import BannerImage from "../assets/image-banner.png";
 import BannerImageMob from "../assets/banner-image-mob.png";
 import RegisterImg from "../assets/register-img.png";
-import HotelImg from "../assets/hotel-img.png";
-import PayImg from "../assets/pay-img.png";
-import FindEmp from "../assets/find-employer.png";
+import HotelImg from "../assets/world-of-opportunities.jpg";
+import PayImg from "../assets/dream-job.jpg";
+import FindEmp from "../assets/dream-kitchen.jpg";
 import Emp1 from "../assets/emp-1.png";
 import Emp2 from "../assets/emp-2.png";
 import Notion from "../assets/notion.png";
@@ -84,7 +84,7 @@ export const Home = () => {
                             </svg>
                             <div className="list-count shadow-[inset_0px_0px_0px_12px_var(--neutral-white)] text-[28px] sm:text-[46px] font-medium rounded-full w-[80px] h-[80px] sm:w-[123px] sm:h-[123px] flex items-center justify-center absolute sm:left-[-55px] sm:right-[unset] left-0 right-0 m-auto top-[-40px] sm:top-[unset] z-1 text-[var(--benefit-list-color)] bg-[var(--benefit-list-bg)] border-[1px] border-[var(--benefit-list-border)]">02</div>
                             <div className="benifits-content flex flex-col sm:flex-row items-center gap-[25px] relative z-1">
-                                <img className="sm:size-[124px] size-100 max-w-[160px] max-h-[160px] sm:max-w-[100%] sm:max-w-[100%]" src={HotelImg} alt="Find your dream hotel" />
+                                <img className="sm:size-[124px] size-100 max-w-[160px] max-h-[160px] sm:max-w-[100%] sm:max-w-[100%] rounded-2xl" src={HotelImg} alt="Find your dream hotel" />
                                 <div className="max-w-[100%] text-center sm:text-left sm:max-w-[340px]">
                                     <h4 className="text-[20px] sm:text-[22px] lg:text-[26px] font-[AvenirNextBold] mb-2.5">Explore a World of Opportunities</h4>
                                     <p>Access thousands of kitchen jobs and connect directly with top employers.</p>
@@ -95,7 +95,7 @@ export const Home = () => {
                         <div className="benifits-list flex relative sm:pt-[40px] pt-[60px] sm:pr-[40px] pr-[20px] sm:pb-[40px] pb-[25px] md:pl-[110px] sm:pl-[85px] pl-[20px] w-[750px] max-w-full rounded-[35px] bg-white border-[1px] border-[var(--benefit-card-border)]">
                             <div className="list-count shadow-[inset_0px_0px_0px_12px_var(--neutral-white)] text-[28px] sm:text-[46px] font-medium rounded-full w-[80px] h-[80px] sm:w-[123px] sm:h-[123px] flex items-center justify-center absolute sm:left-[-55px] sm:right-[unset] left-0 right-0 m-auto top-[-40px] sm:top-[unset] text-[var(--benefit-list-color)] bg-[var(--benefit-list-bg)] border-[1px] border-[var(--benefit-list-border)]">03</div>
                             <div className="benifits-content flex flex-col sm:flex-row items-center gap-[25px] gap-[25px]">
-                                <img className="sm:size-[124px] size-100 max-w-[160px] max-h-[160px] sm:max-w-[100%] sm:max-w-[100%]" src={PayImg} alt="Get Good Pay" />
+                                <img className="sm:size-[124px] size-100 max-w-[160px] max-h-[160px] sm:max-w-[100%] sm:max-w-[100%] rounded-2xl" src={PayImg} alt="Get Good Pay" />
                                 <div className="max-w-[100%] text-center sm:text-left sm:max-w-[340px]">
                                     <h4 className="text-[20px] sm:text-[22px] lg:text-[26px] font-[AvenirNextBold] mb-2.5">Land Your Dream Job</h4>
                                     <p>Receive real-time alerts tailored to your profile and apply with confidence.</p>
@@ -109,7 +109,7 @@ export const Home = () => {
             <div className="find-employer-wrapper pt-[50px] pb-[50px] sm:pt-[70px] sm:pb-[70px]">
                 <div className="container-wrapper text-center lg:text-left flex lg:flex-row flex-col-reverse items-center lg:items-start xl:items-center justify-center lg:justify-between gap-[100px] lg:gap-[50px] xl:gap-[0px]">
                     <div className="w-full max-w-[600px] lg:max-w-[100%] lg:w-2/5 xl:w-1/2 flex justify-center relative">
-                        <img className="max-w-[300px] sm:max-w-[90%] xl:w-[380px] 2xl:w-[410px]" src={FindEmp} width="410" height="563" alt="Find your Employer" />
+                        <img className="max-w-[300px] sm:max-w-[90%] xl:w-[380px] 2xl:w-[410px] rounded-2xl" src={FindEmp} width="410" height="563" alt="Find your Employer" />
                         <div className="border-[1px] border-[var(--neutral-black)] emp-img emp-img1 bg-white absolute rounded-[16px] flex items-center p-4 sm:p-6 gap-4 right-0 top-[-20px]">
                             <img className="size-[48px]" src={Emp2} alt="Find your Employer" />
                             <p className="max-w-[180px] text-left sm:text-[16px] text-[14px]">Employers find qualified candidates within 48 hours.</p>
@@ -121,7 +121,7 @@ export const Home = () => {
                         
                     </div>
                     <div className="find-employer-right w-full lg:w-3/5 xl:w-1/2 max-w-[580px]">
-                        <h2 className="text-[28px] lg:text-[34px] xl:text-[40px] font-[AvenirNextBold]">Build Your Kitchen Dream Team</h2>
+                        <h2 className="text-[28px] lg:text-[34px] xl:text-[40px] font-[AvenirNextBold]">Build Your Dream Kitchen Team</h2>
                         <p className="text-[var(--secondary-text-color)] mt-[18px] mb-[35px]">At Duuty, we make kitchen hiring effortless. Access a pool of pre-vetted culinary professionals, from line cooks to head chefs. Post jobs in minutes, connect with top talent, and fill your kitchen roles faster—with less hassle and better results.</p>
                         <div className="employer-card-wrapper flex flex-wrap gap-x-[30px] sm:gap-y-[50px] gap-y-[30px] justify-center lg:justify-start">
                             <div className="employer-card w-[255px] xl:w-[275px] flex items-center justify-center gap-[15px] rounded-[16px] py-[12px] px-[26px] border-[1px] border-[var(--neutral-black)] bg-[var(--employee-card-bg)] shadow-[8px_8px_0_var(--employee-card-border)]">
