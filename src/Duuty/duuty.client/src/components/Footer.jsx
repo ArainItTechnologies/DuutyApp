@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
-import LogoSrc from '../assets/logo.svg'
+import LogoSrc from '../assets/logo.svg';
+import { ROUTES } from "../Constants";
 
 const Footer = () => {
     return (
@@ -54,10 +55,10 @@ const Footer = () => {
                             Company
                         </h6>
                         <p className="mb-4">
-                            <Link to="/about-us">About Us</Link>
+                            <Link to={ROUTES.ABOUT_US}>About Us</Link>
                         </p>
                         <p className="mb-4">
-                            <Link to="/privacy">Privacy Policy</Link>
+                            <Link to={ROUTES.PRIVACY_POLICY}>Privacy Policy</Link>
                         </p>
                         <p className="mb-4">
                             <Link to="find-job">Careers</Link>
@@ -68,10 +69,10 @@ const Footer = () => {
                             Contact
                         </h6>
                         <p className="mb-4">
-                            <Link to="faq">Help/FAQ</Link>
+                            <Link to={ROUTES.FAQ}>Help/FAQ</Link>
                         </p>
                         <p className="mb-4">
-                            <Link to="contact-us">Contact Us</Link>
+                            <Link to={ROUTES.CONTACT_US}>Contact Us</Link>
                         </p>
                     </div>
 

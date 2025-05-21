@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {Link} from "react-router-dom";
 import BannerImage from "../assets/image-banner.png";
 import BannerImageMob from "../assets/banner-image-mob.png";
@@ -18,7 +17,7 @@ import WavePatten1 from "../assets/wave-patten1.svg";
 import WavePatten2 from "../assets/wave-patten2.svg";
 
 import TabsWithForm from '../components/TabsWithForm';
-import Testiminal from "../components/Testimonial";
+import TestimonialSection from "../components/Testimonial";
 
 export const Home = () => {
     return (
@@ -167,7 +166,7 @@ export const Home = () => {
                 </div>
             </div>
 
-            <Testiminal />
+            <TestimonialSection />
 
             <div className="faq-wrapper flow-root pb-[0px] lg:pb-[100px]">
                 <div className="container-wrapper flex justify-center flex-col-reverse px-[20px] lg:px-[0px] lg:flex-row lg:justify-between items-center lg:items-start relative gap-[80px]">

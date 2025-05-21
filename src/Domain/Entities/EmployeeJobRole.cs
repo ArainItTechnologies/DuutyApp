@@ -7,7 +7,6 @@ public class EmployeeJobRole : Entity
 {
     [Key]
     public long Id { get; set; }
-    public Guid UserId { get; set; }
-    public required string Role { get; set; }
-    public string? SubRoles { get; set; }
+    public required string UserId { get; set; }
+    public required string PreferredRole { get; set; }
 }

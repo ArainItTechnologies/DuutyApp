@@ -63,6 +63,11 @@ public class RegisterEndpoint : Endpoint<RegisterModel, RegistrationResponse>
 
         await _userManager.AddToRoleAsync(user, "User");
 
+        if(model.EmployeeJobRole is not null)
+        {
+            model.EmployeeJobRole.UserId = user.Id;
+        }
+
         await SendAsync(new RegistrationResponse
         {
             IsSuccess = true,

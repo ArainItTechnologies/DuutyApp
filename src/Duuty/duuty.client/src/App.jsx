@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { ROUTES } from "./Constants";
 import Login from "./components/user/Login";
 import Home from "./components/Home";
 import Register from "./components/user/Register";
@@ -19,6 +20,7 @@ import JobListing from "./components/JobListings";
 import BecomeEmployer from "./components/BecomeEmployer";
 import AboutUs from "./components/AboutUs";
 import PrivacyPolicy from "./components/PrivacyPolicy";
+import JobSearch from "./components/JobSearch";
 
 function App() {
   return (
@@ -26,23 +28,23 @@ function App() {
       <Navbar />
       <Routes>
         <Route index element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/job" element={<JobApplication />} />
-        <Route path="/find-job" element={<FindAJob />} />
-        <Route path="/hire" element={<HireNow />} />
-        <Route path="/job-listing" element={<JobListing />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/become-employer" element={<BecomeEmployer />} />
-        <Route path="/forgot" element={<ForgotPassword />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/profile/edit" element={<Edit />} />
-        <Route path="/confirm" element={<EmailConfirmation />} />
-        <Route path="/change-password" element={<ChangePassword />} />
-        <Route path="/pricing" element={<Pricing />} />
-        <Route path="/about-us" element={<AboutUs />} />
-        <Route path="/privacy" element={<PrivacyPolicy />} />
-        {/* <Route path="/404" element={<Notfound />} /> */}
+        <Route path={ROUTES.LOGIN} element={<Login />} />
+        <Route path={ROUTES.DASHBOARD} element={<Dashboard />} />
+        <Route path={ROUTES.JOB_APPLICATION} element={<JobApplication />} />
+        <Route path={ROUTES.FIND_JOB} element={<FindAJob />} />
+        <Route path={ROUTES.HIRE_NOW} element={<HireNow />} />
+        <Route path={ROUTES.JOB_LISTING} element={<JobListing />} />
+        <Route path={ROUTES.JOB_RESULTS} element={<JobSearch />} />
+        <Route path={ROUTES.REGISTER} element={<Register />} />
+        <Route path={ROUTES.BECOME_EMPLOYER} element={<BecomeEmployer />} />
+        <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgotPassword />} />
+        <Route path={ROUTES.PROFILE} element={<Profile />} />
+        <Route path={ROUTES.PROFILE_EDIT} element={<Edit />} />
+        <Route path={ROUTES.EMAIL_CONFIRM} element={<EmailConfirmation />} />
+        <Route path={ROUTES.CHANGE_PASSWORD} element={<ChangePassword />} />
+        <Route path={ROUTES.PRICING} element={<Pricing />} />
+        <Route path={ROUTES.ABOUT_US} element={<AboutUs />} />
+        <Route path={ROUTES.PRIVACY_POLICY} element={<PrivacyPolicy />} />
         <Route path="*" element={<Notfound />} />
       </Routes>
       <Footer />

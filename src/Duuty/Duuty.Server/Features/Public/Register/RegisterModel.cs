@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Domain.Entities;
+using System.ComponentModel.DataAnnotations;
 
 namespace Web.Server.Features.Public.Register;
 
@@ -13,4 +14,6 @@ public class RegisterModel
     public required string ConfirmPassword { get; set; }
     public string? Email { get; set; }
     public string? PhoneNumber { get; set; }
+
+    public EmployeeJobRole? EmployeeJobRole { get; set; }
 }
