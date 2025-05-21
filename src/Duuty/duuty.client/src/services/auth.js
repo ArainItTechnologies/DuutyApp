@@ -47,3 +47,17 @@ export const changePassword = async (data, token) => {
     throw error.response?.data || { message: "Change password failed" };
   }
 };
+
+export const fetchJobs = async (searchTerm) => {
+  try {
+    const response = await axios.get('/api/jobs', {
+      params: {
+        search: searchTerm
+      }
+    });
+
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || { message: "Fetch jobs failed" };
+  }
+};

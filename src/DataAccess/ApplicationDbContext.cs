@@ -16,6 +16,7 @@ public class ApplicationDbContext : IdentityDbContext<ArainUser, ArainRole, stri
     public DbSet<Organisation> Organisations { get; set; }
     public DbSet<Address> Addresses { get; set; }
     public DbSet<EmployerSubscription> Subscriptions { get; set; }
+    public DbSet<JobListing> JobListings { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

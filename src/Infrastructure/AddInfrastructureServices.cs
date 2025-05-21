@@ -67,7 +67,8 @@ public static class InfrastructureServiceRegistration
             });
         services.AddSingleton<JwtHandler>();
 
-        services.AddScoped<IOrganisationService, OrganisationService>();
+        services.AddScoped<IOrganisationService, OrganisationService>()
+                .AddScoped<IJobListingService, JobListingService>();
         return services;
     }
 }
