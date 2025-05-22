@@ -43,6 +43,7 @@ public class JwtHandler
         var claims = new List<Claim>
         {
             new Claim(ClaimTypes.Name, user.UserName!),
+            new Claim(ClaimTypes.Email, user.Email!),
         };
 
         foreach (var role in roles)

@@ -4,6 +4,7 @@ import LogoSrc from "../../assets/logo.svg";
 import { loginUser } from "../../services/auth";
 import { useUser } from "../../hooks/Hooks";
 import { jwtDecode } from "jwt-decode";
+import { normalizeClaims } from "../../utils/ClaimsUtility";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -16,13 +17,11 @@ const Login = () => {
   const { setUser } = useUser();
 
   const getUserDetailsFromToken = (token) => {
-    const decoded = jwtDecode(token);
-
-    const name = decoded?.["Name"];
-    const email = decoded?.["Email"];
-    const role = decoded?.["Role"];
-
-    return { name, email, role };
+    const decoded = jwtDecode(token); 
+    var normalized = normalizeClaims(decoded); 
+    
+    var role = Array.isArray(normalized.role) ? normalized.role : [normalized.role];
+    return { name: normalized.name, email: normalized.email, role };
   };
 
   const handleLogin = async (e) => {
@@ -30,6 +29,7 @@ const Login = () => {
 
     const result = await loginUser({ email, password });
     const userInfo = getUserDetailsFromToken(result.token);
+
     userInfo.token = result.token;
 
     setUser(userInfo);

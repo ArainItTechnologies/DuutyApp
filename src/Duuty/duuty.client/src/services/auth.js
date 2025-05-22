@@ -21,7 +21,7 @@ export const resetPassword = async (email) => {
   } catch (error) {
     throw error.response?.data || { message: "Reset password failed" };
   }
-}
+};
 
 export const loginUser = async (loginData) => {
   try {
@@ -31,7 +31,6 @@ export const loginUser = async (loginData) => {
     throw error.response?.data || { message: "Login failed" };
   }
 };
-
 
 export const changePassword = async (data, token) => {
   try {
@@ -50,14 +49,30 @@ export const changePassword = async (data, token) => {
 
 export const fetchJobs = async (searchTerm) => {
   try {
-    const response = await axios.get('/api/jobs', {
+    const response = await axios.get("/api/jobs", {
       params: {
-        search: searchTerm
-      }
+        search: searchTerm,
+      },
     });
 
     return response.data;
   } catch (error) {
     throw error.response?.data || { message: "Fetch jobs failed" };
+  }
+};
+
+export const becomeEmployer = async (data, token) => {
+  console.log(data)
+  try {
+    const response = await axios.post("/api/user/become-employer", data, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || { message: "Become Employer failed" };
   }
 };

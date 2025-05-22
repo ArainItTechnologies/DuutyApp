@@ -65,10 +65,14 @@ public static class InfrastructureServiceRegistration
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtSettings:SecretKey"]!))
                 };
             });
+
         services.AddSingleton<JwtHandler>();
 
         services.AddScoped<IOrganisationService, OrganisationService>()
-                .AddScoped<IJobListingService, JobListingService>();
+                .AddScoped<IJobListingService, JobListingService>()
+                .AddScoped<IAddressService, AddressService>()
+                .AddScoped<IEmployerService, EmployerService>();
+
         return services;
     }
 }

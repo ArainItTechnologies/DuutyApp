@@ -7,6 +7,8 @@ import { useUser } from "../hooks/Hooks";
 const HireNow = () => {
   const navigate = useNavigate();
   const { user } = useUser();
+
+  console.log(user);
   const [formData, setFormData] = useState({
     title: "",
     location: "",
@@ -30,7 +32,7 @@ const HireNow = () => {
   useEffect(() => {
     if (!user) {
       navigate("/login", { state: { from: location.pathname } });
-    } else if (user.role !== "employer") {
+    } else if (!user.role.includes("Employer")) {
       navigate("/become-employer", { state: { from: location.pathname } });
     }
   }, [navigate, user, location]);
