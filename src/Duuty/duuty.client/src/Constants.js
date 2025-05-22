@@ -20,3 +20,7 @@ export const ROUTES = {
   ABOUT_US: '/about-us',
   PRIVACY_POLICY: '/privacy',
 };
+
+export const SUPER_ADMIN_ROLES = ['SuperAdmin', 'Admin', 'Employer', 'User'];
+export const ADMIN_ROLES = ['Admin', 'Employer', 'User'];
+export const EMPLOYER_ROLES = ['Employer'];

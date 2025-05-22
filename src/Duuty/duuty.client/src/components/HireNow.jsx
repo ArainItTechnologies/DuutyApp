@@ -3,6 +3,7 @@ import { Dialog, DialogBackdrop, DialogPanel } from "@headlessui/react";
 import { CheckCircleIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useUser } from "../hooks/Hooks";
+import { ADMIN_ROLES } from "../Constants";
 
 const HireNow = () => {
   const navigate = useNavigate();
@@ -29,10 +30,11 @@ const HireNow = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
 
-  useEffect(() => {
+    useEffect(() => {
+        console.log(user.role);
     if (!user) {
-      navigate("/login", { state: { from: location.pathname } });
-    } else if (!user.role.includes("Employer")) {
+        navigate("/login", { state: { from: location.pathname } });
+    } else if (!user.role.some(role => ADMIN_ROLES.includes(role))) {
       navigate("/become-employer", { state: { from: location.pathname } });
     }
   }, [navigate, user, location]);
