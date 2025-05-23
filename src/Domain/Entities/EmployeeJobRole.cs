@@ -1,5 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
-using SharedKernel.BaseEntity;
+﻿using SharedKernel.BaseEntity;
+using System.ComponentModel.DataAnnotations;
 
 namespace Domain.Entities;
 

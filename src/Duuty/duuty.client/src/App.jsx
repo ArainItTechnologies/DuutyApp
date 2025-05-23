@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { ROUTES } from "./Constants";
 import Login from "./components/user/Login";
 import Home from "./components/Home";
-import Register from "./components/user/Register";
+import RegisterTabbed from "./components/user/RegisterTabbed";
 import Dashboard from "./components/Dashboard";
 import Navbar from "./components/Navbar";
 import Edit from "./components/Edit";
@@ -35,7 +35,7 @@ function App() {
         <Route path={ROUTES.HIRE_NOW} element={<HireNow />} />
         <Route path={ROUTES.JOB_LISTING} element={<JobListing />} />
         <Route path={ROUTES.JOB_RESULTS} element={<JobSearch />} />
-        <Route path={ROUTES.REGISTER} element={<Register />} />
+        <Route path={ROUTES.REGISTER} element={<RegisterTabbed />} />
         <Route path={ROUTES.BECOME_EMPLOYER} element={<BecomeEmployer />} />
         <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgotPassword />} />
         <Route path={ROUTES.PROFILE} element={<Profile />} />

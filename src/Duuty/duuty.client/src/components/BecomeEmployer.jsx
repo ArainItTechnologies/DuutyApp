@@ -1,6 +1,7 @@
 import { useState } from "react";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useUser } from "../hooks/Hooks";
+import FormInput from "./custom/FormInput";
 import { becomeEmployer } from "../services/auth";
 
 const BecomeEmployer = () => {
@@ -36,22 +37,14 @@ const BecomeEmployer = () => {
         onSubmit={handleSubmit}
         className="bg-white p-6 rounded-lg shadow-md space-y-6 max-w-xl mx-auto"
       >
-        <div>
-          <label
-            htmlFor="organisationName"
-            className="block text-sm/6 font-medium text-(--secondary-text-color)"
-          >
-            Organisation Name <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="text"
-            name="organisationName"
-            value={formData.organisationName}
-            onChange={handleChange}
-            required
-            className="block w-full rounded-xl sm:h-[50px] h-[40px] bg-white sm:p-3 px-3 py-2 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-[16px] text-[14px]"
-          />
-        </div>
+        <FormInput
+          label="Organisation Name"
+          name="organisationName"
+          type="text"
+          value={formData.email}
+          onChange={handleChange}
+          required
+        />
 
         <div>
           <label

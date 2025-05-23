@@ -6,18 +6,16 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using SharedKernel.Services;
 using System.Net;
-using System.Security.Claims;
 
 namespace Web.Server.Features.User.BecomeEmployer;
 
 [HttpPost("/api/user/become-employer")]
-[Authorize]
+[AllowAnonymous]
 public class BecomeEmployerEndpoint(UserManager<ArainUser> userManager, IEmployerService employerService, IAddressService addressService, ITimeProvider timeProvider) : Endpoint<BecomeEmployerRequest>
 {
     public override async Task HandleAsync(BecomeEmployerRequest req, CancellationToken ct)
     {
-        var userName = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
-        var user = await userManager.FindByNameAsync(userName!);
+        var user = await userManager.FindByIdAsync(req.UserId);
         if (user is null)
         {
             await SendNotFoundAsync(ct);

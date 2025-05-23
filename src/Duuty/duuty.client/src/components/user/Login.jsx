@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { Link,useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import LogoSrc from "../../assets/logo.svg";
 import { loginUser } from "../../services/auth";
 import { useUser } from "../../hooks/Hooks";
 import { jwtDecode } from "jwt-decode";
 import { normalizeClaims } from "../../utils/ClaimsUtility";
+import FormInput from "../custom/FormInput";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -12,15 +13,17 @@ const Login = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const from = location.state?.from || '/'; // fallback to home
+  const from = location.state?.from || "/"; // fallback to home
 
   const { setUser } = useUser();
 
   const getUserDetailsFromToken = (token) => {
-    const decoded = jwtDecode(token); 
-    var normalized = normalizeClaims(decoded); 
-    
-    var role = Array.isArray(normalized.role) ? normalized.role : [normalized.role];
+    const decoded = jwtDecode(token);
+    var normalized = normalizeClaims(decoded);
+
+    var role = Array.isArray(normalized.role)
+      ? normalized.role
+      : [normalized.role];
     return { name: normalized.name, email: normalized.email, role };
   };
 
@@ -33,11 +36,11 @@ const Login = () => {
     userInfo.token = result.token;
 
     setUser(userInfo);
-    
-    if(from === "/hire") {
-      navigate("/job-listing", { replace: true }); 
-    } else{
-      navigate(from, { replace: true }); 
+
+    if (from === "/hire") {
+      navigate("/job-listing", { replace: true });
+    } else {
+      navigate(from, { replace: true });
     }
   };
 
@@ -57,26 +60,23 @@ const Login = () => {
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
           <form onSubmit={handleLogin} className="space-y-6">
-            <div>
-              <label
-                htmlFor="email"
-                className="block text-sm/6 font-medium text-gray-900"
-              >
-                Mobile Number
-              </label>
-              <div className="mt-2">
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  required
-                  autoComplete="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
-                />
-              </div>
-            </div>
+            <FormInput
+              label="Mobile Number"
+              name="phoneNumber"
+              type="text"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+
+            <FormInput
+              label="Email address"
+              name="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
 
             <div>
               <div className="flex items-center justify-between">
@@ -104,7 +104,7 @@ const Login = () => {
                   autoComplete="current-password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                  className="block w-full rounded-xl sm:h-[50px] h-[40px] bg-white sm:p-3 px-3 py-2 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-[16px] text-[14px]"
                 />
               </div>
             </div>

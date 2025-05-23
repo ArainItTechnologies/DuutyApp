@@ -1,10 +1,13 @@
 ﻿using Application;
 using DataAccess.Identity;
+using Domain.Entities;
 using FastEndpoints;
+using Infrastructure.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.WebUtilities;
+using SharedKernel.Services;
 using System.Text;
 
 namespace Web.Server.Features.Public.Register;
@@ -14,17 +17,23 @@ namespace Web.Server.Features.Public.Register;
 public class RegisterEndpoint : Endpoint<RegisterModel, RegistrationResponse>
 {
     private readonly UserManager<ArainUser> _userManager;
+    private readonly IEmployeeJobRoleService _employeeJobRoleService;
     private readonly IEmailSender _emailSender;
     private readonly IConfiguration _configuration;
+    private readonly ITimeProvider _timeProvider;
 
     public RegisterEndpoint(
         UserManager<ArainUser> userManager,
+        IEmployeeJobRoleService employeeJobRoleService,
         IEmailSender emailSender,
-        IConfiguration configuration)
+        IConfiguration configuration,
+        ITimeProvider timeProvider)
     {
         _userManager = userManager;
+        _employeeJobRoleService = employeeJobRoleService;
         _emailSender = emailSender;
         _configuration = configuration;
+        _timeProvider = timeProvider;
     }
     public override async Task HandleAsync(RegisterModel model, CancellationToken ct)
     {
@@ -62,15 +71,21 @@ public class RegisterEndpoint : Endpoint<RegisterModel, RegistrationResponse>
         }
 
         await _userManager.AddToRoleAsync(user, "User");
-
-        if(model.EmployeeJobRole is not null)
+        if (!model.IsEmployer)
         {
-            model.EmployeeJobRole.UserId = user.Id;
+            await _employeeJobRoleService.CreateAsync(new EmployeeJobRole
+            {
+                UserId = user.Id,
+                PreferredRole = model.PreferredRole!,
+                DateCreated = _timeProvider.UtcNow,
+                LastUpdated = _timeProvider.UtcNow,
+            });
         }
 
         await SendAsync(new RegistrationResponse
         {
             IsSuccess = true,
+            UserId = user.Id,
             Message = "User registered successfully",
         }, cancellation: ct);
     }

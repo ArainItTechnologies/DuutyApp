@@ -31,10 +31,9 @@ const HireNow = () => {
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
 
     useEffect(() => {
-        console.log(user.role);
     if (!user) {
         navigate("/login", { state: { from: location.pathname } });
-    } else if (!user.role.some(role => ADMIN_ROLES.includes(role))) {
+    } else if (user.role.some(role => ADMIN_ROLES.includes(role))) {
       navigate("/become-employer", { state: { from: location.pathname } });
     }
   }, [navigate, user, location]);
