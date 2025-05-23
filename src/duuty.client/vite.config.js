@@ -38,6 +38,8 @@ if (!fs.existsSync(certFilePath) || !fs.existsSync(keyFilePath)) {
 const target = env.ASPNETCORE_HTTPS_PORT ? `https://localhost:${env.ASPNETCORE_HTTPS_PORT}` :
     env.ASPNETCORE_URLS ? env.ASPNETCORE_URLS.split(';')[0] : 'https://localhost:7120';
 
+const authApiTarget = env.AUTH_API_URL ? env.AUTH_API_URL : 'https://localhost:7120';
+
 // https://vitejs.dev/config/
 export default defineConfig({
     plugins: [plugin(),
@@ -54,6 +56,11 @@ export default defineConfig({
                 changeOrigin: true,
                 secure: false
             }
+        },
+        '/external-api': {
+            target: authApiTarget,
+            changeOrigin: true,
+            secure: true,
         },
         port: 5173,
         https: {
