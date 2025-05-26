@@ -1,4 +1,5 @@
-import {Link} from "react-router-dom";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 import BannerImage from "../assets/image-banner.png";
 import BannerImageMob from "../assets/banner-image-mob.png";
 import RegisterImg from "../assets/register-img.png";
@@ -16,10 +17,12 @@ import FaqImg from "../assets/faq-img.png";
 import WavePatten1 from "../assets/wave-patten1.svg";
 import WavePatten2 from "../assets/wave-patten2.svg";
 
-import TabsWithForm from '../components/TabsWithForm';
 import TestimonialSection from "../components/Testimonial";
+import RegistrationTabs from "./user/RegistrationTabs";
 
 export const Home = () => {
+    const [activeTab, setActiveTab] = useState("employeeForm");
+
     return (
         <section className="main-wrapper bg-linear-[180deg,#F4F3FF,#FFFFFF]">
             <div id="overview" className="banner-section px-3 sm:px-6 py-6 pb-[50px] sm:pb-[70px] md:pb-[100px] mx-auto bg-linear-[180deg,#F4F3FF,#FFFFFF]">
@@ -36,30 +39,30 @@ export const Home = () => {
                             Whether you're a restaurant owner seeking reliable kitchen staff or a talented individual looking for your next culinary adventure, Duuty has you covered.
                         </p>
                         <Link
-                          to="/find-job"
-                          className="hidden text-[15px] text-white font-medium sm:inline-block rounded-[11px] bg-linear-(--gradient-bg) px-[25px] py-[15px] mr-[12px]"
+                            to="/find-job"
+                            className="hidden text-[15px] text-white font-medium sm:inline-block rounded-[11px] bg-linear-(--gradient-bg) px-[25px] py-[15px] mr-[12px]"
                         >
-                          Find a Job
+                            Find a Job
                         </Link>
                         <Link
-                            to="/job-listing" 
+                            to="/job-listing"
                             className="hidden hover:bg-[#ECEFFF] text-[15px] text-[#3B31FF] font-medium sm:inline-block rounded-[11px] px-[25px] py-[15px] border-1 border-[#ECEFFF"
                         >
-                          Hire Now
+                            Hire Now
                         </Link>
 
                     </div>
                     <div className="w-full lg:w-1/2 xl:w-2/5 flex justify-center lg:justify-end max-w-[500px] lg:max-w-[100%]">
-                        <TabsWithForm/>
+                        <RegistrationTabs activeTab={activeTab} setActiveTab={setActiveTab} />
                     </div>
                 </div>
-                
+
             </div>
 
             <div id="benefits" className="employee-benifits-section relative">
                 <svg className="hidden sm:block absolute right-[0px] top-[0px]" width="94" height="177" viewBox="0 0 94 177" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="83" cy="23" r="78" stroke="#232962" strokeWidth="10"/>
-                    <circle cx="104" cy="94" r="78" stroke="#232962" strokeWidth="10"/>
+                    <circle cx="83" cy="23" r="78" stroke="#232962" strokeWidth="10" />
+                    <circle cx="104" cy="94" r="78" stroke="#232962" strokeWidth="10" />
                 </svg>
                 <div className="top-employee-benifits text-center sm:py-[50px] px-[20px] py-[25px] bg-[var(--employee-bg)]">
                     <h3 className="text-white text-[28px] sm:text-[32px] font-[AvenirNextMedium]">Your path to the perfect kitchen role</h3>
@@ -80,7 +83,7 @@ export const Home = () => {
                         </div>
                         <div className="benifits-list flex relative sm:pt-[40px] pt-[60px] sm:pr-[40px] pr-[20px] sm:pb-[40px] pb-[25px] md:pl-[110px] sm:pl-[85px] pl-[20px] w-[750px] max-w-full rounded-[35px] bg-white sm:mt-[40px] sm:mb-[40px] mt-[60px] mb-[60px] ml-auto before:content-[''] before:absolute lg:before:left-0 before:top-0 before:z-1 before:rounded-[35px] before:w-[70px] before:h-full before:bg-white md:before:left-[50px] before:hidden md:before:block border-[1px] border-[var(--benefit-card-border)]">
                             <svg className="hidden md:block absolute top-[-43px] lg:left-[-24px] md:left-[50px] z-0" width="52" height="290" viewBox="0 0 52 290" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M1 1C10.5 12.3333 31.3 40 38.5 60C47.5 85 70 217 14.5 289.5" stroke="#B7B0FF" strokeDasharray="4 4"/>
+                                <path d="M1 1C10.5 12.3333 31.3 40 38.5 60C47.5 85 70 217 14.5 289.5" stroke="#B7B0FF" strokeDasharray="4 4" />
                             </svg>
                             <div className="list-count shadow-[inset_0px_0px_0px_12px_var(--neutral-white)] text-[28px] sm:text-[46px] font-medium rounded-full w-[80px] h-[80px] sm:w-[123px] sm:h-[123px] flex items-center justify-center absolute sm:left-[-55px] sm:right-[unset] left-0 right-0 m-auto top-[-40px] sm:top-[unset] z-1 text-[var(--benefit-list-color)] bg-[var(--benefit-list-bg)] border-[1px] border-[var(--benefit-list-border)]">02</div>
                             <div className="benifits-content flex flex-col sm:flex-row items-center gap-[25px] relative z-1">
@@ -118,7 +121,7 @@ export const Home = () => {
                             <img className="size-[48px]" src={Emp1} alt="Find your Employer" />
                             <p className="max-w-[180px] text-left sm:text-[16px] text-[14px]">Candidate match accuracy based on employer preferences.</p>
                         </div>
-                        
+
                     </div>
                     <div className="find-employer-right w-full lg:w-3/5 xl:w-1/2 max-w-[580px]">
                         <h2 className="text-[28px] lg:text-[34px] xl:text-[40px] font-[AvenirNextBold]">Build Your Dream Kitchen Team</h2>
@@ -305,15 +308,15 @@ export const Home = () => {
                     <path d="M25.2632 40.9554L35.85 34.8432C36.3375 34.5617 36.504 33.9387 36.2228 33.4517L24.9786 39.9435L25.2632 40.9554Z" fill="url(#paint2_linear_3410_637)" />
                     <defs>
                         <linearGradient id="paint0_linear_3410_637" x1="0.992909" y1="6.99981" x2="70.3198" y2="7.41987" gradientUnits="userSpaceOnUse">
-                            <stop stop-color="#3B31FF" />
+                            <stop stopColor="#3B31FF" />
                             <stop offset="1" stopColor="#9239FF" />
                         </linearGradient>
                         <linearGradient id="paint1_linear_3410_637" x1="32.4079" y1="34.5441" x2="33.5455" y2="36.8251" gradientUnits="userSpaceOnUse">
-                            <stop stop-color="#747DEF" />
+                            <stop stopColor="#747DEF" />
                             <stop offset="1" stopColor="#5E3BE1" />
                         </linearGradient>
                         <linearGradient id="paint2_linear_3410_637" x1="32.9024" y1="35.4017" x2="33.5065" y2="36.5259" gradientUnits="userSpaceOnUse">
-                            <stop stop-color="#747DEF" />
+                            <stop stopColor="#747DEF" />
                             <stop offset="1" stopColor="#5E3BE1" />
                         </linearGradient>
                     </defs>

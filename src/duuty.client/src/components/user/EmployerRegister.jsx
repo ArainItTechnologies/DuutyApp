@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import AddRestaurantModal from "../AddRestaurantModal";
 import { registerUser, becomeEmployer } from "../../services/auth";
+import { FormInput, FormPasswordInput, PrimaryButton } from "../custom/FormElements";
 
 const EmployerRegister = () => {
   const [formData, setFormData] = useState({
@@ -65,45 +66,25 @@ const EmployerRegister = () => {
     <>
       <div className="">
         <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
-            <label
-              htmlFor="name"
-              className="block text-sm/6 font-medium text-(--secondary-text-color)"
-            >
-              Name <span className="text-red-500">*</span>
-            </label>
-            <div className="mt-2">
-              <input
-                id="name"
-                name="name"
-                type="text"
-                required
-                onChange={handleChange}
-                className="block w-full rounded-xl sm:h-[50px] h-[40px] bg-white sm:p-3 px-3 py-2 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-[16px] text-[14px]"
-              />
-            </div>
-          </div>
+          <FormInput
+            label="Full Name"
+            name="name"
+            type="text"
+            id="name"
+            value={formData.name}
+            onChange={handleChange}
+            required
+          />
 
           {!formData.email && (
-            <div>
-              <label
-                htmlFor="mobile"
-                className="block text-sm/6 font-medium text-(--secondary-text-color)"
-              >
-                Mobile Number <span className="text-red-500">*</span>
-              </label>
-              <div className="mt-2">
-                <input
-                  id="mobile"
-                  name="mobile"
-                  type="tel"
-                  required
-                  onChange={handleChange}
-                  autoComplete="tel"
-                  className="block w-full rounded-xl sm:h-[50px] h-[40px] bg-white sm:p-3 px-3 py-2 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-[16px] text-[14px]"
-                />
-              </div>
-            </div>
+            <FormInput
+              label="Mobile Number"
+              name="mobile"
+              type="tel"
+              id="mobile"
+              value={formData.mobile}
+              onChange={handleChange}
+              required />
           )}
 
           {!formData.mobile && !formData.email && (
@@ -115,80 +96,41 @@ const EmployerRegister = () => {
           )}
 
           {!formData.mobile && (
-            <div>
-              <label
-                htmlFor="email"
-                className="block text-sm/6 font-medium text-(--secondary-text-color)"
-              >
-                Email Address <span className="text-red-500">*</span>
-              </label>
-              <div className="mt-2">
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  required
-                  autoComplete="email"
-                  onChange={handleChange}
-                  className="block w-full rounded-xl sm:h-[50px] h-[40px] bg-white sm:p-3 px-3 py-2 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-[16px] text-[14px]"
-                />
-              </div>
-            </div>
+            <FormInput
+              label="Email Address"
+              name="email"
+              type="email"
+              id="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
           )}
 
-          <div>
-            <div className="flex items-center justify-between">
-              <label
-                htmlFor="password"
-                className="block text-sm/6 font-medium text-(--secondary-text-color)"
-              >
-                Password <span className="text-red-500">*</span>
-              </label>
-            </div>
-            <div className="mt-2">
-              <input
-                id="password"
-                name="password"
-                type="password"
-                required
-                onChange={handleChange}
-                className="block w-full rounded-xl sm:h-[50px] h-[40px] bg-white sm:p-3 px-3 py-2 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-[16px] text-[14px]"
-              />
-            </div>
-          </div>
+          <FormPasswordInput
+            label="Password"
+            name="password"
+            type="password"
+            id="password"
+            value={formData.password}
+            onChange={handleChange}
+            required />
 
-          <div>
-            <div className="flex items-center justify-between">
-              <label
-                htmlFor="confirmPassword"
-                className="block text-sm/6 font-medium text-(--secondary-text-color)"
-              >
-                Confirm Password <span className="text-red-500">*</span>
-              </label>
-            </div>
-            <div className="mt-2">
-              <input
-                id="confirmPassword"
-                name="confirmPassword"
-                type="password"
-                required
-                onChange={handleChange}
-                className="block w-full rounded-xl sm:h-[50px] h-[40px] bg-white sm:p-3 px-3 py-2 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-[16px] text-[14px]"
-              />
-            </div>
-          </div>
+          <FormPasswordInput
+            label="Confirm Password"
+            name="confirmPassword"
+            type="password"
+            id="confirmPassword"
+            value={formData.confirmPassword}
+            onChange={handleChange}
+            required
+          />
 
           {error && <p className="text-sm text-red-600">{error}</p>}
           {success && <p className="text-sm text-green-600">{success}</p>}
-
-          <div>
-            <button
-              type="submit"
-              className="cursor-pointer flex w-full justify-center rounded-xl sm:h-[50px] h-[40px] bg-linear-(--gradient-bg) sm:p-3 px-3 py-2 text-sm/6 font-semibold text-white shadow-xs hover:bg-primary-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
-              Sign Up
-            </button>
-          </div>
+          <PrimaryButton type="submit">
+            Sign Up
+          </PrimaryButton>
           <p className="mt-6 text-center text-sm/6 text-gray-500">
             Already have an account?{" "}
             <Link
@@ -201,11 +143,7 @@ const EmployerRegister = () => {
         </form>
       </div>
 
-      <AddRestaurantModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onSave={handleSaveRestaurant}
-      />
+      <AddRestaurantModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSave={handleSaveRestaurant} />
     </>
   );
 };

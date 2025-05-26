@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { ROUTES } from "./Constants";
 import Login from "./components/user/Login";
 import Home from "./components/Home";
-import RegisterTabbed from "./components/user/RegisterTabbed";
+import Register from "./components/user/Register";
 import Dashboard from "./components/Dashboard";
 import Navbar from "./components/Navbar";
 import Edit from "./components/Edit";
@@ -21,6 +21,7 @@ import BecomeEmployer from "./components/BecomeEmployer";
 import AboutUs from "./components/AboutUs";
 import PrivacyPolicy from "./components/PrivacyPolicy";
 import JobSearch from "./components/JobSearch";
+import AddRestaurantModal from "./components/AddRestaurantModal";
 
 function App() {
   return (
@@ -35,7 +36,7 @@ function App() {
         <Route path={ROUTES.HIRE_NOW} element={<HireNow />} />
         <Route path={ROUTES.JOB_LISTING} element={<JobListing />} />
         <Route path={ROUTES.JOB_RESULTS} element={<JobSearch />} />
-        <Route path={ROUTES.REGISTER} element={<RegisterTabbed />} />
+        <Route path={ROUTES.REGISTER} element={<Register />} />
         <Route path={ROUTES.BECOME_EMPLOYER} element={<BecomeEmployer />} />
         <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgotPassword />} />
         <Route path={ROUTES.PROFILE} element={<Profile />} />
@@ -46,6 +47,7 @@ function App() {
         <Route path={ROUTES.ABOUT_US} element={<AboutUs />} />
         <Route path={ROUTES.PRIVACY_POLICY} element={<PrivacyPolicy />} />
         <Route path="*" element={<Notfound />} />
+        <Route path="/ddd" element={<AddRestaurantModal  isOpen={true}/>} />
       </Routes>
       <Footer />
     </Router>

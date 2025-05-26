@@ -9,11 +9,13 @@ import {
 import Chinese from "../assets/Chinese.png";
 import JobDetails from "./JobDetails";
 import { fetchJobs } from "../services/auth";
-import { useUser } from "../hooks/Hooks";
+import { ALL_ROLE_OPTIONS, pageSizeOptions } from "../Constants";
+import { FormInput, FormSelect } from "./custom/FormElements";
 
 const JobSearch = () => {
-  const { user } = useUser();
-  
+  const roleOptions = [{ id: "", name: "Select Role" }, ...ALL_ROLE_OPTIONS];
+  const [selectedRole, setSelectedRole] = useState(null);
+
   const [jobs, setJobs] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterJobType, setFilterJobType] = useState("");
@@ -67,7 +69,6 @@ const JobSearch = () => {
   }
 
   useEffect(() => {
-    console.log(user)
     const getJobs = async () => {
       const data = await fetchJobs(searchTerm,);
       setJobs(data.jobs);
@@ -78,7 +79,7 @@ const JobSearch = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-gray-900 mb-6">Find Your Dream Job</h1>
+      <h1 className="mb-6 text-2xl font-semibold w-full sm:w-auto">Find Your Dream Job</h1>
 
       {/* Search and Filter Section */}
       <div className="mb-6 flex flex-col sm:flex-row gap-4">
@@ -87,32 +88,24 @@ const JobSearch = () => {
           placeholder="Search jobs..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="flex-grow px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+          className="mt-2 flex-grow px-3 py-2 block w-3/4 rounded-xl sm:h-[50px] h-[40px] bg-white sm:p-3 text-base text-gray-900 border border-gray-300 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-[16px] text-[14px]"
         />
 
-        <select
-          value={filterJobType}
-          onChange={(e) => setFilterJobType(e.target.value)}
-          className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
-        >
-          <option value="">All Job Types</option>
-          <option value="full-time">Full-time</option>
-          <option value="part-time">Part-time</option>
-          <option value="contract">Contract</option>
-        </select>
+        <FormSelect
+          name="role"
+          required
+          value={selectedRole}
+          setValue={setSelectedRole}
+          options={roleOptions}
+        />
 
-        <select
+        <FormSelect
+          name="jobsPerPage"
           value={jobsPerPage}
-          onChange={(e) => {
-            setJobsPerPage(Number(e.target.value));
-            setCurrentPage(1); // Reset to first page when changing items per page
-          }}
-          className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
-        >
-          <option value={5}>5 per page</option>
-          <option value={10}>10 per page</option>
-          <option value={20}>20 per page</option>
-        </select>
+          options={pageSizeOptions}
+          setValue={setJobsPerPage}
+          onChange={() => setCurrentPage(1)} // Reset to page 1 on change
+        />
       </div>
 
       {/* Results summary */}

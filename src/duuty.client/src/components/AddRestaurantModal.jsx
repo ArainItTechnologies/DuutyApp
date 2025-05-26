@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import FormInput from "./custom/FormInput";
+import { useState } from "react";
+import { FormInput, FormTextArea } from "./custom/FormElements";
 
 const AddRestaurantModal = ({ isOpen, onClose, onSave }) => {
   const [formData, setFormData] = useState({
@@ -7,7 +7,7 @@ const AddRestaurantModal = ({ isOpen, onClose, onSave }) => {
     addressLine1: "",
     city: "",
     state: "",
-    country: "",
+    country: "India",
     postCode: "",
     telephone: "",
     website: "",
@@ -21,7 +21,7 @@ const AddRestaurantModal = ({ isOpen, onClose, onSave }) => {
     country: false,
     postCode: false,
     telephone: false,
-    website: false,
+    websiteUrl: false,
   });
 
   const handleChange = (e) => {
@@ -43,13 +43,13 @@ const AddRestaurantModal = ({ isOpen, onClose, onSave }) => {
   const validateForm = () => {
     const newErrors = {
       organisationName: !formData.organisationName.trim(),
-      address: !formData.address.trim(),
-      postCode: !formData.postCode.trim(),
-      telephone: !formData.telephone.trim(),
-      website: formData.website.trim()
+      address: !formData.address?.trim(),
+      postCode: !formData.postCode?.trim(),
+      telephone: !formData.telephone?.trim(),
+      websiteUrl: formData.websiteUrl?.trim()
         ? !/^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/.test(
-            formData.website
-          )
+          formData.website
+        )
         : false,
     };
 
@@ -67,10 +67,10 @@ const AddRestaurantModal = ({ isOpen, onClose, onSave }) => {
         addressLine1: "",
         city: "",
         state: "",
-        country: "",
+        country: "India",
         postCode: "",
         telephone: "",
-        website: "",
+        websiteUrl: "",
       });
     }
   };
@@ -105,169 +105,102 @@ const AddRestaurantModal = ({ isOpen, onClose, onSave }) => {
         </div>
 
         {/* Modal Body */}
-        <div className="px-6 py-4">
-          <div className="space-y-4">
-            <div>
-              <label
-                className="block text-gray-700 text-sm font-bold mb-2"
-                htmlFor="organisationName"
-              >
-                Restaurant Name *
-              </label>
-              <input
-                id="organisationName"
-                name="organisationName"
-                type="text"
-                value={formData.organisationName}
-                onChange={handleChange}
-                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                  errors.name ? "border-red-500" : "border-gray-300"
-                }`}
-                placeholder="Enter restaurant name"
-              />
-              {errors.organisationName && (
-                <p className="text-red-500 text-xs mt-1">
-                  Restaurant name is required
-                </p>
-              )}
-            </div>
+        <div className="py-4">
+          <div className="px-6">
+          <FormInput
+            label={"Restaurant Name"}
+            name="organisationName"
+            value={formData.organisationName}
+            onChange={handleChange}
+            placeholder="Enter restaurant name"
+            errors={errors.organisationName}
+            errorMessage="Restaurant name is required"
+            required />
 
-            <div>
-              <label
-                className="block text-gray-700 text-sm font-bold mb-2"
-                htmlFor="website"
-              >
-                Website URL
-              </label>
-              <input
-                id="website"
-                name="website"
-                type="url"
-                value={formData.website}
-                onChange={handleChange}
-                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                  errors.website ? "border-red-500" : "border-gray-300"
-                }`}
-                placeholder="Enter website URL"
-              />
-              {errors.website && (
-                <p className="text-red-500 text-xs mt-1">
-                  Please enter a valid URL
-                </p>
-              )}
-            </div>
+          <FormInput
+            label="City"
+            name="city"
+            value={formData.city}
+            onChange={handleChange}
+            placeholder="Enter city"
+            required
+          />
+          <FormInput
+            label="State"
+            name="state"
+            value={formData.state}
+            placeholder="Enter State"
+            onChange={handleChange}
+            required
+          />
+          <FormInput
+            label="Country"
+            name="country"
+            placeholder="Enter Country"
+            value={formData.country}
+            onChange={handleChange}
+            required
+          />
 
-            <div>
-              <label
-                className="block text-gray-700 text-sm font-bold mb-2"
-                htmlFor="telephone"
-              >
-                Telephone Number *
-              </label>
-              <input
-                id="telephone"
-                name="telephone"
-                type="tel"
-                value={formData.telephone}
-                onChange={handleChange}
-                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                  errors.telephone ? "border-red-500" : "border-gray-300"
-                }`}
-                placeholder="Enter telephone number"
-              />
-              {errors.telephone && (
-                <p className="text-red-500 text-xs mt-1">
-                  Telephone number is required
-                </p>
-              )}
-            </div>
+          <FormInput
+            label={"Website URL"}
+            name="websiteUrl"
+            type="url"
+            value={formData.websiteUrl}
+            onChange={handleChange}
+            placeholder="Enter website URL"
+            errors={errors.websiteUrl}
+            errorMessage="Please enter a valid URL" />
 
-            <div>
-              <label
-                className="block text-gray-700 text-sm font-bold mb-2"
-                htmlFor="addressLine1"
-              >
-                AddressLine1 *
-              </label>
-              <textarea
-                id="addressLine1"
-                name="addressLine1"
-                value={formData.addressLine1}
-                onChange={handleChange}
-                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                  errors.address ? "border-red-500" : "border-gray-300"
-                }`}
-                placeholder="Enter restaurant address"
-                rows="2"
-              ></textarea>
-              {errors.address && (
-                <p className="text-red-500 text-xs mt-1">Address is required</p>
-              )}
-            </div>
+          <FormInput
+            label="Telephone Number"
+            name="telephone"
+            type="tel"
+            value={formData.telephone}
+            onChange={handleChange}
+            placeholder="Enter telephone number"
+            errors={errors.telephone}
+            errorMessage="Telephone number is required"
+            required />
 
-            <div>
-              <label
-                className="block text-gray-700 text-sm font-bold mb-2"
-                htmlFor="postalCode"
-              >
-                Post Code *
-              </label>
-              <input
-                id="postalCode"
-                name="postalCode"
-                type="text"
-                value={formData.postalCode}
-                onChange={handleChange}
-                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                  errors.postalCode ? "border-red-500" : "border-gray-300"
-                }`}
-                placeholder="Enter post code"
-              />
-              {errors.postalCode && (
-                <p className="text-red-500 text-xs mt-1">
-                  Post code is required
-                </p>
-              )}
-            </div>
+          <FormTextArea
+            label="Address Line 1"
+            name="addressLine1"
+            value={formData.addressLine1}
+            onChange={handleChange}
+            required
+            errors={errors.address}
+            placeholder="Enter restaurant address"
+            errorMessage="Address is required"
+          />
+
+          <FormInput
+            label="Post Code"
+            name="postalCode"
+            value={formData.postalCode}
+            onChange={handleChange}
+            placeholder="Enter postcode"
+            errors={errors.postalCode}
+            errorMessage="Postcode is required"
+            required
+          />
           </div>
-        </div>
 
-        <FormInput
-          label="City"
-          name="city"
-          value={formData.city}
-          onChange={handleChange}
-          required
-        />
-        <FormInput
-          label="State"
-          name="state"
-          value={formData.state}
-          onChange={handleChange}
-          required
-        />
-        <FormInput
-          label="Country"
-          name="country"
-          value={formData.country}
-          onChange={handleChange}
-          required
-        />
-
-        {/* Modal Footer */}
-        <div className="px-6 py-4 bg-gray-50 rounded-b-lg flex justify-between">
-          <button
-            onClick={onClose}
-            className="cursor-pointer text-[15px] text-gray-700 font-medium inline-block rounded-[11px] border-2 border-gray-300 px-[25px] py-[10px] hover:bg-gray-100"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={handleSubmit}
-            className="cursor-pointer text-[15px] text-white font-medium inline-block rounded-[11px] bg-linear-(--gradient-bg) px-[25px] py-[10px] mr-[12px]"
-          >
-            Save Restaurant
-          </button>
+          {/* Modal Footer */}
+          <div className="px-6 py-4 bg-gray-50 rounded-b-lg flex justify-between">
+            <button
+              onClick={onClose}
+              className="cursor-pointer text-[15px] text-gray-700 font-medium inline-block rounded-[11px] border-2 border-gray-300 px-[25px] py-[10px] hover:bg-gray-100"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleSubmit}
+              className="cursor-pointer text-[15px] text-white font-medium inline-block rounded-[11px] bg-linear-(--gradient-bg) px-[25px] py-[10px] mr-[12px]"
+            >
+              Save Restaurant
+            </button>
+          </div>
         </div>
       </div>
     </div>

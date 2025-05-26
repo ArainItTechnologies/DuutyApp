@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250521225327_InitialCreate")]
+    [Migration("20250525163416_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -165,15 +165,15 @@ namespace DataAccess.Migrations
                         {
                             Id = "10000000-0000-0000-0000-000000000001",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "70afdb4f-f8dd-49a2-bb3d-41e382cd04d0",
+                            ConcurrencyStamp = "8821ac75-5170-41ff-affe-eede1cffd210",
                             Email = "admin@duuty.in",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@DUUTY.IN",
                             NormalizedUserName = "ADMIN@DUUTY.IN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEM6T1Qvc5xi6IyZcD/7kSHX9bpfuu20He1ON6BS396cEcOGGYHEfRo1G1M9kgVBDgg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEBwb09UlNyqcbn2Ii84GBYXPV8vzDm7POven6Ac8vAeTMaGvu3+xajhepURcBfVHLQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "742aa90b-b6e5-4d53-a05e-0f4312bfd818",
+                            SecurityStamp = "5292174c-2e8f-415d-af00-afea4ec752e0",
                             TwoFactorEnabled = false,
                             UserName = "admin@duuty.in"
                         },
@@ -181,15 +181,15 @@ namespace DataAccess.Migrations
                         {
                             Id = "10000000-0000-0000-0000-000000000002",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "b88bee9d-d858-4476-b072-ed54616c848c",
+                            ConcurrencyStamp = "77c0aed3-fa6d-4798-95fc-1c109bc3283b",
                             Email = "employer@duuty.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "EMPLOYER@DUUTY.COM",
                             NormalizedUserName = "EMPLOYER@DUUTY.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEAYLaJytg0G1oPBRARgtmflPsKGBp7i/gHdLLumubIxN2Fo/u2iPyPL5AymejZkujg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEJNAn07IuMVnGBII8VNzomb/PnE+l2zg13uKslau03VeMFObvqtRNqYUuXchFaB7Sw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "3d61c234-8377-4c4a-bf5f-164ef0c78f26",
+                            SecurityStamp = "551def2d-65af-4277-973d-9bca3402ec38",
                             TwoFactorEnabled = false,
                             UserName = "employer@duuty.com"
                         });
@@ -245,10 +245,37 @@ namespace DataAccess.Migrations
                             AddressLine2 = "",
                             City = "Newent",
                             Country = "United Kingdom",
-                            DateCreated = new DateTimeOffset(new DateTime(2025, 5, 21, 23, 53, 22, 768, DateTimeKind.Unspecified).AddTicks(2334), new TimeSpan(0, 1, 0, 0, 0)),
+                            DateCreated = new DateTimeOffset(new DateTime(2025, 5, 25, 17, 34, 15, 435, DateTimeKind.Unspecified).AddTicks(9286), new TimeSpan(0, 1, 0, 0, 0)),
                             PostalCode = "GL18 1UJ",
                             State = "Gloucestershire"
                         });
+                });
+
+            modelBuilder.Entity("Domain.Entities.EmployeeJobRole", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<DateTimeOffset?>("DateCreated")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset?>("LastUpdated")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("PreferredRole")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("EmployeeJobRoles");
                 });
 
             modelBuilder.Entity("Domain.Entities.Employer", b =>
@@ -406,6 +433,9 @@ namespace DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("WebsiteUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("AddressId");
@@ -417,7 +447,7 @@ namespace DataAccess.Migrations
                         {
                             Id = 1L,
                             AddressId = 1L,
-                            DateCreated = new DateTimeOffset(new DateTime(2025, 5, 21, 23, 53, 22, 768, DateTimeKind.Unspecified).AddTicks(1275), new TimeSpan(0, 1, 0, 0, 0)),
+                            DateCreated = new DateTimeOffset(new DateTime(2025, 5, 25, 17, 34, 15, 435, DateTimeKind.Unspecified).AddTicks(9117), new TimeSpan(0, 1, 0, 0, 0)),
                             OranisationName = "Arain IT Technologies"
                         });
                 });

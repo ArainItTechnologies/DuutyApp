@@ -49,6 +49,22 @@ namespace DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "EmployeeJobRoles",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PreferredRole = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DateCreated = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    LastUpdated = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EmployeeJobRoles", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "JobListings",
                 columns: table => new
                 {
@@ -102,6 +118,7 @@ namespace DataAccess.Migrations
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     OranisationName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    WebsiteUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     AddressId = table.Column<long>(type: "bigint", nullable: true),
                     DateCreated = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     LastUpdated = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true)
@@ -280,7 +297,7 @@ namespace DataAccess.Migrations
             migrationBuilder.InsertData(
                 table: "Addresses",
                 columns: new[] { "Id", "AddressLine1", "AddressLine2", "City", "Country", "DateCreated", "LastUpdated", "PostalCode", "State" },
-                values: new object[] { 1L, "95 Manor Road", "", "Newent", "United Kingdom", new DateTimeOffset(new DateTime(2025, 5, 21, 23, 53, 22, 768, DateTimeKind.Unspecified).AddTicks(2334), new TimeSpan(0, 1, 0, 0, 0)), null, "GL18 1UJ", "Gloucestershire" });
+                values: new object[] { 1L, "95 Manor Road", "", "Newent", "United Kingdom", new DateTimeOffset(new DateTime(2025, 5, 25, 17, 34, 15, 435, DateTimeKind.Unspecified).AddTicks(9286), new TimeSpan(0, 1, 0, 0, 0)), null, "GL18 1UJ", "Gloucestershire" });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
@@ -298,8 +315,8 @@ namespace DataAccess.Migrations
                 columns: new[] { "Id", "AccessFailedCount", "Birthday", "ConcurrencyStamp", "Email", "EmailConfirmed", "FullName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "OrganisationId", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { "10000000-0000-0000-0000-000000000001", 0, null, "70afdb4f-f8dd-49a2-bb3d-41e382cd04d0", "admin@duuty.in", true, null, false, null, "ADMIN@DUUTY.IN", "ADMIN@DUUTY.IN", null, "AQAAAAIAAYagAAAAEM6T1Qvc5xi6IyZcD/7kSHX9bpfuu20He1ON6BS396cEcOGGYHEfRo1G1M9kgVBDgg==", null, false, "742aa90b-b6e5-4d53-a05e-0f4312bfd818", false, "admin@duuty.in" },
-                    { "10000000-0000-0000-0000-000000000002", 0, null, "b88bee9d-d858-4476-b072-ed54616c848c", "employer@duuty.com", true, null, false, null, "EMPLOYER@DUUTY.COM", "EMPLOYER@DUUTY.COM", null, "AQAAAAIAAYagAAAAEAYLaJytg0G1oPBRARgtmflPsKGBp7i/gHdLLumubIxN2Fo/u2iPyPL5AymejZkujg==", null, false, "3d61c234-8377-4c4a-bf5f-164ef0c78f26", false, "employer@duuty.com" }
+                    { "10000000-0000-0000-0000-000000000001", 0, null, "8821ac75-5170-41ff-affe-eede1cffd210", "admin@duuty.in", true, null, false, null, "ADMIN@DUUTY.IN", "ADMIN@DUUTY.IN", null, "AQAAAAIAAYagAAAAEBwb09UlNyqcbn2Ii84GBYXPV8vzDm7POven6Ac8vAeTMaGvu3+xajhepURcBfVHLQ==", null, false, "5292174c-2e8f-415d-af00-afea4ec752e0", false, "admin@duuty.in" },
+                    { "10000000-0000-0000-0000-000000000002", 0, null, "77c0aed3-fa6d-4798-95fc-1c109bc3283b", "employer@duuty.com", true, null, false, null, "EMPLOYER@DUUTY.COM", "EMPLOYER@DUUTY.COM", null, "AQAAAAIAAYagAAAAEJNAn07IuMVnGBII8VNzomb/PnE+l2zg13uKslau03VeMFObvqtRNqYUuXchFaB7Sw==", null, false, "551def2d-65af-4277-973d-9bca3402ec38", false, "employer@duuty.com" }
                 });
 
             migrationBuilder.InsertData(
@@ -313,8 +330,8 @@ namespace DataAccess.Migrations
 
             migrationBuilder.InsertData(
                 table: "Organisations",
-                columns: new[] { "Id", "AddressId", "DateCreated", "LastUpdated", "OranisationName" },
-                values: new object[] { 1L, 1L, new DateTimeOffset(new DateTime(2025, 5, 21, 23, 53, 22, 768, DateTimeKind.Unspecified).AddTicks(1275), new TimeSpan(0, 1, 0, 0, 0)), null, "Arain IT Technologies" });
+                columns: new[] { "Id", "AddressId", "DateCreated", "LastUpdated", "OranisationName", "WebsiteUrl" },
+                values: new object[] { 1L, 1L, new DateTimeOffset(new DateTime(2025, 5, 25, 17, 34, 15, 435, DateTimeKind.Unspecified).AddTicks(9117), new TimeSpan(0, 1, 0, 0, 0)), null, "Arain IT Technologies", null });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -388,6 +405,9 @@ namespace DataAccess.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "EmployeeJobRoles");
 
             migrationBuilder.DropTable(
                 name: "Employers");

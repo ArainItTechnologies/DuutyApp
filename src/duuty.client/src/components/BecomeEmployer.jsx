@@ -1,13 +1,14 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../hooks/Hooks";
-import FormInput from "./custom/FormInput";
+import { FormInput, FormTextArea } from "./custom/FormElements";
 import { becomeEmployer } from "../services/auth";
 
 const BecomeEmployer = () => {
   const navigate = useNavigate();
   const { user } = useUser();
   const [formData, setFormData] = useState({
+    userId: user?.userId,
     organisationName: "",
     addressLine1: "",
     city: "",
@@ -16,9 +17,27 @@ const BecomeEmployer = () => {
     postalCode: "",
   });
 
+  const [errors, setErrors] = useState({
+    organisationName: false,
+    addressLine1: false,
+    city: false,
+    state: false,
+    country: false,
+    postCode: false,
+    telephone: false,
+    websiteUrl: false,
+  });
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    // Clear error when user types
+    if (errors[name]) {
+      setErrors({
+        ...errors,
+        [name]: false,
+      });
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -37,102 +56,84 @@ const BecomeEmployer = () => {
         onSubmit={handleSubmit}
         className="bg-white p-6 rounded-lg shadow-md space-y-6 max-w-xl mx-auto"
       >
-        <FormInput
-          label="Organisation Name"
-          name="organisationName"
-          type="text"
-          value={formData.email}
-          onChange={handleChange}
-          required
-        />
-
         <div>
-          <label
-            htmlFor="addressLine1"
-            className="block text-sm/6 font-medium text-(--secondary-text-color)"
-          >
-            Address Line 1 <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="text"
+          <FormInput
+            label={"Restaurant Name"}
+            name="organisationName"
+            value={formData.organisationName}
+            onChange={handleChange}
+            placeholder="Enter restaurant name"
+            errors={errors.organisationName}
+            errorMessage="Restaurant name is required"
+            required />
+            
+          <FormTextArea
+            label="Address Line 1"
             name="addressLine1"
             value={formData.addressLine1}
             onChange={handleChange}
             required
-            className="block w-full rounded-xl sm:h-[50px] h-[40px] bg-white sm:p-3 px-3 py-2 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-[16px] text-[14px]"
+            errors={errors.address}
+            placeholder="Enter restaurant address"
+            errorMessage="Address is required"
           />
-        </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label
-              htmlFor="city"
-              className="block text-sm/6 font-medium text-(--secondary-text-color)"
-            >
-              City <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="text"
-              name="city"
-              value={formData.city}
-              onChange={handleChange}
-              required
-              className="block w-full rounded-xl sm:h-[50px] h-[40px] bg-white sm:p-3 px-3 py-2 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-[16px] text-[14px]"
-            />
-          </div>
+          <FormInput
+            label="City"
+            name="city"
+            value={formData.city}
+            onChange={handleChange}
+            placeholder="Enter city"
+            required
+          />
+          <FormInput
+            label="Post Code"
+            name="postalCode"
+            value={formData.postalCode}
+            onChange={handleChange}
+            placeholder="Enter postcode"
+            errors={errors.postalCode}
+            errorMessage="Postcode is required"
+            required
+          />
 
-          <div>
-            <label
-              htmlFor="state"
-              className="block text-sm/6 font-medium text-(--secondary-text-color)"
-            >
-              State <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="text"
-              name="state"
-              value={formData.state}
-              onChange={handleChange}
-              required
-              className="block w-full rounded-xl sm:h-[50px] h-[40px] bg-white sm:p-3 px-3 py-2 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-[16px] text-[14px]"
-            />
-          </div>
-        </div>
+          <FormInput
+            label="State"
+            name="state"
+            value={formData.state}
+            placeholder="Enter State"
+            onChange={handleChange}
+            required
+          />
+          <FormInput
+            label="Country"
+            name="country"
+            placeholder="Enter Country"
+            value={formData.country}
+            onChange={handleChange}
+            required
+          />
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label
-              htmlFor="country"
-              className="block text-sm/6 font-medium text-(--secondary-text-color)"
-            >
-              Country <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="text"
-              name="country"
-              value={formData.country}
-              onChange={handleChange}
-              required
-              className="block w-full rounded-xl sm:h-[50px] h-[40px] bg-white sm:p-3 px-3 py-2 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-[16px] text-[14px]"
-            />
-          </div>
+          <FormInput
+            label="Telephone Number"
+            name="telephone"
+            type="tel"
+            value={formData.telephone}
+            onChange={handleChange}
+            placeholder="Enter telephone number"
+            errors={errors.telephone}
+            errorMessage="Telephone number is required"
+            required />
 
-          <div>
-            <label
-              htmlFor="postalCode"
-              className="block text-sm/6 font-medium text-(--secondary-text-color)"
-            >
-              Postal Code
-            </label>
-            <input
-              type="text"
-              name="postalCode"
-              value={formData.postalCode}
-              onChange={handleChange}
-              required
-              className="block w-full rounded-xl sm:h-[50px] h-[40px] bg-white sm:p-3 px-3 py-2 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-[16px] text-[14px]"
-            />
-          </div>
+          <FormInput
+            label={"Website URL"}
+            name="websiteUrl"
+            type="url"
+            value={formData.websiteUrl}
+            onChange={handleChange}
+            placeholder="Enter website URL"
+            errors={errors.websiteUrl}
+            errorMessage="Please enter a valid URL" />
         </div>
 
         <div>
