@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
 import {
   MapPinIcon,
-  ClockIcon,
-  CurrencyRupeeIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
 } from "@heroicons/react/24/outline";
@@ -10,7 +8,7 @@ import Chinese from "../assets/Chinese.png";
 import JobDetails from "./JobDetails";
 import { fetchJobs } from "../services/auth";
 import { ALL_ROLE_OPTIONS, pageSizeOptions } from "../Constants";
-import { FormInput, FormSelect } from "./custom/FormElements";
+import { FormSelect } from "./custom/FormElements";
 
 const JobSearch = () => {
   const roleOptions = [{ id: "", name: "Select Role" }, ...ALL_ROLE_OPTIONS];
