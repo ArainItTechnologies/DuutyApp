@@ -82,7 +82,11 @@ export default function Navbar() {
                 <Link
                   onClick={() => setOpen(false)}
                   to={ROUTES.HOME}
-                  className="flex items-center p-3 font-medium text-gray-900 hover:bg-[#EDEBFF] hover:text-indigo-600 rounded-lg transition-colors"
+                  className={`mb-2 flex p-2 px-6 font-medium text-center rounded-[12px] ${
+                    window.location.pathname === '/find-job'
+                      ? 'bg-indigo-600 text-white' // Active state styles
+                      : 'bg-[#fafafa] text-gray-900 hover:bg-[#EDEBFF] hover:text-indigo-600'
+                  }`}
                 >
                   <HomeIcon className="h-5 w-5 mr-3 text-primary" />
                   <span>Home</span>

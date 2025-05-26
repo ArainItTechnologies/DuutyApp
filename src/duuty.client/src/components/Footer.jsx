@@ -81,7 +81,7 @@ const Footer = () => {
               Contact
             </h6>
             <p className="mb-4">
-              <Link to={ROUTES.FAQ}>Help/FAQ</Link>
+              <Link to={`${ROUTES.HOME}#faq-section`}>Help/FAQ</Link>
             </p>
             <p className="mb-4">
               <Link to={ROUTES.CONTACT_US}>Contact Us</Link>

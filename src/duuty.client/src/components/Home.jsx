@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import BannerImage from "../assets/image-banner.png";
 import BannerImageMob from "../assets/banner-image-mob.png";
@@ -22,6 +22,15 @@ import RegistrationTabs from "./user/RegistrationTabs";
 
 export const Home = () => {
     const [activeTab, setActiveTab] = useState("employeeForm");
+
+      useEffect(() => {
+    if (location.hash) {
+      const el = document.querySelector(location.hash);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+  }, [location]);
 
     return (
         <section className="main-wrapper bg-linear-[180deg,#F4F3FF,#FFFFFF]">
@@ -171,7 +180,7 @@ export const Home = () => {
 
             <TestimonialSection />
 
-            <div className="faq-wrapper flow-root pb-[0px] lg:pb-[100px]">
+            <div id="faq-section" className="faq-wrapper flow-root pb-[0px] lg:pb-[100px]">
                 <div className="container-wrapper flex justify-center flex-col-reverse px-[20px] lg:px-[0px] lg:flex-row lg:justify-between items-center lg:items-start relative gap-[80px]">
                     <div className="hidden lg:block w-full lg:w-1/2 lg:sticky lg:top-[90px] max-w-[90%] sm:max-w-[500px] lg:max-w-[100%]">
                         <div className="faq-img-container relative">

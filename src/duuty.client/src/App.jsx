@@ -22,6 +22,7 @@ import AboutUs from "./components/AboutUs";
 import PrivacyPolicy from "./components/PrivacyPolicy";
 import JobSearch from "./components/JobSearch";
 import AddRestaurantModal from "./components/AddRestaurantModal";
+import ContactUs from "./components/ContactUs";
 
 function App() {
   return (
@@ -44,6 +45,7 @@ function App() {
         <Route path={ROUTES.EMAIL_CONFIRM} element={<EmailConfirmation />} />
         <Route path={ROUTES.CHANGE_PASSWORD} element={<ChangePassword />} />
         <Route path={ROUTES.PRICING} element={<Pricing />} />
+        <Route path={ROUTES.CONTACT_US} element={<ContactUs />} />
         <Route path={ROUTES.ABOUT_US} element={<AboutUs />} />
         <Route path={ROUTES.PRIVACY_POLICY} element={<PrivacyPolicy />} />
         <Route path="*" element={<Notfound />} />

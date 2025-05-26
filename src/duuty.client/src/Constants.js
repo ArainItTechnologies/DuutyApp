@@ -17,7 +17,7 @@ import dhaba from "./assets/dhaba-master.jpg";
 
 export const ROUTES = {
   HOME: '/',
-  FAQ: '/faq',
+  FAQ: '#faq-section',
   CONTACT_US: '/contact-us',
   LOGIN: '/login',
   DASHBOARD: '/dashboard',

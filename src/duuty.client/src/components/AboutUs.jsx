@@ -189,57 +189,6 @@ const AboutUs = () => {
         </div>
       </div>
 
-      {/* Current Openings */}
-      <div className="container mx-auto px-4 py-16">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl font-bold text-primary mb-8 text-center">Current Kitchen Openings</h2>
-          
-          <div className="space-y-6">
-            {/* Job Position 1 */}
-            <div className="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
-              <h3 className="text-xl font-semibold text-primary mb-2">Sous Chef</h3>
-              <p className="text-heading mb-4">Full-time position working closely with our Executive Chef to manage kitchen operations and mentor junior staff.</p>
-              <div className="flex flex-wrap gap-2 mb-4">
-                <span className="bg-gray-100 text-heading px-3 py-1 rounded-full text-sm">5+ years experience</span>
-                <span className="bg-gray-100 text-heading px-3 py-1 rounded-full text-sm">Leadership skills</span>
-                <span className="bg-gray-100 text-heading px-3 py-1 rounded-full text-sm">Menu development</span>
-              </div>
-              <button className="text-white bg-primary px-5 py-2 rounded hover:bg-opacity-90 transition-colors">
-                Apply Now
-              </button>
-            </div>
-            
-            {/* Job Position 2 */}
-            <div className="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
-              <h3 className="text-xl font-semibold text-primary mb-2">Line Cook</h3>
-              <p className="text-heading mb-4">Join our team preparing high-quality dishes with attention to detail and consistency.</p>
-              <div className="flex flex-wrap gap-2 mb-4">
-                <span className="bg-gray-100 text-heading px-3 py-1 rounded-full text-sm">2+ years experience</span>
-                <span className="bg-gray-100 text-heading px-3 py-1 rounded-full text-sm">Fast-paced environment</span>
-                <span className="bg-gray-100 text-heading px-3 py-1 rounded-full text-sm">Fine dining</span>
-              </div>
-              <button className="text-white bg-primary px-5 py-2 rounded hover:bg-opacity-90 transition-colors">
-                Apply Now
-              </button>
-            </div>
-            
-            {/* Job Position 3 */}
-            <div className="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
-              <h3 className="text-xl font-semibold text-primary mb-2">Pastry Chef</h3>
-              <p className="text-heading mb-4">Create exceptional desserts and pastries for our award-winning restaurant.</p>
-              <div className="flex flex-wrap gap-2 mb-4">
-                <span className="bg-gray-100 text-heading px-3 py-1 rounded-full text-sm">3+ years experience</span>
-                <span className="bg-gray-100 text-heading px-3 py-1 rounded-full text-sm">Pastry expertise</span>
-                <span className="bg-gray-100 text-heading px-3 py-1 rounded-full text-sm">Creative mindset</span>
-              </div>
-              <button className="text-white bg-primary px-5 py-2 rounded hover:bg-opacity-90 transition-colors">
-                Apply Now
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* Join Us Call-to-Action */}
       <div className="bg-primary py-16 text-white">
         <div className="container mx-auto px-4">
