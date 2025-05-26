@@ -41,6 +41,7 @@ export default function Navbar() {
 
   const handleLogout = () => {
     setUser(null);
+    setOpen(false);
     navigate(ROUTES.LOGIN); // or use navigate if inside react-router
   };
 
@@ -79,6 +80,7 @@ export default function Navbar() {
             <div className="space-y-6 border-t border-gray-200 px-3 py-3">
               <div className="flow-root">
                 <Link
+                  onClick={() => setOpen(false)}
                   to={ROUTES.HOME}
                   className="flex items-center p-3 font-medium text-gray-900 hover:bg-[#EDEBFF] hover:text-indigo-600 rounded-lg transition-colors"
                 >
@@ -87,6 +89,7 @@ export default function Navbar() {
                 </Link>
                 {!user && (
                   <Link
+                    onClick={() => setOpen(false)}
                     to={ROUTES.LOGIN}
                     className="flex items-center p-3 font-medium text-gray-900 hover:bg-[#EDEBFF] hover:text-indigo-600 rounded-lg transition-colors"
                   >
@@ -95,6 +98,7 @@ export default function Navbar() {
                   </Link>
                 )}
                 <Link
+                  onClick={() => setOpen(false)}
                   to={ROUTES.JOB_RESULTS}
                   className="flex items-center p-3 font-medium text-gray-900 hover:bg-[#EDEBFF] hover:text-indigo-600 rounded-lg transition-colors"
                 >
@@ -102,6 +106,7 @@ export default function Navbar() {
                   <span>Find a Job</span>
                 </Link>
                 <Link
+                  onClick={() => setOpen(false)}
                   to={ROUTES.JOB_LISTING}
                   className="flex items-center p-3 font-medium text-gray-900 hover:bg-[#EDEBFF] hover:text-indigo-600 rounded-lg transition-colors"
                 >
