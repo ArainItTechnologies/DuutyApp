@@ -23,14 +23,14 @@ import RegistrationTabs from "./user/RegistrationTabs";
 export const Home = () => {
     const [activeTab, setActiveTab] = useState("employeeForm");
 
-      useEffect(() => {
-    if (location.hash) {
-      const el = document.querySelector(location.hash);
-      if (el) {
-        el.scrollIntoView({ behavior: "smooth" });
-      }
-    }
-  }, [location]);
+    useEffect(() => {
+        if (location.hash) {
+            const el = document.querySelector(location.hash);
+            if (el) {
+                el.scrollIntoView({ behavior: "smooth" });
+            }
+        }
+    }, [location]);
 
     return (
         <section className="main-wrapper bg-linear-[180deg,#F4F3FF,#FFFFFF]">

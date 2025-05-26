@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import LogoSrc from "../assets/logo.svg";
 import { ROUTES } from "../Constants";
+import { ScrollLink } from "./custom/FormElements";
 
 const Footer = () => {
   return (
@@ -81,7 +82,7 @@ const Footer = () => {
               Contact
             </h6>
             <p className="mb-4">
-              <Link to={`${ROUTES.HOME}#faq-section`}>Help/FAQ</Link>
+              <ScrollLink to={`${ROUTES.HOME}#faq-section`} label="Help/FAQ" />
             </p>
             <p className="mb-4">
               <Link to={ROUTES.CONTACT_US}>Contact Us</Link>

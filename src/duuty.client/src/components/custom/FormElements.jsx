@@ -1,4 +1,5 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+
 
 export const FormInput = ({
   label,
@@ -207,5 +208,25 @@ export const PrimaryButton = ({
     </button>
   );
 };
+
+
+export const ScrollLink = ({ to, label, onClick }) => {
+  const location = useLocation();
+
+  const handleClick = (e) => {
+    if (location.pathname === "/" && to.includes("#faq-section")) {
+      e.preventDefault();
+      document.getElementById("faq-section")?.scrollIntoView({ behavior: "smooth" });
+      onClick?.();
+    }
+  };
+
+  return (
+    <Link to={to} onClick={handleClick}>
+      {label}
+    </Link>
+  );
+};
+
 
 
