@@ -86,7 +86,7 @@ const JobSearch = () => {
           placeholder="Search jobs..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="mt-2 flex-grow px-3 py-2 block w-3/4 rounded-xl sm:h-[50px] h-[40px] bg-white sm:p-3 text-base text-gray-900 border border-gray-300 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-[16px] text-[14px]"
+          className="mt-2 flex-grow px-3 py-2 block w-full sm:w-3/4 rounded-xl sm:h-[50px] h-[40px] bg-white sm:p-3 text-base text-gray-900 border border-gray-300 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-[16px] text-[14px]"
         />
 
         <FormSelect
