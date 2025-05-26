@@ -60,7 +60,7 @@ public class ForgotPasswordEndpoint : Endpoint<ForgotPasswordRequest, ForgotPass
 public class ForgotPasswordResponse
 {
     public required bool IsSuccess { get; set; }
-    public string Message { get; set; }
+    public string? Message { get; set; }
 }
 
 public class ForgotPasswordRequest

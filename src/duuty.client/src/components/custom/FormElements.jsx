@@ -6,6 +6,7 @@ export const FormInput = ({
   type = "text",
   value,
   onChange,
+  readonly = false,
   required = false,
   autoComplete,
   placeholder,
@@ -32,6 +33,7 @@ export const FormInput = ({
           onChange={onChange}
           required={required}
           autoComplete={autoComplete}
+          readOnly={readonly}
           placeholder={placeholder}
           className={`block w-full rounded-xl sm:h-[50px] h-[40px] bg-white sm:p-3 px-3 py-2 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-[16px] text-[14px] ${errors ? "border-red-500" : "border-gray-300"}`}
         />
@@ -51,6 +53,7 @@ export const FormTextArea = ({
   onChange,
   required = false,
   errors,
+  rows = "2",
   placeholder,
   errorMessage
 }) => {
@@ -75,7 +78,7 @@ export const FormTextArea = ({
           required={required}
           className={`block w-full rounded-xl bg-white sm:p-3 px-3 py-2 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-[16px] text-[14px] ${errors ? "border-red-500" : "border-gray-300"}`}
           placeholder={placeholder}
-          rows="2"
+          rows={rows}
         ></textarea>
 
         {errors && (

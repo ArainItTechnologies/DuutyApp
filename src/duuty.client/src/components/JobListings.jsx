@@ -25,15 +25,6 @@ const JobListing = () =>{
           <h1 className="text-2xl font-semibold w-full sm:w-auto">
             Find your Dream Kitchen Team!
           </h1>
-          <div className="flex items-center gap-4 w-full sm:w-auto">
-            <input
-              type="text"
-              placeholder="Search Jobs..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="focus:outline-2 focus:-outline-offset-2 focus:!outline-indigo-600 bg-white w-full sm:w-[250px] px-4 py-2 rounded-[10px] border border-gray-300"
-            />
-          </div>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -44,11 +35,11 @@ const JobListing = () =>{
             >
               <img
                 src={job.image}
-                alt={job.title}
+                alt={job.name}
                 className="rounded-[20px] mb-4 w-full h-48 object-cover"
               />
               <h2 className="text-lg font-medium mb-2">
-                {job.title}
+                {job.name}
                 {/* <span className="ml-2 bg-green-100 text-green-700 text-xs font-semibold px-2 py-1 rounded">
                   {job.type}
                 </span> */}
@@ -56,7 +47,7 @@ const JobListing = () =>{
 
               <div className="mt-4 flex justify-between items-center gap-2">
                 <button 
-                onClick={() => handleJobRole(job.title)}
+                onClick={() => handleJobRole(job.name)}
                 className="hover:bg-[linear-gradient(var(--gradient-bg))] hover:text-white w-full text-purple-600 border border-purple-400 hover:bg-purple-100 font-medium py-2 rounded-[10px] transition cursor-pointer">
                   Hire Now
                 </button>
