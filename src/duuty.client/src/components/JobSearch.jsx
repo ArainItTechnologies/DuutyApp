@@ -7,12 +7,14 @@ import {
 import Chinese from "../assets/Chinese.png";
 import JobDetails from "./JobDetails";
 import { fetchJobs } from "../services/auth";
-import { ALL_ROLE_OPTIONS, pageSizeOptions } from "../Constants";
+import { pageSizeOptions } from "../Constants";
 import { FormSelect } from "./custom/FormElements";
+import SelectRole from "./user/SelectRole";
 
 const JobSearch = () => {
-  const roleOptions = [{ id: "", name: "Select Role" }, ...ALL_ROLE_OPTIONS];
+  const [roleOptions, setRoleOptions] = useState([{ id: "", name: "Select Role" }]);
   const [selectedRole, setSelectedRole] = useState(null);
+  const [showSelectRole, setShowSelectRole] = useState(false);
 
   const [jobs, setJobs] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -75,6 +77,13 @@ const JobSearch = () => {
     getJobs();
   }, [searchTerm]);
 
+    const handleRoleSelect = (role) => {
+    setSelectedRole(role);
+    if (!roleOptions.some((option) => option.id === role)) {
+      setRoleOptions([...roleOptions, { id: role, name: role }]);
+    }
+  };
+
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="mb-6 text-2xl font-semibold w-full sm:w-auto">Find Your Dream Job</h1>
@@ -91,9 +100,9 @@ const JobSearch = () => {
 
         <FormSelect
           name="role"
-          required
           value={selectedRole}
           setValue={setSelectedRole}
+          onMouseDown={() => setShowSelectRole(true)}
           options={roleOptions}
         />
 
@@ -259,6 +268,15 @@ const JobSearch = () => {
         <JobDetails
           job={selectedJob}
           onClose={handleCloseJobDetails}
+        />
+      )}
+
+      {showSelectRole && (
+        <SelectRole
+          onClose={() => setShowSelectRole(false)}
+          onRoleSelect={handleRoleSelect}
+          selectedRole={selectedRole}
+          includeSubroles={true}
         />
       )}
     </div>

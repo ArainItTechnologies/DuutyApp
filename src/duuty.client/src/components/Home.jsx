@@ -1,10 +1,7 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import BannerImage from "../assets/image-banner.png";
 import BannerImageMob from "../assets/banner-image-mob.png";
-import RegisterImg from "../assets/register-img.png";
-import HotelImg from "../assets/world-of-opportunities.jpg";
-import PayImg from "../assets/dream-job.jpg";
 import FindEmp from "../assets/dream-kitchen.jpg";
 import Emp1 from "../assets/emp-1.png";
 import Emp2 from "../assets/emp-2.png";
@@ -13,15 +10,26 @@ import Unsplash from "../assets/unsplash.png";
 import Grammarly from "../assets/grammarly.png";
 import Descript from "../assets/descript.png";
 import Intercom from "../assets/intercom.png";
-import FaqImg from "../assets/faq-img.png";
 import WavePatten1 from "../assets/wave-patten1.svg";
 import WavePatten2 from "../assets/wave-patten2.svg";
 
 import TestimonialSection from "../components/Testimonial";
 import RegistrationTabs from "./user/RegistrationTabs";
+import LanguageSelectionModal from "./LanguageSelectionModal";
+import Benefits from "./Benefits";
+import Faq from "./Faq";
 
 export const Home = () => {
     const [activeTab, setActiveTab] = useState("employeeForm");
+    const [isOpen, setIsOpen] = useState(true);
+
+    const location = useLocation();
+
+    useEffect(() => {
+        if (location.pathname === "/") {
+            setIsOpen(true);
+        }
+    }, [location.pathname]);
 
     useEffect(() => {
         if (location.hash) {
@@ -68,55 +76,7 @@ export const Home = () => {
 
             </div>
 
-            <div id="benefits" className="employee-benifits-section relative">
-                <svg className="hidden sm:block absolute right-[0px] top-[0px]" width="94" height="177" viewBox="0 0 94 177" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="83" cy="23" r="78" stroke="#232962" strokeWidth="10" />
-                    <circle cx="104" cy="94" r="78" stroke="#232962" strokeWidth="10" />
-                </svg>
-                <div className="top-employee-benifits text-center sm:py-[50px] px-[20px] py-[25px] bg-[var(--employee-bg)]">
-                    <h3 className="text-white text-[28px] sm:text-[32px] font-[AvenirNextMedium]">Your path to the perfect kitchen role</h3>
-                    <p className="mt-[10px] max-w-[calc(100%-100px)] m-auto text-[var(--employee-para-color)]">Discover the Culinary Career You Deserve. Your Dream Kitchen Job Awaits.</p>
-                </div>
-                <div className="benifits-wrapper sm:pr-[30px] pr-[20px] sm:pb-[90px] sm:pl-[80px] pl-[20px] relative before:content-[''] before:absolute before:left-0 before:top-[-40px] sm:before:top-0  before:w-full before:h-[150px] sm:before:h-[100px] before:bg-(--employee-bg) bg-[var(--benefit-bg)]">
-                    <div className="container-wrapper">
-                        <div className="benifits-list flex relative sm:pt-[40px] pt-[60px] sm:pr-[40px] pr-[20px] sm:pb-[40px] pb-[25px] md:pl-[110px] sm:pl-[85px] pl-[20px] w-[750px] max-w-full rounded-[35px] bg-white mt-[40px] sm:mt-[unset] border-[1px] border-[var(--benefit-card-border)]">
-                            <div className="list-count shadow-[inset_0px_0px_0px_12px_var(--neutral-white)] text-[28px] sm:text-[46px] font-medium rounded-full w-[80px] h-[80px] sm:w-[123px] sm:h-[123px] flex items-center justify-center absolute sm:left-[-55px] sm:right-[unset] left-0 right-0 m-auto top-[-40px] sm:top-[unset] text-[var(--benefit-list-color)] bg-[var(--benefit-list-bg)] border-[1px] border-[var(--benefit-list-border)]">01</div>
-                            <div className="benifits-content flex flex-col sm:flex-row items-center gap-[25px]">
-                                <img className="sm:size-[124px] size-100 max-w-[160px] max-h-[160px] sm:max-w-[100%] sm:max-w-[100%]" src={RegisterImg} alt="Register your role" />
-                                <div className="max-w-[100%] text-center sm:text-left sm:max-w-[340px]">
-                                    <h4 className="text-[20px] sm:text-[22px] lg:text-[26px] font-[AvenirNextBold] mb-2.5">Create your profile</h4>
-                                    <p>Easy profile creation with minimal information.</p>
-                                </div>
-
-                            </div>
-                        </div>
-                        <div className="benifits-list flex relative sm:pt-[40px] pt-[60px] sm:pr-[40px] pr-[20px] sm:pb-[40px] pb-[25px] md:pl-[110px] sm:pl-[85px] pl-[20px] w-[750px] max-w-full rounded-[35px] bg-white sm:mt-[40px] sm:mb-[40px] mt-[60px] mb-[60px] ml-auto before:content-[''] before:absolute lg:before:left-0 before:top-0 before:z-1 before:rounded-[35px] before:w-[70px] before:h-full before:bg-white md:before:left-[50px] before:hidden md:before:block border-[1px] border-[var(--benefit-card-border)]">
-                            <svg className="hidden md:block absolute top-[-43px] lg:left-[-24px] md:left-[50px] z-0" width="52" height="290" viewBox="0 0 52 290" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M1 1C10.5 12.3333 31.3 40 38.5 60C47.5 85 70 217 14.5 289.5" stroke="#B7B0FF" strokeDasharray="4 4" />
-                            </svg>
-                            <div className="list-count shadow-[inset_0px_0px_0px_12px_var(--neutral-white)] text-[28px] sm:text-[46px] font-medium rounded-full w-[80px] h-[80px] sm:w-[123px] sm:h-[123px] flex items-center justify-center absolute sm:left-[-55px] sm:right-[unset] left-0 right-0 m-auto top-[-40px] sm:top-[unset] z-1 text-[var(--benefit-list-color)] bg-[var(--benefit-list-bg)] border-[1px] border-[var(--benefit-list-border)]">02</div>
-                            <div className="benifits-content flex flex-col sm:flex-row items-center gap-[25px] relative z-1">
-                                <img className="sm:size-[124px] size-100 max-w-[160px] max-h-[160px] sm:max-w-[100%] sm:max-w-[100%] rounded-2xl" src={HotelImg} alt="Find your dream hotel" />
-                                <div className="max-w-[100%] text-center sm:text-left sm:max-w-[340px]">
-                                    <h4 className="text-[20px] sm:text-[22px] lg:text-[26px] font-[AvenirNextBold] mb-2.5">Explore a World of Opportunities</h4>
-                                    <p>Access thousands of kitchen jobs and connect directly with top employers.</p>
-                                </div>
-
-                            </div>
-                        </div>
-                        <div className="benifits-list flex relative sm:pt-[40px] pt-[60px] sm:pr-[40px] pr-[20px] sm:pb-[40px] pb-[25px] md:pl-[110px] sm:pl-[85px] pl-[20px] w-[750px] max-w-full rounded-[35px] bg-white border-[1px] border-[var(--benefit-card-border)]">
-                            <div className="list-count shadow-[inset_0px_0px_0px_12px_var(--neutral-white)] text-[28px] sm:text-[46px] font-medium rounded-full w-[80px] h-[80px] sm:w-[123px] sm:h-[123px] flex items-center justify-center absolute sm:left-[-55px] sm:right-[unset] left-0 right-0 m-auto top-[-40px] sm:top-[unset] text-[var(--benefit-list-color)] bg-[var(--benefit-list-bg)] border-[1px] border-[var(--benefit-list-border)]">03</div>
-                            <div className="benifits-content flex flex-col sm:flex-row items-center gap-[25px] gap-[25px]">
-                                <img className="sm:size-[124px] size-100 max-w-[160px] max-h-[160px] sm:max-w-[100%] sm:max-w-[100%] rounded-2xl" src={PayImg} alt="Get Good Pay" />
-                                <div className="max-w-[100%] text-center sm:text-left sm:max-w-[340px]">
-                                    <h4 className="text-[20px] sm:text-[22px] lg:text-[26px] font-[AvenirNextBold] mb-2.5">Land Your Dream Job</h4>
-                                    <p>Receive real-time alerts tailored to your profile and apply with confidence.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <Benefits/>
 
             <div className="find-employer-wrapper pt-[50px] pb-[50px] sm:pt-[70px] sm:pb-[70px]">
                 <div className="container-wrapper text-center lg:text-left flex lg:flex-row flex-col-reverse items-center lg:items-start xl:items-center justify-center lg:justify-between gap-[100px] lg:gap-[50px] xl:gap-[0px]">
@@ -181,124 +141,7 @@ export const Home = () => {
             <TestimonialSection />
 
             <div id="faq-section" className="faq-wrapper flow-root pb-[0px] lg:pb-[100px]">
-                <div className="container-wrapper flex justify-center flex-col-reverse px-[20px] lg:px-[0px] lg:flex-row lg:justify-between items-center lg:items-start relative gap-[80px]">
-                    <div className="hidden lg:block w-full lg:w-1/2 lg:sticky lg:top-[90px] max-w-[90%] sm:max-w-[500px] lg:max-w-[100%]">
-                        <div className="faq-img-container relative">
-                            <img className="rounded-[20px] relative w-full" src={FaqImg} alt="Frequently Asked Questions" />
-                            <svg className="faq-plus-patten absolute bottom-[-100px] hidden md:block md:left-[-20px] left-[-30px] z-[-1]" xmlns="http://www.w3.org/2000/svg" width="153" height="166" viewBox="0 0 153 166" fill="none">
-                                <path d="M141.441 152.61V154.479H152.162V152.61H141.441ZM145.803 148.045V159.432H147.79V148.045H145.803Z" fill="#6246E5" />
-                                <path d="M106.441 117.61V119.479H117.162V117.61H106.441ZM110.803 113.045V124.432H112.79V113.045H110.803Z" fill="#6246E5" />
-                                <path d="M106.441 152.61V154.479H117.162V152.61H106.441ZM110.803 148.045V159.432H112.79V148.045H110.803Z" fill="#6246E5" />
-                                <path d="M71.4414 12.6104V14.4795H82.1621V12.6104H71.4414ZM75.8027 8.04492V19.4316H77.79V8.04492H75.8027Z" fill="#6246E5" />
-                                <path d="M71.4414 47.6104V49.4795H82.1621V47.6104H71.4414ZM75.8027 43.0449V54.4316H77.79V43.0449H75.8027Z" fill="#6246E5" />
-                                <path d="M71.4414 82.6104V84.4795H82.1621V82.6104H71.4414ZM75.8027 78.0449V89.4316H77.79V78.0449H75.8027Z" fill="#6246E5" />
-                                <path d="M71.4414 117.61V119.479H82.1621V117.61H71.4414ZM75.8027 113.045V124.432H77.79V113.045H75.8027Z" fill="#6246E5" />
-                                <path d="M71.4414 152.61V154.479H82.1621V152.61H71.4414ZM75.8027 148.045V159.432H77.79V148.045H75.8027Z" fill="#6246E5" />
-                                <path d="M36.4414 12.6104V14.4795H47.1621V12.6104H36.4414ZM40.8027 8.04492V19.4316H42.79V8.04492H40.8027Z" fill="#6246E5" />
-                                <path d="M36.4414 47.6104V49.4795H47.1621V47.6104H36.4414ZM40.8027 43.0449V54.4316H42.79V43.0449H40.8027Z" fill="#6246E5" />
-                                <path d="M36.4414 82.6104V84.4795H47.1621V82.6104H36.4414ZM40.8027 78.0449V89.4316H42.79V78.0449H40.8027Z" fill="#6246E5" />
-                                <path d="M36.4414 117.61V119.479H47.1621V117.61H36.4414ZM40.8027 113.045V124.432H42.79V113.045H40.8027Z" fill="#6246E5" />
-                                <path d="M36.4414 152.61V154.479H47.1621V152.61H36.4414ZM40.8027 148.045V159.432H42.79V148.045H40.8027Z" fill="#6246E5" />
-                                <path d="M1.44141 12.6104V14.4795H12.1621V12.6104H1.44141ZM5.80273 8.04492V19.4316H7.79004V8.04492H5.80273Z" fill="#6246E5" />
-                                <path d="M1.44141 47.6104V49.4795H12.1621V47.6104H1.44141ZM5.80273 43.0449V54.4316H7.79004V43.0449H5.80273Z" fill="#6246E5" />
-                                <path d="M1.44141 82.6104V84.4795H12.1621V82.6104H1.44141ZM5.80273 78.0449V89.4316H7.79004V78.0449H5.80273Z" fill="#6246E5" />
-                                <path d="M1.44141 117.61V119.479H12.1621V117.61H1.44141ZM5.80273 113.045V124.432H7.79004V113.045H5.80273Z" fill="#6246E5" />
-                                <path d="M1.44141 152.61V154.479H12.1621V152.61H1.44141ZM5.80273 148.045V159.432H7.79004V148.045H5.80273Z" fill="#6246E5" />
-                            </svg>
-                        </div>
-                    </div>
-                    <div className="-my-4 w-full lg:w-1/2  flex flex-col faq-right-content divide-y-2 lg:divide-y-4 divide-[#D7DEF0] max-w-[700px] lg:max-w-[570px]">
-                        <h2 className="text-[28px] lg:text-[34px] xl:text-[40px] font-[AvenirNextBold] pb-8">Frequently Asked Questions</h2>
-                        <details className="group py-4 lg:py-8 [&_summary::-webkit-details-marker]:hidden" open>
-                            <summary className="flex items-center justify-between gap-1.5 text-black cursor-pointer">
-                                <h5 className="text-[18px] font-semibold font-[AvenirNextMedium]">How do I post a job on Duuty?</h5>
-                                <svg className="shrink-0 transition-transform duration-300 group-open:-rotate-43" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M6.54534 12.5674H11.1408V17.1628C11.1408 17.6299 11.525 18.0216 11.9996 18.0216C12.4742 18.0216 12.8584 17.6299 12.8584 17.1628V12.5674H17.4538C17.9209 12.5674 18.3126 12.1832 18.3126 11.7086C18.3126 11.234 17.9209 10.8497 17.4538 10.8497H12.8584V6.25432C12.8584 5.78725 12.4742 5.39551 11.9996 5.39551C11.525 5.39551 11.1408 5.78725 11.1408 6.25432V10.8497H6.54534C6.07826 10.8497 5.68652 11.234 5.68652 11.7086C5.68652 12.1832 6.07826 12.5674 6.54534 12.5674Z" fill="#3E2E4D" />
-                                </svg>
-                            </summary>
-
-                            <p className="pt-4 font-normal text-[var(--faq-text-color)] sm:text-[18px] text-[16px]">
-                                Creating a job listing takes just a few minutes. Sign in, add your role details, and start receiving applications instantly.
-                            </p>
-                        </details>
-
-                        <details className="group py-4 lg:py-8 [&_summary::-webkit-details-marker]:hidden">
-                            <summary className="flex items-center justify-between gap-1.5 text-black cursor-pointer">
-                                <h5 className="text-[18px] font-semibold font-[AvenirNextMedium]">What kind of kitchen roles can I hire for?</h5>
-                                <svg className="shrink-0 transition-transform duration-300 group-open:-rotate-43" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M6.54534 12.5674H11.1408V17.1628C11.1408 17.6299 11.525 18.0216 11.9996 18.0216C12.4742 18.0216 12.8584 17.6299 12.8584 17.1628V12.5674H17.4538C17.9209 12.5674 18.3126 12.1832 18.3126 11.7086C18.3126 11.234 17.9209 10.8497 17.4538 10.8497H12.8584V6.25432C12.8584 5.78725 12.4742 5.39551 11.9996 5.39551C11.525 5.39551 11.1408 5.78725 11.1408 6.25432V10.8497H6.54534C6.07826 10.8497 5.68652 11.234 5.68652 11.7086C5.68652 12.1832 6.07826 12.5674 6.54534 12.5674Z" fill="#3E2E4D" />
-                                </svg>
-                            </summary>
-
-                            <p className="pt-4 font-normal sm:text-[18px] text-[16px] text-[var(--faq-text-color)]">
-                                Duuty supports all culinary roles—chefs, line cooks, kitchen porters, sous chefs, and more.
-                            </p>
-                        </details>
-
-                        <details className="group py-4 lg:py-8 [&_summary::-webkit-details-marker]:hidden">
-                            <summary className="flex items-center justify-between gap-1.5 text-black cursor-pointer">
-                                <h5 className="text-[18px] font-semibold font-[AvenirNextMedium]">How quickly can I expect candidates?</h5>
-                                <svg className="shrink-0 transition-transform duration-300 group-open:-rotate-43" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M6.54534 12.5674H11.1408V17.1628C11.1408 17.6299 11.525 18.0216 11.9996 18.0216C12.4742 18.0216 12.8584 17.6299 12.8584 17.1628V12.5674H17.4538C17.9209 12.5674 18.3126 12.1832 18.3126 11.7086C18.3126 11.234 17.9209 10.8497 17.4538 10.8497H12.8584V6.25432C12.8584 5.78725 12.4742 5.39551 11.9996 5.39551C11.525 5.39551 11.1408 5.78725 11.1408 6.25432V10.8497H6.54534C6.07826 10.8497 5.68652 11.234 5.68652 11.7086C5.68652 12.1832 6.07826 12.5674 6.54534 12.5674Z" fill="#3E2E4D" />
-                                </svg>
-                            </summary>
-
-                            <p className="pt-4 font-normal sm:text-[18px] text-[16px] text-[var(--faq-text-color)]">
-                                Most employers start receiving matches within 24–48 hours of posting.
-                            </p>
-                        </details>
-                        <details className="group py-4 lg:py-8 [&_summary::-webkit-details-marker]:hidden">
-                            <summary className="flex items-center justify-between gap-1.5 text-black cursor-pointer">
-                                <h5 className="text-[18px] font-semibold font-[AvenirNextMedium]">Are candidates pre-vetted?</h5>
-                                <svg className="shrink-0 transition-transform duration-300 group-open:-rotate-43" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M6.54534 12.5674H11.1408V17.1628C11.1408 17.6299 11.525 18.0216 11.9996 18.0216C12.4742 18.0216 12.8584 17.6299 12.8584 17.1628V12.5674H17.4538C17.9209 12.5674 18.3126 12.1832 18.3126 11.7086C18.3126 11.234 17.9209 10.8497 17.4538 10.8497H12.8584V6.25432C12.8584 5.78725 12.4742 5.39551 11.9996 5.39551C11.525 5.39551 11.1408 5.78725 11.1408 6.25432V10.8497H6.54534C6.07826 10.8497 5.68652 11.234 5.68652 11.7086C5.68652 12.1832 6.07826 12.5674 6.54534 12.5674Z" fill="#3E2E4D" />
-                                </svg>
-                            </summary>
-
-                            <p className="pt-4 font-normal sm:text-[18px] text-[16px] text-[var(--faq-text-color)]">
-                                Yes, we verify every candidate’s experience and availability to ensure quality matches.
-                            </p>
-                        </details>
-                        <details className="group py-4 lg:py-8 [&_summary::-webkit-details-marker]:hidden">
-                            <summary className="flex items-center justify-between gap-1.5 text-black cursor-pointer">
-                                <h5 className="text-[18px] font-semibold font-[AvenirNextMedium]">How much does it cost to hire through Duuty?</h5>
-                                <svg className="shrink-0 transition-transform duration-300 group-open:-rotate-43" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M6.54534 12.5674H11.1408V17.1628C11.1408 17.6299 11.525 18.0216 11.9996 18.0216C12.4742 18.0216 12.8584 17.6299 12.8584 17.1628V12.5674H17.4538C17.9209 12.5674 18.3126 12.1832 18.3126 11.7086C18.3126 11.234 17.9209 10.8497 17.4538 10.8497H12.8584V6.25432C12.8584 5.78725 12.4742 5.39551 11.9996 5.39551C11.525 5.39551 11.1408 5.78725 11.1408 6.25432V10.8497H6.54534C6.07826 10.8497 5.68652 11.234 5.68652 11.7086C5.68652 12.1832 6.07826 12.5674 6.54534 12.5674Z" fill="#3E2E4D" />
-                                </svg>
-                            </summary>
-
-                            <p className="pt-4 font-normal sm:text-[18px] text-[16px] text-[var(--faq-text-color)]">
-                                We offer flexible pricing plans. Contact us for details tailored to your hiring needs.
-
-                            </p>
-                        </details>
-                        <details className="group py-4 lg:py-8 [&_summary::-webkit-details-marker]:hidden">
-                            <summary className="flex items-center justify-between gap-1.5 text-black cursor-pointer">
-                                <h5 className="text-[18px] font-semibold font-[AvenirNextMedium]">How do I apply for a kitchen job?</h5>
-                                <svg className="shrink-0 transition-transform duration-300 group-open:-rotate-43" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M6.54534 12.5674H11.1408V17.1628C11.1408 17.6299 11.525 18.0216 11.9996 18.0216C12.4742 18.0216 12.8584 17.6299 12.8584 17.1628V12.5674H17.4538C17.9209 12.5674 18.3126 12.1832 18.3126 11.7086C18.3126 11.234 17.9209 10.8497 17.4538 10.8497H12.8584V6.25432C12.8584 5.78725 12.4742 5.39551 11.9996 5.39551C11.525 5.39551 11.1408 5.78725 11.1408 6.25432V10.8497H6.54534C6.07826 10.8497 5.68652 11.234 5.68652 11.7086C5.68652 12.1832 6.07826 12.5674 6.54534 12.5674Z" fill="#3E2E4D" />
-                                </svg>
-                            </summary>
-
-                            <p className="pt-4 font-normal sm:text-[18px] text-[16px] text-[var(--faq-text-color)]">
-                                Simply create a profile, browse jobs, and apply with one click.
-                            </p>
-                        </details>
-                        <details className="group py-4 lg:py-8 [&_summary::-webkit-details-marker]:hidden">
-                            <summary className="flex items-center justify-between gap-1.5 text-black cursor-pointer">
-                                <h5 className="text-[18px] font-semibold font-[AvenirNextMedium]">Can I get alerts for new jobs?</h5>
-                                <svg className="shrink-0 transition-transform duration-300 group-open:-rotate-43" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M6.54534 12.5674H11.1408V17.1628C11.1408 17.6299 11.525 18.0216 11.9996 18.0216C12.4742 18.0216 12.8584 17.6299 12.8584 17.1628V12.5674H17.4538C17.9209 12.5674 18.3126 12.1832 18.3126 11.7086C18.3126 11.234 17.9209 10.8497 17.4538 10.8497H12.8584V6.25432C12.8584 5.78725 12.4742 5.39551 11.9996 5.39551C11.525 5.39551 11.1408 5.78725 11.1408 6.25432V10.8497H6.54534C6.07826 10.8497 5.68652 11.234 5.68652 11.7086C5.68652 12.1832 6.07826 12.5674 6.54534 12.5674Z" fill="#3E2E4D" />
-                                </svg>
-                            </summary>
-
-                            <p className="pt-4 font-normal sm:text-[18px] text-[16px] text-[var(--faq-text-color)]">
-                                Yes, we’ll notify you when new jobs match your skills and preferences.
-                            </p>
-                        </details>
-                    </div>
-
-                </div>
+                <Faq/>
             </div>
 
             <div className="interesting-offers-section relative my-[50px] sm:my-[80px] mx-auto py-[50px] sm:py-[80px] px-[20px] sm:rounded-[130px_20px_20px] rounded-[90px_20px_20px] max-w-[90%] xl:max-w-[85%] bg-[var(--interesting-offer-bg)]">
@@ -350,6 +193,7 @@ export const Home = () => {
                     <path d="M147.197 152.61H151.559V154.49H147.197V159.432H145.199V154.49H140.838V152.61H145.199V148.045H147.197V152.61Z" fill="#E5E5E5" />
                 </svg>
             </div>
+            {isOpen && <LanguageSelectionModal isOpen={isOpen} setIsOpen={setIsOpen} />}
         </section>
 
 

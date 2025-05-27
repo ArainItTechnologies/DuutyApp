@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { ROLE_OPTIONS } from "../../Constants";
+import { ROLE_OPTIONS, ALL_ROLE_OPTIONS } from "../../Constants";
 
-const SelectRole = ({ onClose, onRoleSelect, selectedRole }) => {
+const SelectRole = ({ onClose, onRoleSelect, selectedRole, includeSubroles = false }) => {
+    const preferredRoles = includeSubroles ? ALL_ROLE_OPTIONS : ROLE_OPTIONS;
     const [activeRole, setActiveRole] = useState(selectedRole || null);
     const handleCardClick = (role) => {
         setActiveRole(role);
@@ -31,7 +32,7 @@ const SelectRole = ({ onClose, onRoleSelect, selectedRole }) => {
                 </div>
                 <div className="flex-1 overflow-y-auto">
                     <div className="grid grid-cols-2 justify-items-center sm:grid-cols-2 sm:justify-center sm:max-w-[400px] sm:m-auto lg:max-w-[100%] lg:grid-cols-4 lg:justify-start gap-4">
-                        {ROLE_OPTIONS.map((role) => (
+                        {preferredRoles.map((role) => (
                             <div
                                 key={role.id}
                                 className={`w-full sm:w-[150px] md:w-[190px] rounded-[10px] overflow-hidden border-[2px] ${activeRole === role.id ? "border-indigo-600 shadow-md" : "border-gray-300 shadow-sm"

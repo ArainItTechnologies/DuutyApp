@@ -85,4 +85,35 @@ export const pageSizeOptions = [
   { id: 20, name: "20 per page" },
 ];
 
+export const FAQS = [
+  {
+    question: "How do I post a job on Duuty?",
+    answer: "Creating a job listing takes just a few minutes. Sign in, add your role details, and start receiving applications instantly.",
+  },
+  {
+    question: "What kind of kitchen roles can I hire for?",
+    answer: "Duuty supports all culinary roles—chefs, line cooks, kitchen porters, sous chefs, and more.",
+  },
+  {
+    question: "How quickly can I expect candidates?",
+    answer: "Most employers start receiving matches within 24–48 hours of posting.",
+  },
+  {
+    question: "Are candidates pre-vetted?",
+    answer: "Yes, we verify every candidate’s experience and availability to ensure quality matches.",
+  },
+  {
+    question: "How much does it cost to hire through Duuty?",
+    answer: "We offer flexible pricing plans. Contact us for details tailored to your hiring needs.",
+  },
+  {
+    question: "How do I apply for a kitchen job?",
+    answer: "Simply create a profile, browse jobs, and apply with one click.",
+  },
+  {
+    question: "Can I get alerts for new jobs?",
+    answer: "Yes, we’ll notify you when new jobs match your skills and preferences.",
+  },
+];
+
 

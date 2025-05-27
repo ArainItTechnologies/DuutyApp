@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useTranslation } from "../translations/TranslationHook";
 import { ROUTES } from "../Constants";
 import { Dialog, DialogBackdrop, DialogPanel } from "@headlessui/react";
 import {
@@ -18,6 +19,8 @@ import LogoSrc from "../assets/logo.svg";
 import { useUser } from "../hooks/Hooks";
 
 export default function Navbar() {
+  const { t } = useTranslation();
+
   const { user, setUser } = useUser();
   const [open, setOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -171,7 +174,7 @@ export default function Navbar() {
                   to={ROUTES.JOB_RESULTS}
                   className="text-[12px] text-white font-medium inline-block rounded-[11px] bg-linear-(--gradient-bg) py-2 px-4 mr-[12px]"
                 >
-                  Find a Job
+                   {t("findajob")}
                 </Link>
                 <Link
                   to="/job-listing"
