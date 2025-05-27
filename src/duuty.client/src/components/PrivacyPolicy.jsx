@@ -5,11 +5,15 @@ export default function PrivacyPolicy() {
   return (
     <div className="bg-white min-h-screen">
       {/* Header */}
-      <div className="bg-blue-600 text-white">
-        <div className="container mx-auto px-4 py-12">
-          <div className="max-w-4xl mx-auto">
-            <h1 className="text-4xl font-bold mb-4">Privacy Policy</h1>
-            <p className="text-lg opacity-90">Last updated: May 20, 2025</p>
+      <div className="bg-gradient-to-r from-blue-600 to-purple-700 text-white py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">
+              Privacy Policy
+            </h1>
+            <p className="text-xl text-blue-100 max-w-2xl mx-auto">
+              Last updated: May 20, 2025
+            </p>
           </div>
         </div>
       </div>
@@ -67,12 +71,12 @@ export default function PrivacyPolicy() {
           <section className="mb-12">
             <h2 className="text-2xl font-semibold mb-4">1. Introduction</h2>
             <p className="text-gray-700 mb-4">
-              At Duuty ("we", "our", or "us"), we respect your privacy and are committed to protecting your personal data. 
-              This privacy policy will inform you about how we look after your personal data when you visit our website 
+              At Duuty ("we", "our", or "us"), we respect your privacy and are committed to protecting your personal data.
+              This privacy policy will inform you about how we look after your personal data when you visit our website
               and use our application, regardless of where you visit it from, and tell you about your privacy rights.
             </p>
             <p className="text-gray-700">
-              This policy applies to information we collect when you use our website, mobile applications, 
+              This policy applies to information we collect when you use our website, mobile applications,
               and services (collectively, the "Services") or when you otherwise interact with us.
             </p>
           </section>
@@ -84,19 +88,19 @@ export default function PrivacyPolicy() {
             </p>
             <ul className="list-disc pl-6 space-y-2 text-gray-700">
               <li>
-                <span className="font-medium">Personal Information:</span> This includes your name, email address, 
+                <span className="font-medium">Personal Information:</span> This includes your name, email address,
                 and other information you provide when registering for an account.
               </li>
               <li>
-                <span className="font-medium">Usage Data:</span> We collect information about how you interact with 
+                <span className="font-medium">Usage Data:</span> We collect information about how you interact with
                 our Services, including the features you use, the time spent on the platform, and other usage statistics.
               </li>
               <li>
-                <span className="font-medium">Device Information:</span> This includes the type of device you use, 
+                <span className="font-medium">Device Information:</span> This includes the type of device you use,
                 operating system, browser type, and IP address.
               </li>
               <li>
-                <span className="font-medium">Tasks and Content:</span> Information and content you provide when creating 
+                <span className="font-medium">Tasks and Content:</span> Information and content you provide when creating
                 tasks, projects, and other content within our Services.
               </li>
             </ul>
@@ -125,19 +129,19 @@ export default function PrivacyPolicy() {
             </p>
             <ul className="list-disc pl-6 space-y-2 text-gray-700">
               <li>
-                <span className="font-medium">With Service Providers:</span> We share information with vendors, 
+                <span className="font-medium">With Service Providers:</span> We share information with vendors,
                 consultants, and other service providers who need access to such information to carry out work on our behalf.
               </li>
               <li>
-                <span className="font-medium">For Legal Reasons:</span> We may disclose information if we believe it's necessary 
+                <span className="font-medium">For Legal Reasons:</span> We may disclose information if we believe it's necessary
                 to comply with a legal obligation or to protect the rights, property, and safety of Duuty, our users, or others.
               </li>
               <li>
-                <span className="font-medium">With Your Consent:</span> We may share information with third parties when 
+                <span className="font-medium">With Your Consent:</span> We may share information with third parties when
                 you give us explicit consent to do so.
               </li>
               <li>
-                <span className="font-medium">During Business Transfers:</span> If Duuty is involved in a merger, acquisition, 
+                <span className="font-medium">During Business Transfers:</span> If Duuty is involved in a merger, acquisition,
                 or sale of all or a portion of its assets, your information may be transferred as part of that transaction.
               </li>
             </ul>
@@ -162,8 +166,8 @@ export default function PrivacyPolicy() {
           <section className="mb-12">
             <h2 className="text-2xl font-semibold mb-4">6. Data Security</h2>
             <p className="text-gray-700">
-              We take reasonable measures to help protect information about you from loss, theft, misuse, unauthorized access, 
-              disclosure, alteration, and destruction. However, no internet or electronic storage system is 100% secure, 
+              We take reasonable measures to help protect information about you from loss, theft, misuse, unauthorized access,
+              disclosure, alteration, and destruction. However, no internet or electronic storage system is 100% secure,
               and we cannot guarantee absolute security of your data.
             </p>
           </section>
@@ -171,8 +175,8 @@ export default function PrivacyPolicy() {
           <section className="mb-12">
             <h2 className="text-2xl font-semibold mb-4">7. Changes to this Policy</h2>
             <p className="text-gray-700">
-              We may update this privacy policy from time to time. We will notify you of any changes by posting the new 
-              privacy policy on this page and updating the "Last updated" date at the top of this policy. You are advised 
+              We may update this privacy policy from time to time. We will notify you of any changes by posting the new
+              privacy policy on this page and updating the "Last updated" date at the top of this policy. You are advised
               to review this privacy policy periodically for any changes.
             </p>
           </section>

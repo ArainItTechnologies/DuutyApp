@@ -1,15 +1,17 @@
-import React from 'react';
-
 const AboutUs = () => {
   return (
     <div className="bg-white min-h-screen">
       {/* Hero Section */}
-      <div className="bg-primary py-20 text-white">
-        <div className="container mx-auto px-4">
-          <h1 className="text-4xl md:text-5xl font-bold mb-6 text-center">Join Our Culinary Team</h1>
-          <p className="text-xl text-center max-w-3xl mx-auto">
-            We're looking for passionate kitchen professionals to create extraordinary dining experiences.
-          </p>
+      <div className="bg-gradient-to-r from-blue-600 to-purple-700 text-white py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">
+              Join Our Culinary Team
+            </h1>
+            <p className="text-xl text-blue-100 max-w-2xl mx-auto">
+              We're looking for passionate kitchen professionals to create extraordinary dining experiences.
+            </p>
+          </div>
         </div>
       </div>
 
@@ -31,7 +33,7 @@ const AboutUs = () => {
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             <h2 className="text-3xl font-bold text-primary mb-12 text-center">Our Kitchen Culture</h2>
-            
+
             <div className="grid md:grid-cols-3 gap-8">
               <div className="bg-white p-6 rounded-lg shadow">
                 <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center mb-4">
@@ -42,7 +44,7 @@ const AboutUs = () => {
                 <h3 className="text-xl font-semibold mb-2 text-primary">Collaborative Team</h3>
                 <p className="text-heading">We value input from every team member, creating a supportive environment where ideas can flourish.</p>
               </div>
-              
+
               <div className="bg-white p-6 rounded-lg shadow">
                 <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center mb-4">
                   <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -52,7 +54,7 @@ const AboutUs = () => {
                 <h3 className="text-xl font-semibold mb-2 text-primary">Continuous Learning</h3>
                 <p className="text-heading">We encourage professional development through workshops, tastings, and opportunities to experiment with new techniques.</p>
               </div>
-              
+
               <div className="bg-white p-6 rounded-lg shadow">
                 <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center mb-4">
                   <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -71,7 +73,7 @@ const AboutUs = () => {
       <div className="container mx-auto px-4 py-16">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-3xl font-bold text-primary mb-12 text-center">Meet Our Culinary Team</h2>
-          
+
           <div className="grid md:grid-cols-3 gap-8">
             {/* Team Member 1 */}
             <div className="text-center">
@@ -82,7 +84,7 @@ const AboutUs = () => {
               <p className="text-heading">Executive Chef</p>
               <p className="text-sm text-heading mt-2">15 years of experience with training in French and Asian cuisine. Winner of Regional Chef Award 2023.</p>
             </div>
-            
+
             {/* Team Member 2 */}
             <div className="text-center">
               <div className="w-40 h-40 rounded-full bg-gray-200 mx-auto mb-4 overflow-hidden">
@@ -92,7 +94,7 @@ const AboutUs = () => {
               <p className="text-heading">Sous Chef</p>
               <p className="text-sm text-heading mt-2">Specializes in pastry and desserts. Graduate of Le Cordon Bleu with 8 years in fine dining kitchens.</p>
             </div>
-            
+
             {/* Team Member 3 */}
             <div className="text-center">
               <div className="w-40 h-40 rounded-full bg-gray-200 mx-auto mb-4 overflow-hidden">
@@ -111,7 +113,7 @@ const AboutUs = () => {
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             <h2 className="text-3xl font-bold text-primary mb-10 text-center">What We Offer</h2>
-            
+
             <div className="grid md:grid-cols-2 gap-8">
               <div className="bg-white p-6 rounded-lg shadow">
                 <h3 className="text-xl font-semibold mb-4 text-primary">Competitive Benefits</h3>
@@ -148,7 +150,7 @@ const AboutUs = () => {
                   </li>
                 </ul>
               </div>
-              
+
               <div className="bg-white p-6 rounded-lg shadow">
                 <h3 className="text-xl font-semibold mb-4 text-primary">Career Growth</h3>
                 <ul className="space-y-2 text-heading">
@@ -184,26 +186,6 @@ const AboutUs = () => {
                   </li>
                 </ul>
               </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Join Us Call-to-Action */}
-      <div className="bg-primary py-16 text-white">
-        <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-3xl font-bold mb-6">Join Our Kitchen Team</h2>
-            <p className="text-xl mb-8">
-              Whether you're an experienced chef or just starting your culinary journey, we'd love to hear from you. Send us your resume today and take the next step in your career.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="bg-white text-primary font-semibold py-3 px-8 rounded-lg hover:bg-gray-100 transition-colors">
-                View All Positions
-              </button>
-              <button className="bg-transparent border border-white text-white font-semibold py-3 px-8 rounded-lg hover:bg-white hover:bg-opacity-10 transition-colors">
-                Contact Recruitment
-              </button>
             </div>
           </div>
         </div>
