@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useTranslation } from "../translations/TranslationHook";
 import { ROUTES } from "../Constants";
 import { Dialog, DialogBackdrop, DialogPanel } from "@headlessui/react";
@@ -82,44 +82,52 @@ export default function Navbar() {
 
             <div className="space-y-6 border-t border-gray-200 px-3 py-3">
               <div className="flow-root">
-                <Link
+                <NavLink
                   onClick={() => setOpen(false)}
                   to={ROUTES.HOME}
-                  className={`mb-2 flex p-2 px-6 font-medium text-center rounded-[12px] ${
-                    window.location.pathname === '/find-job'
-                      ? 'bg-indigo-600 text-white' // Active state styles
-                      : 'bg-[#fafafa] text-gray-900 hover:bg-[#EDEBFF] hover:text-indigo-600'
-                  }`}
+                  className={({ isActive }) => `mb-2 flex p-2 px-6 font-medium text-center rounded-[12px] ${isActive
+                    ? 'bg-indigo-600 text-white' // Active state styles
+                    : 'bg-[#fafafa] text-gray-900 hover:bg-[#EDEBFF] hover:text-indigo-600'
+                    }`}
                 >
                   <HomeIcon className="h-5 w-5 mr-3 text-primary" />
                   <span>Home</span>
-                </Link>
+                </NavLink>
                 {!user && (
-                  <Link
+                  <NavLink
                     onClick={() => setOpen(false)}
                     to={ROUTES.LOGIN}
-                    className="flex items-center p-3 font-medium text-gray-900 hover:bg-[#EDEBFF] hover:text-indigo-600 rounded-lg transition-colors"
+                    className={({ isActive }) => `mb-2 flex p-2 px-6 font-medium text-center rounded-[12px] ${isActive
+                      ? 'bg-indigo-600 text-white' // Active state styles
+                      : 'bg-[#fafafa] text-gray-900 hover:bg-[#EDEBFF] hover:text-indigo-600'
+                      }`}
                   >
                     <UserIcon className="h-5 w-5 mr-3 text-primary" />
                     <span>Sign in</span>
-                  </Link>
+                  </NavLink>
                 )}
-                <Link
+                <NavLink
                   onClick={() => setOpen(false)}
                   to={ROUTES.JOB_RESULTS}
-                  className="flex items-center p-3 font-medium text-gray-900 hover:bg-[#EDEBFF] hover:text-indigo-600 rounded-lg transition-colors"
+                  className={({ isActive }) => `mb-2 flex p-2 px-6 font-medium text-center rounded-[12px] ${isActive
+                    ? 'bg-indigo-600 text-white' // Active state styles
+                    : 'bg-[#fafafa] text-gray-900 hover:bg-[#EDEBFF] hover:text-indigo-600'
+                    }`}
                 >
                   <BriefcaseIcon className="h-5 w-5 mr-3 text-primary" />
                   <span>Find a Job</span>
-                </Link>
-                <Link
+                </NavLink>
+                <NavLink
                   onClick={() => setOpen(false)}
                   to={ROUTES.JOB_LISTING}
-                  className="flex items-center p-3 font-medium text-gray-900 hover:bg-[#EDEBFF] hover:text-indigo-600 rounded-lg transition-colors"
+                  className={({ isActive }) => `mb-2 flex p-2 px-6 font-medium text-center rounded-[12px] ${isActive
+                    ? 'bg-indigo-600 text-white' // Active state styles
+                    : 'bg-[#fafafa] text-gray-900 hover:bg-[#EDEBFF] hover:text-indigo-600'
+                    }`}
                 >
                   <BuildingOfficeIcon className="h-5 w-5 mr-3 text-primary" />
                   <span>Hire Now</span>
-                </Link>
+                </NavLink>
                 {/*<Link to="/pricing" className="flex items-center p-3 font-medium text-gray-900 hover:bg-[#EDEBFF] hover:text-indigo-600 rounded-lg transition-colors">
                 <CurrencyDollarIcon className="h-5 w-5 mr-3 text-primary" />
                 <span>Pricing</span>
@@ -174,7 +182,7 @@ export default function Navbar() {
                   to={ROUTES.JOB_RESULTS}
                   className="text-[12px] text-white font-medium inline-block rounded-[11px] bg-linear-(--gradient-bg) py-2 px-4 mr-[12px]"
                 >
-                   {t("findajob")}
+                  {t("findajob")}
                 </Link>
                 <Link
                   to="/job-listing"

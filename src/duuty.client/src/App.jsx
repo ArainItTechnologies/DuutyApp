@@ -24,6 +24,7 @@ import JobSearch from "./components/JobSearch";
 import AddRestaurantModal from "./components/AddRestaurantModal";
 import ContactUs from "./components/ContactUs";
 import { useTranslation } from "./translations/TranslationHook";
+import ScrollToTop from "./components/ScrollToTop";
 
 function App() {
   const { languageLoading } = useTranslation();
@@ -33,6 +34,7 @@ function App() {
   }
   return (
     <Router>
+       <ScrollToTop />
       <Navbar />
       <Routes>
         <Route index element={<Home />} />
