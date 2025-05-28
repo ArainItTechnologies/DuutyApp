@@ -12,7 +12,7 @@ import { FormSelect } from "./custom/FormElements";
 import SelectRole from "./user/SelectRole";
 
 const JobSearch = () => {
-  const [roleOptions, setRoleOptions] = useState([{ id: "", name: "Select Role" }]);
+  const [roleOptions, setRoleOptions] = useState([{ id: "", name: "Search job by Role" }]);
   const [selectedRole, setSelectedRole] = useState(null);
   const [showSelectRole, setShowSelectRole] = useState(false);
 

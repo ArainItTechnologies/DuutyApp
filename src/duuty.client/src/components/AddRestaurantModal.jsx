@@ -43,7 +43,7 @@ const AddRestaurantModal = ({ isOpen, onClose, onSave }) => {
   const validateForm = () => {
     const newErrors = {
       organisationName: !formData.organisationName.trim(),
-      address: !formData.address?.trim(),
+      address: !formData.addressLine1?.trim(),
       postCode: !formData.postCode?.trim(),
       telephone: !formData.telephone?.trim(),
       websiteUrl: formData.websiteUrl?.trim()
@@ -175,7 +175,7 @@ const AddRestaurantModal = ({ isOpen, onClose, onSave }) => {
           />
 
           <FormInput
-            label="Post Code"
+            label="Pin Code"
             name="postalCode"
             value={formData.postalCode}
             onChange={handleChange}
