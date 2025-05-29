@@ -41,6 +41,7 @@ public class BecomeEmployerEndpoint(UserManager<ArainUser> userManager, IEmploye
             Organisation = new Organisation
             {
                 OranisationName = req.OrganisationName,
+                WebsiteUrl = req.WebsiteUrl,
                 DateCreated = timeProvider.UtcNow,
                 LastUpdated = timeProvider.UtcNow,
                 AddressId = addressEntity.Id,

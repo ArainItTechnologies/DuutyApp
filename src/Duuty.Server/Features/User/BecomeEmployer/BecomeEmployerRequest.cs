@@ -9,4 +9,5 @@ public class BecomeEmployerRequest
     public required string Country { get; set; }
     public required string PostalCode { get; set; }
     public required string UserId { get; set; }
+    public string? WebsiteUrl { get; set; }
 }

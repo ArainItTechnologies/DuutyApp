@@ -25,6 +25,7 @@ import AddRestaurantModal from "./components/AddRestaurantModal";
 import ContactUs from "./components/ContactUs";
 import { useTranslation } from "./translations/TranslationHook";
 import ScrollToTop from "./components/ScrollToTop";
+import JobDashboard from "./components/JobDashboard";
 
 function App() {
   const { languageLoading } = useTranslation();
@@ -57,7 +58,7 @@ function App() {
         <Route path={ROUTES.ABOUT_US} element={<AboutUs />} />
         <Route path={ROUTES.PRIVACY_POLICY} element={<PrivacyPolicy />} />
         <Route path="*" element={<Notfound />} />
-        <Route path="/ddd" element={<AddRestaurantModal isOpen={true} />} />
+        <Route path="/ddd" element={<JobDashboard />} />
       </Routes>
       <Footer />
     </Router>
