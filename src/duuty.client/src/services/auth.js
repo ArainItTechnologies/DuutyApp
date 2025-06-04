@@ -47,14 +47,19 @@ export const changePassword = async (data, token) => {
   }
 };
 
-export const fetchJobs = async (searchTerm) => {
+export const fetchJobs = async (jobLocation, jobState, preferredJob, token) => {
   try {
     const response = await axios.get("/api/jobs", {
       params: {
-        search: searchTerm,
+        jobLocation,
+        jobState,
+        preferredJob,
       },
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      }
     });
-
     return response.data;
   } catch (error) {
     throw error.response?.data || { message: "Fetch jobs failed" };
@@ -76,3 +81,31 @@ export const becomeEmployer = async (data, token) => {
     throw error.response?.data || { message: "Become Employer failed" };
   }
 };
+
+export const postJob = async (jobData, token) => {
+  try {
+    const response = await axios.post("/api/post-job", jobData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || { message: "Post job failed" };
+  }
+};
+
+export const applyJob = async (applicationData, token) => {
+  try {
+    const response = await axios.post("/api/apply", applicationData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || { message: "Apply job failed" };
+  }
+}

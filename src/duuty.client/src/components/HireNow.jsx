@@ -3,19 +3,24 @@ import { Dialog, DialogBackdrop, DialogPanel } from "@headlessui/react";
 import { ArrowLeftIcon, CheckCircleIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useUser } from "../hooks/Hooks";
-import { ADMIN_ROLES, ROUTES } from "../Constants";
-import { FormInput, FormTextArea, PrimaryButton } from "./custom/FormElements";
+import { ADMIN_ROLES, ROUTES, CITIES, STATES } from "../Constants";
+import { FormInput, FormSelect, FormTextArea, PrimaryButton } from "./custom/FormElements";
+import { postJob } from "../services/auth";
 
 const HireNow = () => {
+  const [locationOptions] = useState([{ id: "", name: "Select City" }, ...CITIES]);
+  const [stateOptions] = useState([{ id: "", name: "Select State" }, ...STATES]);
+
+  const [jobLocation, setJobLocation] = useState("");
+  const [state, setState] = useState("");
+
   const navigate = useNavigate();
   const { user } = useUser();
 
-  console.log(user);
   const [formData, setFormData] = useState({
     title: "",
     location: "",
     state: "",
-    jobType: "full-time",
     experience: "",
     salary: "",
     description: "",
@@ -59,8 +64,8 @@ const HireNow = () => {
     const newErrors = {};
 
     if (!jobRole.trim()) newErrors.title = "Job title is required";
-    if (!formData.location.trim()) newErrors.location = "Location is required";
-    if (!formData.state.trim()) newErrors.state = "State is required";
+    if (!jobLocation.trim()) newErrors.location = "Location is required";
+    if (!state.trim()) newErrors.state = "State is required";
     if (!formData.experience.trim())
       newErrors.experience = "Experience is required";
     if (!formData.description.trim())
@@ -78,8 +83,19 @@ const HireNow = () => {
     setIsSubmitting(true);
 
     try {
-      // Simulate API call with a delay
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      const jobData = {
+        userId: user?.userId,
+        jobTitle: jobRole,
+        jobDescription: formData.description, 
+        jobLocation: jobLocation,
+        jobState: state,
+        experience: formData.experience,
+        salaryRange: formData.salary,
+        requirements: formData.requirements,
+        benefits: formData.benefits,
+      };
+
+      await postJob(jobData, user.token);
 
       // Show success dialog
       setShowSuccessDialog(true);
@@ -121,7 +137,7 @@ const HireNow = () => {
           </button>{" "}
           Post a New Job</h1>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form className="space-y-6">
           <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">
             <FormInput
               label="Job Title"
@@ -145,6 +161,29 @@ const HireNow = () => {
               required
             />
 
+            <FormSelect
+              label="Job Location"
+              name="location"
+              id="location"
+              options={locationOptions}
+              value={jobLocation}
+              setValue={setJobLocation}
+              errors={errors.location}
+              errorMessage={errors.location}
+              required />
+
+            <FormSelect
+              label="State"
+              name="state"
+              id="state"
+              options={stateOptions}
+              value={state}
+              setValue={setState}
+              errors={errors.state}
+              errorMessage={errors.state}
+              required
+            />
+
             <FormInput
               label="Salary Range"
               name="salary"
@@ -155,30 +194,6 @@ const HireNow = () => {
               onChange={handleChange}
               errors={errors.salary}
               errorMessage={errors.salary}
-              required
-            />
-
-            <FormInput
-              label="Job Location"
-              name="location"
-              type="text"
-              id="location"
-              value={formData.location}
-              onChange={handleChange}
-              errors={errors.location}
-              errorMessage={errors.location}
-              required
-            />
-
-            <FormInput
-              label="State"
-              name="state"
-              type="text"
-              id="state"
-              value={formData.state}
-              onChange={handleChange}
-              errors={errors.state}
-              errorMessage={errors.state}
               required
             />
           </div>
@@ -213,7 +228,7 @@ const HireNow = () => {
             placeholder="List benefits, perks, and additional offerings..."
           />
 
-          <PrimaryButton type="submit">
+          <PrimaryButton type="submit" onClick={handleSubmit} disabled={isSubmitting}>
             {isSubmitting ? (
               <>
                 <svg

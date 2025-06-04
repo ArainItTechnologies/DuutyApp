@@ -19,6 +19,7 @@ public class ApplicationDbContext : IdentityDbContext<ArainUser, ArainRole, stri
     public DbSet<JobListing> JobListings { get; set; }
     public DbSet<Employer> Employers { get; set; }
     public DbSet<EmployeeJobRole> EmployeeJobRoles { get; set; }
+    public DbSet<JobApplication> JobApplications { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -39,6 +40,10 @@ public class ApplicationDbContext : IdentityDbContext<ArainUser, ArainRole, stri
             entity.Property(e => e.StartDate).IsRequired();
             entity.Property(e => e.ExpiryDate).IsRequired();
         });
+
+        modelBuilder.Entity<JobApplication>()
+            .HasIndex(a => new { a.UserId, a.JobListingId })
+            .IsUnique();
 
         modelBuilder.ApplyConfiguration(new OrganisationConfiguration());
         modelBuilder.ApplyConfiguration(new AddressConfiguration());

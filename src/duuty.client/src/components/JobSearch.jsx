@@ -7,30 +7,35 @@ import {
 import Chinese from "../assets/Chinese.png";
 import JobDetails from "./JobDetails";
 import { fetchJobs } from "../services/auth";
-import { pageSizeOptions } from "../Constants";
+import { CITIES, ROUTES, STATES, pageSizeOptions } from "../Constants";
 import { FormSelect } from "./custom/FormElements";
 import SelectRole from "./user/SelectRole";
+import { useUser } from "../hooks/Hooks";
+import { applyJob } from "../services/auth";
+import { useNavigate } from "react-router-dom";
+
 
 const JobSearch = () => {
+  const { user } = useUser();
+  const navigate = useNavigate();
+
   const [roleOptions, setRoleOptions] = useState([{ id: "", name: "Search job by Role" }]);
+  const [locationOptions] = useState([{ id: "", name: "Search by City" }, ...CITIES]);
+  const [stateOptions] = useState([{ id: "", name: "Search by State" }, ...STATES]);
+
+  const [jobLocation, setJobLocation] = useState("");
+  const [jobState, setJobState] = useState("");
+
   const [selectedRole, setSelectedRole] = useState(null);
   const [showSelectRole, setShowSelectRole] = useState(false);
 
   const [jobs, setJobs] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filterJobType, setFilterJobType] = useState("");
+
   const [selectedJob, setSelectedJob] = useState(null);
 
   // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
   const [jobsPerPage, setJobsPerPage] = useState(5);
-
-  // Filter jobs based on search term and job type
-  const filteredJobs = jobs && jobs.filter(
-    (job) =>
-      job.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
-      (filterJobType === "" || job.jobType === filterJobType)
-  );
 
   // Calculate pagination values
   const indexOfLastJob = currentPage * jobsPerPage;
@@ -70,19 +75,24 @@ const JobSearch = () => {
 
   useEffect(() => {
     const getJobs = async () => {
-      const data = await fetchJobs(searchTerm,);
+      const data = await fetchJobs(jobLocation, jobState, selectedRole, user?.token);
       setJobs(data.jobs);
     };
 
     getJobs();
-  }, [searchTerm]);
+  }, [jobLocation, jobState, selectedRole, user?.token]);
 
-    const handleRoleSelect = (role) => {
+  const handleRoleSelect = (role) => {
     setSelectedRole(role);
     if (!roleOptions.some((option) => option.id === role)) {
       setRoleOptions([...roleOptions, { id: role, name: role }]);
     }
   };
+
+  const handleApply = async (jobId) => {
+    await applyJob({ jobListingId: jobId, userId: user.userId }, user?.token);
+    navigate(ROUTES.JOB_LISTING, { replace: true });
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -90,13 +100,19 @@ const JobSearch = () => {
 
       {/* Search and Filter Section */}
       <div className="mb-6 flex flex-col sm:flex-row gap-4">
-        <input
-          type="text"
-          placeholder="Search jobs..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="mt-2 flex-grow px-3 py-2 block w-full sm:w-3/4 rounded-xl sm:h-[50px] h-[40px] bg-white sm:p-3 text-base text-gray-900 border border-gray-300 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-[16px] text-[14px]"
-        />
+        <FormSelect
+          name="location"
+          id="location"
+          options={locationOptions}
+          value={jobLocation}
+          setValue={setJobLocation} />
+
+        <FormSelect
+          name="state"
+          id="state"
+          options={stateOptions}
+          value={jobState}
+          setValue={setJobState} />
 
         <FormSelect
           name="role"
@@ -133,19 +149,19 @@ const JobSearch = () => {
             <div key={job.id} className="bg-white rounded-[20px] shadow-md p-4 hover:shadow-lg transition duration-300">
               <img
                 src={Chinese}
-                alt={job.title}
+                alt={job.jobTitle}
                 className="rounded-[20px] mb-4 w-full h-48 object-cover"
               />
               <h2 className="text-lg font-medium mb-2">
-                {job.title}
-                <span className="ml-2 bg-green-100 text-green-700 text-xs font-semibold px-2 py-1 rounded">
+                {job.jobTitle}
+                {/* <span className="ml-2 bg-green-100 text-green-700 text-xs font-semibold px-2 py-1 rounded">
                   {job.jobType}
-                </span>
+                </span> */}
               </h2>
-              <p className="text-xl font-bold">{job.salary.substring(0, 20)}</p>
+              <p className="text-xl font-bold"> &#8377; {job.salaryRange.substring(0, 20)}</p>
               <p className="flex items-center text-sm text-gray-500 mt-1">
                 <MapPinIcon className="h-5 w-5 mr-1 text-gray-500" />
-                {job.location}, {job.state}
+                {job.jobLocation}, {job.jobState}
               </p>
 
               {/* Actions Row */}
@@ -180,7 +196,7 @@ const JobSearch = () => {
 
                 {/* Apply Job Button */}
                 <button
-                  onClick={() => handleApply(job)}
+                  onClick={() => handleApply(job.id)}
                   className="flex-grow text-purple-600 border border-purple-400 hover:bg-purple-600 hover:text-white hover:font-bold font-medium py-2 px-4 rounded-[10px] transition cursor-pointer"
                 >
                   Apply Job
@@ -192,7 +208,7 @@ const JobSearch = () => {
       </div>
 
       {/* Pagination Controls */}
-      {filteredJobs.length > 0 && (
+      {jobs.length > 0 && (
         <div className="flex justify-center items-center mt-8 mb-12">
           <nav className="flex items-center space-x-2">
             <button

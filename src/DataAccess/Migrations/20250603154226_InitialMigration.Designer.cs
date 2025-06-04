@@ -4,6 +4,7 @@ using DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250603154226_InitialMigration")]
+    partial class InitialMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -162,15 +165,15 @@ namespace DataAccess.Migrations
                         {
                             Id = "10000000-0000-0000-0000-000000000001",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "60ebe5c2-3727-460f-a2e3-daab7015e8ac",
+                            ConcurrencyStamp = "29930c7a-3788-4dc6-b3b2-d6a8f077f858",
                             Email = "admin@duuty.in",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@DUUTY.IN",
                             NormalizedUserName = "ADMIN@DUUTY.IN",
-                            PasswordHash = "AQAAAAIAAYagAAAAECv4Ig/+LRS4/hZc7OBtJhcw7JJ3F/uCm8Ycv6AU7yXRbZnlfDuyblQRIY3PFSoiBg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEFtgS+AaXNWkOlE13kdf3NanltytJuW4Kb/tAuHqn5F4M1FBOowTwCq+8nfuGZyKyg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "7269efff-1b57-4a1d-8062-b5d00a4b22c1",
+                            SecurityStamp = "71419b23-e687-4785-b36e-8ecf37d15bc2",
                             TwoFactorEnabled = false,
                             UserName = "admin@duuty.in"
                         },
@@ -178,15 +181,15 @@ namespace DataAccess.Migrations
                         {
                             Id = "10000000-0000-0000-0000-000000000002",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "ccc33ff1-d15d-45e6-b1a5-664f69747df5",
+                            ConcurrencyStamp = "538a841f-d344-4a10-9ced-bed9dfb3c01f",
                             Email = "employer@duuty.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "EMPLOYER@DUUTY.COM",
                             NormalizedUserName = "EMPLOYER@DUUTY.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEKMi/omnErezufVMeYg32GdyeWkE1OjLW1u/UCRhz8r5FBvKEC+5YtkK/b0UwutcCw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAELKpj59qtdMzcbpo9hPTNoNbKTPRPhmZe6Ojrwh+mqyINWJjix8SXTKBculQ1CvBkA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "0f0dcab9-2709-462a-8527-9b91a20caf39",
+                            SecurityStamp = "a20dcf0b-8528-4d4f-9e7d-f7176a51b41e",
                             TwoFactorEnabled = false,
                             UserName = "employer@duuty.com"
                         });
@@ -242,7 +245,7 @@ namespace DataAccess.Migrations
                             AddressLine2 = "",
                             City = "Newent",
                             Country = "United Kingdom",
-                            DateCreated = new DateTimeOffset(new DateTime(2025, 6, 4, 15, 28, 56, 37, DateTimeKind.Unspecified).AddTicks(232), new TimeSpan(0, 1, 0, 0, 0)),
+                            DateCreated = new DateTimeOffset(new DateTime(2025, 6, 3, 16, 42, 26, 27, DateTimeKind.Unspecified).AddTicks(4244), new TimeSpan(0, 1, 0, 0, 0)),
                             PostalCode = "GL18 1UJ",
                             State = "Gloucestershire"
                         });
@@ -346,38 +349,6 @@ namespace DataAccess.Migrations
                     b.ToTable("Subscriptions");
                 });
 
-            modelBuilder.Entity("Domain.Entities.JobApplication", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<DateTimeOffset>("AppliedOn")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<DateTimeOffset?>("DateCreated")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<long>("JobListingId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTimeOffset?>("LastUpdated")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId", "JobListingId")
-                        .IsUnique();
-
-                    b.ToTable("JobApplications");
-                });
-
             modelBuilder.Entity("Domain.Entities.JobListing", b =>
                 {
                     b.Property<long>("Id")
@@ -478,7 +449,7 @@ namespace DataAccess.Migrations
                         {
                             Id = 1L,
                             AddressId = 1L,
-                            DateCreated = new DateTimeOffset(new DateTime(2025, 6, 4, 15, 28, 56, 37, DateTimeKind.Unspecified).AddTicks(56), new TimeSpan(0, 1, 0, 0, 0)),
+                            DateCreated = new DateTimeOffset(new DateTime(2025, 6, 3, 16, 42, 26, 27, DateTimeKind.Unspecified).AddTicks(4001), new TimeSpan(0, 1, 0, 0, 0)),
                             OranisationName = "Arain IT Technologies"
                         });
                 });

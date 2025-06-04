@@ -85,6 +85,59 @@ export const pageSizeOptions = [
   { id: 20, name: "20 per page" },
 ];
 
+export const CITIES = [
+  { id: "Ahmedabad", name: "Ahmedabad", state: "Gujarat" },
+  { id: "Bangalore", name: "Bangalore", state: "Karnataka" },
+  { id: "Chennai", name: "Chennai", state: "Tamil Nadu" },
+  { id: "Delhi", name: "Delhi", state: "Delhi" },
+  { id: "Hyderabad", name: "Hyderabad", state: "Telangana" },
+  { id: "Jaipur", name: "Jaipur", state: "Rajasthan" },
+  { id: "Kolkata", name: "Kolkata", state: "West Bengal" },
+  { id: "Lucknow", name: "Lucknow", state: "Uttar Pradesh" },
+  { id: "Mumbai", name: "Mumbai", state: "Maharashtra" },
+  { id: "Pune", name: "Pune", state: "Maharashtra" },
+  { id: "Surat", name: "Surat", state: "Gujarat" },
+  { id: "Vadodara", name: "Vadodara", state: "Gujarat" },
+  { id: "Indore", name: "Indore", state: "Madhya Pradesh" },
+  { id: "Bhopal", name: "Bhopal", state: "Madhya Pradesh" },
+  { id: "Coimbatore", name: "Coimbatore", state: "Tamil Nadu" },
+  { id: "Nagpur", name: "Nagpur", state: "Maharashtra" },
+  { id: "Visakhapatnam", name: "Visakhapatnam", state: "Andhra Pradesh" },
+  { id: "Patna", name: "Patna", state: "Bihar" },
+  { id: "Ludhiana", name: "Ludhiana", state: "Punjab" },
+  { id: "Agra", name: "Agra", state: "Uttar Pradesh" },
+  { id: "Nashik", name: "Nashik", state: "Maharashtra" },
+  { id: "Faridabad", name: "Faridabad", state: "Haryana" },
+  { id: "Meerut", name: "Meerut", state: "Uttar Pradesh" },
+  { id: "Rajkot", name: "Rajkot", state: "Gujarat" },
+  { id: "Kalyan-Dombivli", name: "Kalyan-Dombivli", state: "Maharashtra" },
+  { id: "Vasai-Virar", name: "Vasai-Virar", state: "Maharashtra" },
+  { id: "Varanasi", name: "Varanasi", state: "Uttar Pradesh" },
+  { id: "Srinagar", name: "Srinagar", state: "Jammu and Kashmir" },
+  { id: "Aurangabad", name: "Aurangabad", state: "Maharashtra" },
+  { id: "Dhanbad", name: "Dhanbad", state: "Jharkhand" },
+  { id: "Amritsar", name: "Amritsar", state: "Punjab" },
+  { id: "Navi Mumbai", name: "Navi Mumbai", state: "Maharashtra" },
+  { id: "Allahabad", name: "Allahabad", state: "Uttar Pradesh" },
+  { id: "Ranchi", name: "Ranchi", state: "Jharkhand" },
+  { id: "Howrah", name: "Howrah", state: "West Bengal" },
+  { id: "Thane", name: "Thane", state: "Maharashtra" },
+  { id: "Salem", name: "Salem", state: "Tamil Nadu" },
+  { id: "Warangal", name: "Warangal", state: "Telangana" },
+  { id: "Gwalior", name: "Gwalior", state: "Madhya Pradesh" },
+  { id: "Jabalpur", name: "Jabalpur", state: "Madhya Pradesh" }
+];
+export const STATES = [
+  { id: "Andhra Pradesh", name: "Andhra Pradesh" },
+  { id: "Tamil Nadu", name: "Tamil Nadu" },
+  { id: "Kerala", name: "Kerala" },
+  { id: "Odisha", name: "Odisha" },
+  { id: "West Bengal", name: "West Bengal" },
+  { id: "Telangana", name: "Telangana" },
+  { id: "Karnataka", name: "Karnataka" },
+  { id: "Rajasthan", name: "Rajasthan" }
+];
+
 export const FAQS = [
   {
     question: "How do I post a job on Duuty?",

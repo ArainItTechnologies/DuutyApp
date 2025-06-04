@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250525163416_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20250604142857_JobApplication")]
+    partial class JobApplication
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -165,15 +165,15 @@ namespace DataAccess.Migrations
                         {
                             Id = "10000000-0000-0000-0000-000000000001",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "8821ac75-5170-41ff-affe-eede1cffd210",
+                            ConcurrencyStamp = "60ebe5c2-3727-460f-a2e3-daab7015e8ac",
                             Email = "admin@duuty.in",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@DUUTY.IN",
                             NormalizedUserName = "ADMIN@DUUTY.IN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEBwb09UlNyqcbn2Ii84GBYXPV8vzDm7POven6Ac8vAeTMaGvu3+xajhepURcBfVHLQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAECv4Ig/+LRS4/hZc7OBtJhcw7JJ3F/uCm8Ycv6AU7yXRbZnlfDuyblQRIY3PFSoiBg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "5292174c-2e8f-415d-af00-afea4ec752e0",
+                            SecurityStamp = "7269efff-1b57-4a1d-8062-b5d00a4b22c1",
                             TwoFactorEnabled = false,
                             UserName = "admin@duuty.in"
                         },
@@ -181,15 +181,15 @@ namespace DataAccess.Migrations
                         {
                             Id = "10000000-0000-0000-0000-000000000002",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "77c0aed3-fa6d-4798-95fc-1c109bc3283b",
+                            ConcurrencyStamp = "ccc33ff1-d15d-45e6-b1a5-664f69747df5",
                             Email = "employer@duuty.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "EMPLOYER@DUUTY.COM",
                             NormalizedUserName = "EMPLOYER@DUUTY.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJNAn07IuMVnGBII8VNzomb/PnE+l2zg13uKslau03VeMFObvqtRNqYUuXchFaB7Sw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEKMi/omnErezufVMeYg32GdyeWkE1OjLW1u/UCRhz8r5FBvKEC+5YtkK/b0UwutcCw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "551def2d-65af-4277-973d-9bca3402ec38",
+                            SecurityStamp = "0f0dcab9-2709-462a-8527-9b91a20caf39",
                             TwoFactorEnabled = false,
                             UserName = "employer@duuty.com"
                         });
@@ -245,7 +245,7 @@ namespace DataAccess.Migrations
                             AddressLine2 = "",
                             City = "Newent",
                             Country = "United Kingdom",
-                            DateCreated = new DateTimeOffset(new DateTime(2025, 5, 25, 17, 34, 15, 435, DateTimeKind.Unspecified).AddTicks(9286), new TimeSpan(0, 1, 0, 0, 0)),
+                            DateCreated = new DateTimeOffset(new DateTime(2025, 6, 4, 15, 28, 56, 37, DateTimeKind.Unspecified).AddTicks(232), new TimeSpan(0, 1, 0, 0, 0)),
                             PostalCode = "GL18 1UJ",
                             State = "Gloucestershire"
                         });
@@ -280,9 +280,11 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("Domain.Entities.Employer", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<DateTimeOffset?>("DateCreated")
                         .HasColumnType("datetimeoffset");
@@ -345,6 +347,38 @@ namespace DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Subscriptions");
+                });
+
+            modelBuilder.Entity("Domain.Entities.JobApplication", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<DateTimeOffset>("AppliedOn")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset?>("DateCreated")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<long>("JobListingId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTimeOffset?>("LastUpdated")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId", "JobListingId")
+                        .IsUnique();
+
+                    b.ToTable("JobApplications");
                 });
 
             modelBuilder.Entity("Domain.Entities.JobListing", b =>
@@ -447,7 +481,7 @@ namespace DataAccess.Migrations
                         {
                             Id = 1L,
                             AddressId = 1L,
-                            DateCreated = new DateTimeOffset(new DateTime(2025, 5, 25, 17, 34, 15, 435, DateTimeKind.Unspecified).AddTicks(9117), new TimeSpan(0, 1, 0, 0, 0)),
+                            DateCreated = new DateTimeOffset(new DateTime(2025, 6, 4, 15, 28, 56, 37, DateTimeKind.Unspecified).AddTicks(56), new TimeSpan(0, 1, 0, 0, 0)),
                             OranisationName = "Arain IT Technologies"
                         });
                 });

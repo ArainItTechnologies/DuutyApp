@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { 
   MapPinIcon, 
   ClockIcon, 
-  BriefcaseIcon, 
   CurrencyRupeeIcon 
 } from '@heroicons/react/24/outline';
 import ApplyNow from './ApplyNow'; // We'll create this component next
@@ -26,10 +25,10 @@ const JobDetails = ({ job, onClose }) => {
           </div>
           
           <div className="mt-4">
-            <p className="text-lg font-semibold">{job.company}</p>
+            <p className="text-lg font-semibold">{job.jobTitle}</p>
             <p className="flex items-center text-gray-600 mt-1">
               <MapPinIcon className="h-5 w-5 mr-1" />
-              {job.location}, {job.state}
+              {job.jobLocation}, {job.jobState}
             </p>
             <p className="flex items-center text-gray-600 mt-1">
               <ClockIcon className="h-5 w-5 mr-1" />
@@ -37,12 +36,12 @@ const JobDetails = ({ job, onClose }) => {
             </p>
             <p className="flex items-center text-gray-600 mt-1">
               <CurrencyRupeeIcon className="h-5 w-5 mr-1" />
-              {job.salary}
+              {job.salaryRange.substring(0, 20)} per month
             </p>
             
             <div className="mt-4">
               <h3 className="text-lg font-semibold">Description</h3>
-              <p className="text-gray-700 mt-1">{job.description}</p>
+              <p className="text-gray-700 mt-1">{job.jobDescription}</p>
             </div>
             
             <div className="mt-4">

@@ -3,10 +3,11 @@ import { useNavigate } from "react-router-dom";
 import { useUser } from "../hooks/Hooks";
 import { FormInput, FormTextArea } from "./custom/FormElements";
 import { becomeEmployer } from "../services/auth";
+import { ROUTES } from "../Constants";
 
 const BecomeEmployer = () => {
   const navigate = useNavigate();
-  const { user } = useUser();
+  const { user, setUser } = useUser();
   const [formData, setFormData] = useState({
     userId: user?.userId,
     organisationName: "",
@@ -44,7 +45,8 @@ const BecomeEmployer = () => {
     e.preventDefault();
     await becomeEmployer(formData, user.token);
 
-    navigate("/hire");
+    setUser(null);
+    navigate(ROUTES.LOGIN);
   };
 
   return (
@@ -66,7 +68,7 @@ const BecomeEmployer = () => {
             errors={errors.organisationName}
             errorMessage="Restaurant name is required"
             required />
-            
+
           <FormTextArea
             label="Address Line 1"
             name="addressLine1"

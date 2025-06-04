@@ -48,7 +48,7 @@ const AddRestaurantModal = ({ isOpen, onClose, onSave }) => {
       telephone: !formData.telephone?.trim(),
       websiteUrl: formData.websiteUrl?.trim()
         ? !/^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/.test(
-          formData.website
+          formData.websiteUrl
         )
         : false,
     };

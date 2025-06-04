@@ -72,6 +72,7 @@ public static class InfrastructureServiceRegistration
                 .AddScoped<IJobListingService, JobListingService>()
                 .AddScoped<IAddressService, AddressService>()
                 .AddScoped<IEmployeeJobRoleService, EmployeeJobRoleService>()
+                .AddScoped<IJobApplicationService, JobApplicationService>()
                 .AddScoped<IEmployerService, EmployerService>();
 
         return services;
