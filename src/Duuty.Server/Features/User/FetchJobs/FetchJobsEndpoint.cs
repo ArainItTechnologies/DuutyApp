@@ -2,11 +2,13 @@ using System.Net;
 using Domain.Entities;
 using FastEndpoints;
 using Infrastructure.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 
 namespace Duuty.Server.Features.User.FetchJobs;
 
 [HttpGet("/api/jobs")]
+[AllowAnonymous]
 public class FetchJobsEndpoint(IJobListingService jobListingService) : Endpoint<FetchJobsRequest, FetchJobsResponse>
 {
     public override async Task HandleAsync(FetchJobsRequest req, CancellationToken ct)
@@ -17,7 +19,6 @@ public class FetchJobsEndpoint(IJobListingService jobListingService) : Endpoint<
 
         try
         {
-
             var query = jobListingService.Get(x => x.IsActive);
             if (string.IsNullOrWhiteSpace(preferredJob) && string.IsNullOrEmpty(jobState) && string.IsNullOrEmpty(jobLocation))
             {
@@ -67,11 +68,11 @@ public class FetchJobsRequest
 {
     [QueryParam]
     public string JobLocation { get; set; } = string.Empty;
+    [QueryParam]
     public string JobState { get; set; } = string.Empty;
-
     [QueryParam]
     public string PreferredJob { get; set; } = string.Empty;
 }
 
-public record FetchJobsResponse(bool IsSuccess, List<JobListing> Jobs, string? errorMessage = "");
+public record FetchJobsResponse(bool IsSuccess, List<JobListing> Jobs, string? ErrorMessage = "");
 
