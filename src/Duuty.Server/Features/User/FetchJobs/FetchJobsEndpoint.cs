@@ -2,7 +2,6 @@ using System.Net;
 using Domain.Entities;
 using FastEndpoints;
 using Infrastructure.Services.Interfaces;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 
 namespace Duuty.Server.Features.User.FetchJobs;

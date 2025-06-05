@@ -14,7 +14,7 @@ const Login = () => {
 
   const location = useLocation();
   const navigate = useNavigate();
-  const { setIsLoading, isLoading } = useAppState();
+  const { setIsLoading } = useAppState();
   
   const from = location.state?.from || "/";
 
@@ -33,8 +33,6 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    console.info("About User logged in:", isLoading);
-
     const result = await loginUser({ phoneNumber, email, password });
     const userInfo = getUserDetailsFromToken(result.token);
 
@@ -42,7 +40,6 @@ const Login = () => {
     userInfo.userId = result.userId;
 
     setUser(userInfo);
-    console.info("User logged in:", isLoading);
     setIsLoading(false);
 
     if (from === ROUTES.HIRE_NOW) {

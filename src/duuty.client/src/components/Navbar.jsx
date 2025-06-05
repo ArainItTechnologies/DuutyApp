@@ -19,7 +19,7 @@ import LogoSrc from "../assets/logo.svg";
 import { useUser } from "../hooks/Hooks";
 
 export default function Navbar() {
-  const { t } = useTranslation();
+  const { t, reset } = useTranslation();
 
   const { user, setUser } = useUser();
   const [open, setOpen] = useState(false);
@@ -44,6 +44,7 @@ export default function Navbar() {
 
   const handleLogout = () => {
     setUser(null);
+    reset();
     setOpen(false);
     navigate(ROUTES.LOGIN); // or use navigate if inside react-router
   };

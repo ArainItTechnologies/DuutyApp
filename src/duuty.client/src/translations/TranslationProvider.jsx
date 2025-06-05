@@ -11,6 +11,11 @@ export const TranslationProvider = ({ children }) => {
   const [translations, setTranslations] = useState({});
   const [isInitialized, setIsInitialized] = useState(false);
   const {setIsLoading} = useAppState();
+
+  const resetLanguageSelection = useCallback(() => {
+    localStorage.removeItem("selectedLanguage");
+    setLanguage("");
+  });
   
   const changeLanguage = useCallback(async (newLanguage) => {
     if (newLanguage === language && isInitialized) {
@@ -94,9 +99,10 @@ export const TranslationProvider = ({ children }) => {
   const contextValue = {
     t,
     language,
-    setLanguage: changeLanguage, // Use the enhanced function
+    setLanguage: changeLanguage,
+    reset: resetLanguageSelection,
     isInitialized,
-    translations, // Expose translations for debugging
+    translations,
   };
 
   return (

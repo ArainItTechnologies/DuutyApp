@@ -23,14 +23,15 @@ import { ROUTES } from "../Constants";
 
 export const Home = () => {
     const [activeTab, setActiveTab] = useState("employeeForm");
-    const [selectLanguage, setSelectLanguage] = useState(true);
+    const [selectLanguage, setSelectLanguage] = useState(false);
+    const selectedLanguage = localStorage.getItem("selectedLanguage");
 
     const { user } = useUser();
 
     const location = useLocation();
 
     useEffect(() => {
-        if (location.pathname === ROUTES.HOME && !user) {
+        if (location.pathname === ROUTES.HOME && selectedLanguage===null) {
             setSelectLanguage(true);
         }
     }, [location.pathname, user, setSelectLanguage]);
