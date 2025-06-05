@@ -4,8 +4,11 @@ import { FormInput, FormPasswordInput, FormSelect, PrimaryButton } from "../cust
 import SelectRole from "../user/SelectRole";
 import { registerUser } from "../../services/auth";
 import { CHEF_OPTIONS } from "../../Constants";
+import { useAppState } from "../../hooks/Hooks";
 
 const EmployeeRegister = () => {
+  const { setIsLoading } = useAppState();
+  
   const [showSelectRole, setShowSelectRole] = useState(false);
   const [selectedRole, setSelectedRole] = useState(null);
   const [selectedSubRole, setSelectedSubRole] = useState(null);
@@ -44,6 +47,7 @@ const EmployeeRegister = () => {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
 
     try {
       await registerUser({
@@ -54,12 +58,14 @@ const EmployeeRegister = () => {
         password: formData.password,
       });
 
+      setIsLoading(false);
       setSuccess(
         "Registration successful! Please check your email for confirmation."
       );
       setError("");
       navigate(from); // Redirect to the previous page
     } catch (err) {
+      setIsLoading(false);
       setError(err.message || "Something went wrong");
     }
   };

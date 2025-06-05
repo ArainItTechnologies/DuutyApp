@@ -8,7 +8,6 @@ using Microsoft.EntityFrameworkCore;
 namespace Duuty.Server.Features.User.FetchJobs;
 
 [HttpGet("/api/jobs")]
-[Authorize]
 public class FetchJobsEndpoint(IJobListingService jobListingService) : Endpoint<FetchJobsRequest, FetchJobsResponse>
 {
     public override async Task HandleAsync(FetchJobsRequest req, CancellationToken ct)

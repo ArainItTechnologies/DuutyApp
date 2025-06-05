@@ -23,16 +23,10 @@ import PrivacyPolicy from "./components/PrivacyPolicy";
 import JobSearch from "./components/JobSearch";
 import AddRestaurantModal from "./components/AddRestaurantModal";
 import ContactUs from "./components/ContactUs";
-import { useTranslation } from "./translations/TranslationHook";
 import ScrollToTop from "./components/ScrollToTop";
 import JobDashboard from "./components/JobDashboard";
 
 function App() {
-  const { languageLoading } = useTranslation();
-
-  if (languageLoading) {
-    return <div>Loading translations...</div>;
-  }
   return (
     <Router>
        <ScrollToTop />

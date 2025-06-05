@@ -2,6 +2,7 @@ import { createContext, useState, useEffect } from "react";
 
 // Create the User context
 export const UserContext = createContext();
+export const LoadingContext = createContext();
 
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
@@ -23,5 +24,17 @@ export const UserProvider = ({ children }) => {
     <UserContext.Provider value={{ user, setUser }}>
       {children}
     </UserContext.Provider>
+  );
+};
+
+export const LoadingContextProvider = ({ children }) => {
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setError] = useState(false);
+
+  return (
+    <LoadingContext.Provider value={{isLoading, setIsLoading, isError, setError}}>
+      {children}
+    </LoadingContext.Provider>
   );
 };

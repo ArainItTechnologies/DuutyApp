@@ -1,18 +1,21 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { loginUser } from "../../services/auth";
-import { useUser } from "../../hooks/Hooks";
+import { useAppState, useUser } from "../../hooks/Hooks";
 import { jwtDecode } from "jwt-decode";
 import { normalizeClaims } from "../../utils/ClaimsUtility";
 import { FormInput, FormPasswordInput, PrimaryButton } from "../custom/FormElements";
+import { ROUTES } from "../../Constants";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [password, setPassword] = useState("");
+
   const location = useLocation();
   const navigate = useNavigate();
-
+  const { setIsLoading, isLoading } = useAppState();
+  
   const from = location.state?.from || "/";
 
   const { setUser } = useUser();
@@ -29,6 +32,8 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
+    console.info("About User logged in:", isLoading);
 
     const result = await loginUser({ phoneNumber, email, password });
     const userInfo = getUserDetailsFromToken(result.token);
@@ -37,16 +42,18 @@ const Login = () => {
     userInfo.userId = result.userId;
 
     setUser(userInfo);
+    console.info("User logged in:", isLoading);
+    setIsLoading(false);
 
-    if (from === "/hire") {
-      navigate("/job-listing", { replace: true });
+    if (from === ROUTES.HIRE_NOW) {
+      navigate(ROUTES.JOB_LISTING, { replace: true });
     } else {
       navigate(from, { replace: true });
     }
   };
 
   return (
-    <>
+    <section>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <h2 className="mt-1 text-center text-2xl/9 font-bold tracking-tight text-gray-900">
@@ -107,7 +114,7 @@ const Login = () => {
           </p>
         </div>
       </div>
-    </>
+    </section>
   );
 };
 

@@ -115,7 +115,7 @@ export default function Navbar() {
                     }`}
                 >
                   <BriefcaseIcon className="h-5 w-5 mr-3 text-primary" />
-                  <span>Find a Job</span>
+                  <span>  {t("findajob")}</span>
                 </NavLink>
                 <NavLink
                   onClick={() => setOpen(false)}
@@ -218,7 +218,7 @@ export default function Navbar() {
                   to={ROUTES.JOB_RESULTS}
                   className="text-[15px] text-white font-medium inline-block rounded-[11px] bg-linear-(--gradient-bg) px-[25px] py-[10px] mr-[12px]"
                 >
-                  Find a Job
+                   {t("findajob")}
                 </Link>
                 <Link
                   to={ROUTES.JOB_LISTING}

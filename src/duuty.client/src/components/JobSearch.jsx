@@ -10,7 +10,7 @@ import { fetchJobs } from "../services/auth";
 import { CITIES, ROUTES, STATES, pageSizeOptions } from "../Constants";
 import { FormSelect } from "./custom/FormElements";
 import SelectRole from "./user/SelectRole";
-import { useUser } from "../hooks/Hooks";
+import { useAppState, useUser } from "../hooks/Hooks";
 import { applyJob } from "../services/auth";
 import { useNavigate } from "react-router-dom";
 
@@ -19,6 +19,7 @@ const JobSearch = () => {
   const { user } = useUser();
   const navigate = useNavigate();
 
+  const { setIsLoading } = useAppState(false);
   const [roleOptions, setRoleOptions] = useState([{ id: "", name: "Search job by Role" }]);
   const [locationOptions] = useState([{ id: "", name: "Search by City" }, ...CITIES]);
   const [stateOptions] = useState([{ id: "", name: "Search by State" }, ...STATES]);
@@ -75,12 +76,14 @@ const JobSearch = () => {
 
   useEffect(() => {
     const getJobs = async () => {
+      setIsLoading(true);
       const data = await fetchJobs(jobLocation, jobState, selectedRole, user?.token);
       setJobs(data.jobs);
+      setIsLoading(false);
     };
 
     getJobs();
-  }, [jobLocation, jobState, selectedRole, user?.token]);
+  }, [jobLocation, jobState, selectedRole, user]);
 
   const handleRoleSelect = (role) => {
     setSelectedRole(role);
@@ -90,14 +93,15 @@ const JobSearch = () => {
   };
 
   const handleApply = async (jobId) => {
+    setIsLoading(true);
     await applyJob({ jobListingId: jobId, userId: user.userId }, user?.token);
+    setIsLoading(false);
     navigate(ROUTES.JOB_LISTING, { replace: true });
   }
 
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="mb-6 text-2xl font-semibold w-full sm:w-auto">Find Your Dream Job</h1>
-
       {/* Search and Filter Section */}
       <div className="mb-6 flex flex-col sm:flex-row gap-4">
         <FormSelect

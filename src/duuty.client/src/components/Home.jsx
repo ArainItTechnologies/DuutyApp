@@ -18,18 +18,22 @@ import RegistrationTabs from "./user/RegistrationTabs";
 import LanguageSelectionModal from "./LanguageSelectionModal";
 import Benefits from "./Benefits";
 import Faq from "./Faq";
+import { useUser } from "../hooks/Hooks";
+import { ROUTES } from "../Constants";
 
 export const Home = () => {
     const [activeTab, setActiveTab] = useState("employeeForm");
-    const [isOpen, setIsOpen] = useState(true);
+    const [selectLanguage, setSelectLanguage] = useState(true);
+
+    const { user } = useUser();
 
     const location = useLocation();
 
     useEffect(() => {
-        if (location.pathname === "/") {
-            setIsOpen(true);
+        if (location.pathname === ROUTES.HOME && !user) {
+            setSelectLanguage(true);
         }
-    }, [location.pathname]);
+    }, [location.pathname, user, setSelectLanguage]);
 
     useEffect(() => {
         if (location.hash) {
@@ -76,7 +80,7 @@ export const Home = () => {
 
             </div>
 
-            <Benefits/>
+            <Benefits />
 
             <div className="find-employer-wrapper pt-[50px] pb-[50px] sm:pt-[70px] sm:pb-[70px]">
                 <div className="container-wrapper text-center lg:text-left flex lg:flex-row flex-col-reverse items-center lg:items-start xl:items-center justify-center lg:justify-between gap-[100px] lg:gap-[50px] xl:gap-[0px]">
@@ -141,7 +145,7 @@ export const Home = () => {
             <TestimonialSection />
 
             <div id="faq-section" className="faq-wrapper flow-root pb-[0px] lg:pb-[100px]">
-                <Faq/>
+                <Faq />
             </div>
 
             <div className="interesting-offers-section relative my-[50px] sm:my-[80px] mx-auto py-[50px] sm:py-[80px] px-[20px] sm:rounded-[130px_20px_20px] rounded-[90px_20px_20px] max-w-[90%] xl:max-w-[85%] bg-[var(--interesting-offer-bg)]">
@@ -193,7 +197,7 @@ export const Home = () => {
                     <path d="M147.197 152.61H151.559V154.49H147.197V159.432H145.199V154.49H140.838V152.61H145.199V148.045H147.197V152.61Z" fill="#E5E5E5" />
                 </svg>
             </div>
-            {isOpen && <LanguageSelectionModal isOpen={isOpen} setIsOpen={setIsOpen} />}
+            <LanguageSelectionModal isOpen={selectLanguage} setIsOpen={setSelectLanguage} />
         </section>
 
 
