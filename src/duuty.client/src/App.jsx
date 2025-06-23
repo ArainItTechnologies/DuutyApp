@@ -4,7 +4,6 @@ import Login from "./components/user/Login";
 import Home from "./components/Home";
 import Register from "./components/user/Register";
 import Dashboard from "./components/Dashboard";
-import Navbar from "./components/Navbar";
 import Edit from "./components/Edit";
 import Notfound from "./components/Notfound";
 import JobApplication from "./components/JobApplication";
@@ -21,10 +20,10 @@ import BecomeEmployer from "./components/BecomeEmployer";
 import AboutUs from "./components/AboutUs";
 import PrivacyPolicy from "./components/PrivacyPolicy";
 import JobSearch from "./components/JobSearch";
-import AddRestaurantModal from "./components/AddRestaurantModal";
 import ContactUs from "./components/ContactUs";
 import ScrollToTop from "./components/ScrollToTop";
 import JobDashboard from "./components/JobDashboard";
+import Navbar from "./components/navBar/Navbar";
 
 function App() {
   return (
