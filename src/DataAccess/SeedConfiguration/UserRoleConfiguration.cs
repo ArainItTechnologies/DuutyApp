@@ -18,6 +18,11 @@ public class UserRoleConfiguration : IEntityTypeConfiguration<IdentityUserRole<s
             {
                 UserId = DuutySeedConstants.EmployerUserId,
                 RoleId = DuutySeedConstants.EmployerRoleId
+            },
+            new IdentityUserRole<string>
+            {
+                UserId = DuutySeedConstants.SuperAdminUserId,
+                RoleId = DuutySeedConstants.SuperAdminRoleId
             }
         );
     }

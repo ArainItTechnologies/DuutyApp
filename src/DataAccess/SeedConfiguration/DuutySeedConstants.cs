@@ -5,8 +5,10 @@ public static class DuutySeedConstants
     // User IDs
     public const string AdminUserId = "10000000-0000-0000-0000-000000000001";
     public const string EmployerUserId = "10000000-0000-0000-0000-000000000002";
+    public const string SuperAdminUserId = "10000000-0000-0000-0000-000000000003";
 
     // Role IDs
+    public const string SuperAdminRoleId = "B6B2C3G4-E5F6-7890-1234-56789ABCDEF0";
     public const string AdminRoleId = "A1B2C3D4-E5F6-7890-1234-56789ABCDEF0";
     public const string UserRoleId = "B2C3D4E5-F678-9012-3456-789ABCDEFA1B";
     public const string EmployerRoleId = "C3D4E5F6-7890-1234-5678-9ABCDEFA1B2C";

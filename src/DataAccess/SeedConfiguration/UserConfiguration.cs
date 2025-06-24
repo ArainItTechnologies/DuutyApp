@@ -35,7 +35,19 @@ public class UserConfiguration : IEntityTypeConfiguration<ArainUser>
         };
         employerUser.PasswordHash = hasher.HashPassword(employerUser, "Employer@123");
 
-        builder.HasData(adminUser, employerUser);
+        var superAdminUser = new ArainUser
+        {
+            Id = DuutySeedConstants.SuperAdminUserId,
+            UserName = "superadmin@duuty.com",
+            NormalizedUserName = "SUPERADMIN@DUUTY.COM",
+            Email = "superadmin@duuty.com",
+            NormalizedEmail = "SUPERADMIN@DUUTY.COM",
+            EmailConfirmed = true,
+            SecurityStamp = Guid.NewGuid().ToString("D")
+        };
+        superAdminUser.PasswordHash = hasher.HashPassword(superAdminUser, "SuperAdmin@123");
+
+        builder.HasData(superAdminUser, adminUser, employerUser);
     }
 }
 

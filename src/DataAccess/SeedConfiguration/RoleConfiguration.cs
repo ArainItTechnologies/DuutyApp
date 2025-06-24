@@ -11,6 +11,13 @@ public class RoleConfiguration : IEntityTypeConfiguration<ArainRole>
         builder.HasData(
             new ArainRole
             {
+                Id = "B6B2C3G4-E5F6-7890-1234-56789ABCDEF0",
+                Name = "SuperAdmin",
+                NormalizedName = "SUPERADMIN",
+                Description = "Super administrator role with full access to all system features."
+            },
+            new ArainRole
+            {
                 Id = "A1B2C3D4-E5F6-7890-1234-56789ABCDEF0",
                 Name = "Admin",
                 NormalizedName = "ADMIN",
