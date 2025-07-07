@@ -169,15 +169,15 @@ namespace DataAccess.Migrations
                         {
                             Id = "10000000-0000-0000-0000-000000000003",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "eeaaacf7-4d81-49b4-bf43-63a009ad345c",
+                            ConcurrencyStamp = "f2e39e82-d1b4-4bdb-8392-187f02cd5a6c",
                             Email = "superadmin@duuty.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "SUPERADMIN@DUUTY.COM",
                             NormalizedUserName = "SUPERADMIN@DUUTY.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEFgUuMsARCZH3joVOsSFXalOmKI4so7WFsR0ZpW5UH+7h58sujVOUMRp2yT30nHVjQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEN7nRsNlhpq8iFJCHeYagYdAVfs5hw50ngKfyHZiBJONijYMtyIVzUnAcsQkp89XlQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "bfdecee7-7037-4b6f-a864-aba78821a11d",
+                            SecurityStamp = "2678e270-aec7-41b3-aaa2-f668d55fbe6e",
                             TwoFactorEnabled = false,
                             UserName = "superadmin@duuty.com"
                         },
@@ -185,15 +185,15 @@ namespace DataAccess.Migrations
                         {
                             Id = "10000000-0000-0000-0000-000000000001",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "97e73ee8-3825-42f7-8983-0192d9279798",
+                            ConcurrencyStamp = "6c80cae8-fa91-430a-ad0a-6ed2286e4a2a",
                             Email = "admin@duuty.in",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@DUUTY.IN",
                             NormalizedUserName = "ADMIN@DUUTY.IN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEOhqy9INyKd06h7XYyqr7d/I0NZfnB5xcMiGR5vWr5dX1Ts3Pp6wzL9e3iZ71esk3A==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEHh5/3/NSG5CKDl8QvMilT+6ZqgXDSQEo8xj9pC2hhO8wS+MjBAXyYB3x1M9vN+39g==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "a9bcced3-ec7f-465d-84cf-a78a8dca2e29",
+                            SecurityStamp = "95072af5-1467-453c-abb1-e0fbd1c95b73",
                             TwoFactorEnabled = false,
                             UserName = "admin@duuty.in"
                         },
@@ -201,15 +201,15 @@ namespace DataAccess.Migrations
                         {
                             Id = "10000000-0000-0000-0000-000000000002",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "c985aa81-6b52-473d-9cec-31c18910f36f",
+                            ConcurrencyStamp = "37072726-ec68-429e-b0f1-9597f6492d67",
                             Email = "employer@duuty.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "EMPLOYER@DUUTY.COM",
                             NormalizedUserName = "EMPLOYER@DUUTY.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEMXO1lbLdT0FrGUNyEudw4ub8DQPdb756UFg6tU0aw6HFXpu130B9pQm1l58R1OzzA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEEqP6jB12JhR772/0CCXKdWskdMCLQ23kNbQyKsVif/fgQTSMpAdCEI4Vx7YdIx3BQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "c891510e-6d39-4b6a-94f5-1fda4b3198c5",
+                            SecurityStamp = "a87dedc0-b01b-47e2-b1ad-4d90993fb1af",
                             TwoFactorEnabled = false,
                             UserName = "employer@duuty.com"
                         });
@@ -265,7 +265,7 @@ namespace DataAccess.Migrations
                             AddressLine2 = "",
                             City = "Newent",
                             Country = "United Kingdom",
-                            DateCreated = new DateTimeOffset(new DateTime(2025, 6, 24, 16, 26, 25, 40, DateTimeKind.Unspecified).AddTicks(6318), new TimeSpan(0, 1, 0, 0, 0)),
+                            DateCreated = new DateTimeOffset(new DateTime(2025, 7, 7, 15, 41, 53, 18, DateTimeKind.Unspecified).AddTicks(9408), new TimeSpan(0, 1, 0, 0, 0)),
                             PostalCode = "GL18 1UJ",
                             State = "Gloucestershire"
                         });
@@ -501,7 +501,7 @@ namespace DataAccess.Migrations
                         {
                             Id = 1L,
                             AddressId = 1L,
-                            DateCreated = new DateTimeOffset(new DateTime(2025, 6, 24, 16, 26, 25, 40, DateTimeKind.Unspecified).AddTicks(6079), new TimeSpan(0, 1, 0, 0, 0)),
+                            DateCreated = new DateTimeOffset(new DateTime(2025, 7, 7, 15, 41, 53, 18, DateTimeKind.Unspecified).AddTicks(9116), new TimeSpan(0, 1, 0, 0, 0)),
                             OranisationName = "Arain IT Technologies"
                         });
                 });

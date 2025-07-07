@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250604142857_JobApplication")]
-    partial class JobApplication
+    [Migration("20250707144154_SuperadminRole")]
+    partial class SuperadminRole
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -55,6 +55,13 @@ namespace DataAccess.Migrations
                     b.ToTable("AspNetRoles", (string)null);
 
                     b.HasData(
+                        new
+                        {
+                            Id = "B6B2C3G4-E5F6-7890-1234-56789ABCDEF0",
+                            Description = "Super administrator role with full access to all system features.",
+                            Name = "SuperAdmin",
+                            NormalizedName = "SUPERADMIN"
+                        },
                         new
                         {
                             Id = "A1B2C3D4-E5F6-7890-1234-56789ABCDEF0",
@@ -163,17 +170,33 @@ namespace DataAccess.Migrations
                     b.HasData(
                         new
                         {
+                            Id = "10000000-0000-0000-0000-000000000003",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "f2e39e82-d1b4-4bdb-8392-187f02cd5a6c",
+                            Email = "superadmin@duuty.com",
+                            EmailConfirmed = true,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "SUPERADMIN@DUUTY.COM",
+                            NormalizedUserName = "SUPERADMIN@DUUTY.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEN7nRsNlhpq8iFJCHeYagYdAVfs5hw50ngKfyHZiBJONijYMtyIVzUnAcsQkp89XlQ==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "2678e270-aec7-41b3-aaa2-f668d55fbe6e",
+                            TwoFactorEnabled = false,
+                            UserName = "superadmin@duuty.com"
+                        },
+                        new
+                        {
                             Id = "10000000-0000-0000-0000-000000000001",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "60ebe5c2-3727-460f-a2e3-daab7015e8ac",
+                            ConcurrencyStamp = "6c80cae8-fa91-430a-ad0a-6ed2286e4a2a",
                             Email = "admin@duuty.in",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@DUUTY.IN",
                             NormalizedUserName = "ADMIN@DUUTY.IN",
-                            PasswordHash = "AQAAAAIAAYagAAAAECv4Ig/+LRS4/hZc7OBtJhcw7JJ3F/uCm8Ycv6AU7yXRbZnlfDuyblQRIY3PFSoiBg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEHh5/3/NSG5CKDl8QvMilT+6ZqgXDSQEo8xj9pC2hhO8wS+MjBAXyYB3x1M9vN+39g==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "7269efff-1b57-4a1d-8062-b5d00a4b22c1",
+                            SecurityStamp = "95072af5-1467-453c-abb1-e0fbd1c95b73",
                             TwoFactorEnabled = false,
                             UserName = "admin@duuty.in"
                         },
@@ -181,15 +204,15 @@ namespace DataAccess.Migrations
                         {
                             Id = "10000000-0000-0000-0000-000000000002",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "ccc33ff1-d15d-45e6-b1a5-664f69747df5",
+                            ConcurrencyStamp = "37072726-ec68-429e-b0f1-9597f6492d67",
                             Email = "employer@duuty.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "EMPLOYER@DUUTY.COM",
                             NormalizedUserName = "EMPLOYER@DUUTY.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEKMi/omnErezufVMeYg32GdyeWkE1OjLW1u/UCRhz8r5FBvKEC+5YtkK/b0UwutcCw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEEqP6jB12JhR772/0CCXKdWskdMCLQ23kNbQyKsVif/fgQTSMpAdCEI4Vx7YdIx3BQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "0f0dcab9-2709-462a-8527-9b91a20caf39",
+                            SecurityStamp = "a87dedc0-b01b-47e2-b1ad-4d90993fb1af",
                             TwoFactorEnabled = false,
                             UserName = "employer@duuty.com"
                         });
@@ -245,7 +268,7 @@ namespace DataAccess.Migrations
                             AddressLine2 = "",
                             City = "Newent",
                             Country = "United Kingdom",
-                            DateCreated = new DateTimeOffset(new DateTime(2025, 6, 4, 15, 28, 56, 37, DateTimeKind.Unspecified).AddTicks(232), new TimeSpan(0, 1, 0, 0, 0)),
+                            DateCreated = new DateTimeOffset(new DateTime(2025, 7, 7, 15, 41, 53, 18, DateTimeKind.Unspecified).AddTicks(9408), new TimeSpan(0, 1, 0, 0, 0)),
                             PostalCode = "GL18 1UJ",
                             State = "Gloucestershire"
                         });
@@ -481,7 +504,7 @@ namespace DataAccess.Migrations
                         {
                             Id = 1L,
                             AddressId = 1L,
-                            DateCreated = new DateTimeOffset(new DateTime(2025, 6, 4, 15, 28, 56, 37, DateTimeKind.Unspecified).AddTicks(56), new TimeSpan(0, 1, 0, 0, 0)),
+                            DateCreated = new DateTimeOffset(new DateTime(2025, 7, 7, 15, 41, 53, 18, DateTimeKind.Unspecified).AddTicks(9116), new TimeSpan(0, 1, 0, 0, 0)),
                             OranisationName = "Arain IT Technologies"
                         });
                 });
@@ -582,6 +605,11 @@ namespace DataAccess.Migrations
                         {
                             UserId = "10000000-0000-0000-0000-000000000002",
                             RoleId = "C3D4E5F6-7890-1234-5678-9ABCDEFA1B2C"
+                        },
+                        new
+                        {
+                            UserId = "10000000-0000-0000-0000-000000000003",
+                            RoleId = "B6B2C3G4-E5F6-7890-1234-56789ABCDEF0"
                         });
                 });
 
