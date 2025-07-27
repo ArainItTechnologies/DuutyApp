@@ -26,10 +26,10 @@ public class UserConfiguration : IEntityTypeConfiguration<ArainUser>
         var employerUser = new ArainUser
         {
             Id = DuutySeedConstants.EmployerUserId,
-            UserName = "employer@duuty.com",
-            NormalizedUserName = "EMPLOYER@DUUTY.COM",
-            Email = "employer@duuty.com",
-            NormalizedEmail = "EMPLOYER@DUUTY.COM",
+            UserName = "employer@duuty.in",
+            NormalizedUserName = "EMPLOYER@DUUTY.IN",
+            Email = "employer@duuty.in",
+            NormalizedEmail = "EMPLOYER@DUUTY.IN",
             EmailConfirmed = true,
             SecurityStamp = Guid.NewGuid().ToString("D")
         };
@@ -38,10 +38,10 @@ public class UserConfiguration : IEntityTypeConfiguration<ArainUser>
         var superAdminUser = new ArainUser
         {
             Id = DuutySeedConstants.SuperAdminUserId,
-            UserName = "superadmin@duuty.com",
-            NormalizedUserName = "SUPERADMIN@DUUTY.COM",
-            Email = "superadmin@duuty.com",
-            NormalizedEmail = "SUPERADMIN@DUUTY.COM",
+            UserName = "superadmin@duuty.in",
+            NormalizedUserName = "SUPERADMIN@DUUTY.IN",
+            Email = "superadmin@duuty.in",
+            NormalizedEmail = "SUPERADMIN@DUUTY.IN",
             EmailConfirmed = true,
             SecurityStamp = Guid.NewGuid().ToString("D")
         };

@@ -45,6 +45,12 @@ public class ApplicationDbContext : IdentityDbContext<ArainUser, ArainRole, stri
             .HasIndex(a => new { a.UserId, a.JobListingId })
             .IsUnique();
 
+        modelBuilder.Entity<Employer>()
+            .HasOne(e => e.EmployerSubscription)
+            .WithMany(s => s.Employers)
+            .HasForeignKey(e => e.EmployerSubscriptionId)
+            .OnDelete(DeleteBehavior.Cascade);
+
         modelBuilder.ApplyConfiguration(new OrganisationConfiguration());
         modelBuilder.ApplyConfiguration(new AddressConfiguration());
         modelBuilder.ApplyConfiguration(new RoleConfiguration());

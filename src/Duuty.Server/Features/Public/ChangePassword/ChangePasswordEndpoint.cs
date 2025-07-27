@@ -22,6 +22,7 @@ public class ChangePasswordEndpoint : Endpoint<ChangePasswordRequest, ChangePass
             await SendNotFoundAsync(ct);
             return;
         }
+
         var result = await _userManager.ChangePasswordAsync(user, request.CurrentPassword, request.NewPassword);
         if (result.Succeeded)
         {

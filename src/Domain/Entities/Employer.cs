@@ -8,4 +8,6 @@ public class Employer : Entity
     public string UserId { get; set; } = default!;
     public string Email { get; set; } = default!;
     public virtual Organisation Organisation { get; set; } = default!;
+    public long? EmployerSubscriptionId { get; set; }
+    public virtual EmployerSubscription? EmployerSubscription { get; set; }
 }

@@ -2,9 +2,9 @@
 
 public enum SubscriptionPlan
 {
-    //TODO: Update these
-    Free,
-    Standard,
-    Premium
+    Monthly,
+    Quarterly,
+    Annually,
+    EndToEnd
 }
 

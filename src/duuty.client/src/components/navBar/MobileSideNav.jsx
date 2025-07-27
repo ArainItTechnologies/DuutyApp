@@ -4,6 +4,7 @@ import { ROUTES } from "../../Constants";
 import { useTranslation } from "../../translations/TranslationHook";
 import {
   UserIcon,
+  CurrencyRupeeIcon,
   BriefcaseIcon,
   BuildingOfficeIcon,
   HomeIcon,
@@ -52,10 +53,9 @@ const MobileSideNav = ({ open, onClose, user, handleLogout }) => {
                   onClick={() => onClose(false)}
                   to={ROUTES.HOME}
                   className={({ isActive }) =>
-                    `mb-2 flex p-2 px-6 font-medium text-center rounded-[12px] ${
-                      isActive
-                        ? "bg-indigo-600 text-white" // Active state styles
-                        : "bg-[#fafafa] text-gray-900 hover:bg-[#EDEBFF] hover:text-indigo-600"
+                    `mb-2 flex p-2 px-6 font-medium text-center rounded-[12px] ${isActive
+                      ? "bg-indigo-600 text-white" // Active state styles
+                      : "bg-[#fafafa] text-gray-900 hover:bg-[#EDEBFF] hover:text-indigo-600"
                     }`
                   }
                 >
@@ -67,10 +67,9 @@ const MobileSideNav = ({ open, onClose, user, handleLogout }) => {
                     onClick={() => onClose(false)}
                     to={ROUTES.LOGIN}
                     className={({ isActive }) =>
-                      `mb-2 flex p-2 px-6 font-medium text-center rounded-[12px] ${
-                        isActive
-                          ? "bg-indigo-600 text-white" // Active state styles
-                          : "bg-[#fafafa] text-gray-900 hover:bg-[#EDEBFF] hover:text-indigo-600"
+                      `mb-2 flex p-2 px-6 font-medium text-center rounded-[12px] ${isActive
+                        ? "bg-indigo-600 text-white" // Active state styles
+                        : "bg-[#fafafa] text-gray-900 hover:bg-[#EDEBFF] hover:text-indigo-600"
                       }`
                     }
                   >
@@ -80,12 +79,23 @@ const MobileSideNav = ({ open, onClose, user, handleLogout }) => {
                 )}
                 <NavLink
                   onClick={() => onClose(false)}
+                  to={ROUTES.PRICING}
+                  className={({ isActive }) =>
+                    `mb-2 flex p-2 px-6 font-medium text-center rounded-[12px] ${isActive
+                      ? "bg-indigo-600 text-white" 
+                      : "bg-[#fafafa] text-gray-900 hover:bg-[#EDEBFF] hover:text-indigo-600"
+                    }`
+                  } >
+                  <CurrencyRupeeIcon className="h-5 w-5 mr-3 text-primary" />
+                  <span>Pricing</span>
+                </NavLink>
+                <NavLink
+                  onClick={() => onClose(false)}
                   to={ROUTES.JOB_RESULTS}
                   className={({ isActive }) =>
-                    `mb-2 flex p-2 px-6 font-medium text-center rounded-[12px] ${
-                      isActive
-                        ? "bg-indigo-600 text-white" // Active state styles
-                        : "bg-[#fafafa] text-gray-900 hover:bg-[#EDEBFF] hover:text-indigo-600"
+                    `mb-2 flex p-2 px-6 font-medium text-center rounded-[12px] ${isActive
+                      ? "bg-indigo-600 text-white" // Active state styles
+                      : "bg-[#fafafa] text-gray-900 hover:bg-[#EDEBFF] hover:text-indigo-600"
                     }`
                   }
                 >
@@ -96,10 +106,9 @@ const MobileSideNav = ({ open, onClose, user, handleLogout }) => {
                   onClick={() => onClose(false)}
                   to={ROUTES.JOB_LISTING}
                   className={({ isActive }) =>
-                    `mb-2 flex p-2 px-6 font-medium text-center rounded-[12px] ${
-                      isActive
-                        ? "bg-indigo-600 text-white" // Active state styles
-                        : "bg-[#fafafa] text-gray-900 hover:bg-[#EDEBFF] hover:text-indigo-600"
+                    `mb-2 flex p-2 px-6 font-medium text-center rounded-[12px] ${isActive
+                      ? "bg-indigo-600 text-white" // Active state styles
+                      : "bg-[#fafafa] text-gray-900 hover:bg-[#EDEBFF] hover:text-indigo-600"
                     }`
                   }
                 >
