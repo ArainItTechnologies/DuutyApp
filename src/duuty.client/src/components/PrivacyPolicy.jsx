@@ -254,7 +254,7 @@ export default function PrivacyPolicy() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-900">Email</h3>
-                    <p className="text-gray-600">support@duuty.com</p>
+                    <p className="text-gray-600">support@duuty.in</p>
                   </div>
                 </div>
 
@@ -263,8 +263,9 @@ export default function PrivacyPolicy() {
                     <Phone className="h-6 w-6 text-green-600" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-gray-900">Phone</h3>
-                    <p className="text-gray-600">+91 8939785306</p>
+                    <h3 className="font-semibold text-gray-900">Mobile</h3>
+                    <p className="text-gray-600">+91 9566344191</p>
+                    <p className="text-gray-600">Mon-Sat, 9AM-6PM IST</p>
                   </div>
                 </div>
 
@@ -275,11 +276,11 @@ export default function PrivacyPolicy() {
                   <div>
                     <h3 className="font-semibold text-gray-900">Office</h3>
                     <p className="text-gray-600">
-                      10-37, Maruthi Nagar
+                      G-1, 4/608, V.O.C Street
                       <br />
-                      Kodambakkam
+                      Desk #284 Perungudi
                       <br />
-                      Chennai, IN, 600024
+                      Kottivakkam, Chennai - 600041
                     </p>
                   </div>
                 </div>

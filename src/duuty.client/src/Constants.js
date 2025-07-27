@@ -4,7 +4,7 @@ import chat from "./assets/chat-master.jpeg";
 import tandoor from "./assets/tandoori-master.jpeg";
 import biryani from "./assets/biryani.jpeg";
 import barota from "./assets/dosa.jpeg";
-import chinese from "./assets/chinese.jpeg";
+import chinese from "./assets/Chinese.png";
 import teamaster from "./assets/tea-master.jpeg";
 import northindian from "./assets/north-indian.jpeg";
 import southindian from "./assets/south-indian.jpeg";

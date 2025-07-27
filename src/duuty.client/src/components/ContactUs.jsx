@@ -1,15 +1,22 @@
-import React, { useState } from 'react';
-import { Mail, Phone, MapPin, Send, CheckCircle, AlertCircle } from 'lucide-react';
+import React, { useState } from "react";
+import {
+  Mail,
+  Phone,
+  MapPin,
+  Send,
+  CheckCircle,
+  AlertCircle,
+} from "lucide-react";
 
 const ContactUs = () => {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    company: '',
-    subject: '',
-    message: '',
-    inquiryType: 'general'
+    name: "",
+    email: "",
+    phone: "",
+    company: "",
+    subject: "",
+    message: "",
+    inquiryType: "general",
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -17,35 +24,35 @@ const ContactUs = () => {
   const [errors, setErrors] = useState({});
 
   const inquiryTypes = [
-    { value: 'general', label: 'General Inquiry' },
-    { value: 'support', label: 'Technical Support' },
-    { value: 'sales', label: 'Sales & Pricing' },
-    { value: 'partnership', label: 'Partnership' },
-    { value: 'careers', label: 'Careers' },
-    { value: 'feedback', label: 'Feedback' }
+    { value: "general", label: "General Inquiry" },
+    { value: "support", label: "Technical Support" },
+    { value: "sales", label: "Sales & Pricing" },
+    { value: "partnership", label: "Partnership" },
+    { value: "careers", label: "Careers" },
+    { value: "feedback", label: "Feedback" },
   ];
 
   const validateForm = () => {
     const newErrors = {};
 
     if (!formData.name.trim()) {
-      newErrors.name = 'Name is required';
+      newErrors.name = "Name is required";
     }
 
     if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
+      newErrors.email = "Email is required";
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email address';
+      newErrors.email = "Please enter a valid email address";
     }
 
     if (!formData.subject.trim()) {
-      newErrors.subject = 'Subject is required';
+      newErrors.subject = "Subject is required";
     }
 
     if (!formData.message.trim()) {
-      newErrors.message = 'Message is required';
+      newErrors.message = "Message is required";
     } else if (formData.message.trim().length < 10) {
-      newErrors.message = 'Message must be at least 10 characters long';
+      newErrors.message = "Message must be at least 10 characters long";
     }
 
     setErrors(newErrors);
@@ -54,23 +61,23 @@ const ContactUs = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
 
     // Clear error when user starts typing
     if (errors[name]) {
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
-        [name]: ''
+        [name]: "",
       }));
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
@@ -80,23 +87,23 @@ const ContactUs = () => {
 
     try {
       // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      console.log('Contact form submitted:', formData);
-      
-      setSubmitStatus('success');
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
+      console.log("Contact form submitted:", formData);
+
+      setSubmitStatus("success");
       setFormData({
-        name: '',
-        email: '',
-        phone: '',
-        company: '',
-        subject: '',
-        message: '',
-        inquiryType: 'general'
+        name: "",
+        email: "",
+        phone: "",
+        company: "",
+        subject: "",
+        message: "",
+        inquiryType: "general",
       });
     } catch (error) {
-      console.error('Error submitting form:', error);
-      setSubmitStatus('error');
+      console.error("Error submitting form:", error);
+      setSubmitStatus("error");
     } finally {
       setIsSubmitting(false);
     }
@@ -112,7 +119,8 @@ const ContactUs = () => {
               Get in Touch
             </h1>
             <p className="text-xl text-blue-100 max-w-2xl mx-auto">
-              We'd love to hear from you. Send us a message and we'll respond as soon as possible.
+              We'd love to hear from you. Send us a message and we'll respond as
+              soon as possible.
             </p>
           </div>
         </div>
@@ -126,7 +134,7 @@ const ContactUs = () => {
               <h2 className="text-2xl font-bold text-gray-900 mb-6">
                 Contact Information
               </h2>
-              
+
               <div className="space-y-6">
                 <div className="flex items-start space-x-4">
                   <div className="bg-blue-100 p-3 rounded-lg">
@@ -134,8 +142,7 @@ const ContactUs = () => {
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-900">Email</h3>
-                    <p className="text-gray-600">contact@duuty.com</p>
-                    <p className="text-gray-600">support@duuty.com</p>
+                    <p className="text-gray-600">support@duuty.in</p>
                   </div>
                 </div>
 
@@ -144,9 +151,9 @@ const ContactUs = () => {
                     <Phone className="h-6 w-6 text-green-600" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-gray-900">Phone</h3>
-                    <p className="text-gray-600">+91 8939785306</p>
-                    <p className="text-gray-600">Mon-Fri, 9AM-6PM IST</p>
+                    <h3 className="font-semibold text-gray-900">Mobile</h3>
+                    <p className="text-gray-600">+91 9566344191</p>
+                    <p className="text-gray-600">Mon-Sat, 9AM-6PM IST</p>
                   </div>
                 </div>
 
@@ -157,16 +164,20 @@ const ContactUs = () => {
                   <div>
                     <h3 className="font-semibold text-gray-900">Office</h3>
                     <p className="text-gray-600">
-                      10-37, Maruthi Nagar<br />
-                      Kodambakkam<br />
-                      Chennai, IN, 600024
+                      G-1, 4/608, V.O.C Street
+                      <br />
+                      Desk #284 Perungudi
+                      <br />
+                      Kottivakkam, Chennai - 600041
                     </p>
                   </div>
                 </div>
               </div>
 
               <div className="mt-8 pt-8 border-t border-gray-200">
-                <h3 className="font-semibold text-gray-900 mb-4">Business Hours</h3>
+                <h3 className="font-semibold text-gray-900 mb-4">
+                  Business Hours
+                </h3>
                 <div className="space-y-2 text-sm text-gray-600">
                   <div className="flex justify-between">
                     <span>Monday - Friday</span>
@@ -192,20 +203,22 @@ const ContactUs = () => {
                 Send us a Message
               </h2>
 
-              {submitStatus === 'success' && (
+              {submitStatus === "success" && (
                 <div className="mb-6 bg-green-50 border border-green-200 rounded-lg p-4 flex items-center space-x-3">
                   <CheckCircle className="h-5 w-5 text-green-600" />
                   <p className="text-green-800">
-                    Thank you for your message! We'll get back to you within 24 hours.
+                    Thank you for your message! We'll get back to you within 24
+                    hours.
                   </p>
                 </div>
               )}
 
-              {submitStatus === 'error' && (
+              {submitStatus === "error" && (
                 <div className="mb-6 bg-red-50 border border-red-200 rounded-lg p-4 flex items-center space-x-3">
                   <AlertCircle className="h-5 w-5 text-red-600" />
                   <p className="text-red-800">
-                    Sorry, there was an error sending your message. Please try again.
+                    Sorry, there was an error sending your message. Please try
+                    again.
                   </p>
                 </div>
               )}
@@ -213,7 +226,10 @@ const ContactUs = () => {
               <div className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+                    <label
+                      htmlFor="name"
+                      className="block text-sm font-medium text-gray-700 mb-2"
+                    >
                       Full Name *
                     </label>
                     <input
@@ -223,7 +239,9 @@ const ContactUs = () => {
                       value={formData.name}
                       onChange={handleChange}
                       className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors ${
-                        errors.name ? 'border-red-300 bg-red-50' : 'border-gray-300'
+                        errors.name
+                          ? "border-red-300 bg-red-50"
+                          : "border-gray-300"
                       }`}
                       placeholder="Enter your full name"
                     />
@@ -233,7 +251,10 @@ const ContactUs = () => {
                   </div>
 
                   <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                    <label
+                      htmlFor="email"
+                      className="block text-sm font-medium text-gray-700 mb-2"
+                    >
                       Email Address *
                     </label>
                     <input
@@ -243,19 +264,26 @@ const ContactUs = () => {
                       value={formData.email}
                       onChange={handleChange}
                       className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors ${
-                        errors.email ? 'border-red-300 bg-red-50' : 'border-gray-300'
+                        errors.email
+                          ? "border-red-300 bg-red-50"
+                          : "border-gray-300"
                       }`}
                       placeholder="Enter your email address"
                     />
                     {errors.email && (
-                      <p className="mt-1 text-sm text-red-600">{errors.email}</p>
+                      <p className="mt-1 text-sm text-red-600">
+                        {errors.email}
+                      </p>
                     )}
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
+                    <label
+                      htmlFor="phone"
+                      className="block text-sm font-medium text-gray-700 mb-2"
+                    >
                       Phone Number
                     </label>
                     <input
@@ -270,7 +298,10 @@ const ContactUs = () => {
                   </div>
 
                   <div>
-                    <label htmlFor="company" className="block text-sm font-medium text-gray-700 mb-2">
+                    <label
+                      htmlFor="company"
+                      className="block text-sm font-medium text-gray-700 mb-2"
+                    >
                       Company/Organization
                     </label>
                     <input
@@ -286,7 +317,10 @@ const ContactUs = () => {
                 </div>
 
                 <div>
-                  <label htmlFor="inquiryType" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label
+                    htmlFor="inquiryType"
+                    className="block text-sm font-medium text-gray-700 mb-2"
+                  >
                     Inquiry Type
                   </label>
                   <select
@@ -305,7 +339,10 @@ const ContactUs = () => {
                 </div>
 
                 <div>
-                  <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label
+                    htmlFor="subject"
+                    className="block text-sm font-medium text-gray-700 mb-2"
+                  >
                     Subject *
                   </label>
                   <input
@@ -315,17 +352,24 @@ const ContactUs = () => {
                     value={formData.subject}
                     onChange={handleChange}
                     className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors ${
-                      errors.subject ? 'border-red-300 bg-red-50' : 'border-gray-300'
+                      errors.subject
+                        ? "border-red-300 bg-red-50"
+                        : "border-gray-300"
                     }`}
                     placeholder="Enter the subject of your message"
                   />
                   {errors.subject && (
-                    <p className="mt-1 text-sm text-red-600">{errors.subject}</p>
+                    <p className="mt-1 text-sm text-red-600">
+                      {errors.subject}
+                    </p>
                   )}
                 </div>
 
                 <div>
-                  <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label
+                    htmlFor="message"
+                    className="block text-sm font-medium text-gray-700 mb-2"
+                  >
                     Message *
                   </label>
                   <textarea
@@ -335,19 +379,23 @@ const ContactUs = () => {
                     value={formData.message}
                     onChange={handleChange}
                     className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors resize-vertical ${
-                      errors.message ? 'border-red-300 bg-red-50' : 'border-gray-300'
+                      errors.message
+                        ? "border-red-300 bg-red-50"
+                        : "border-gray-300"
                     }`}
                     placeholder="Enter your message here..."
                   />
                   {errors.message && (
-                    <p className="mt-1 text-sm text-red-600">{errors.message}</p>
+                    <p className="mt-1 text-sm text-red-600">
+                      {errors.message}
+                    </p>
                   )}
                   <p className="mt-1 text-sm text-gray-500">
                     {formData.message.length}/500 characters
                   </p>
                 </div>
 
-                <div className="flex items-center justify-between pt-4">                  
+                <div className="flex items-center justify-between pt-4">
                   <button
                     type="submit"
                     disabled={isSubmitting}
