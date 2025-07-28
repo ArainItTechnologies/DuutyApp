@@ -1,10 +1,11 @@
-import Notion from "../assets/notion.png";
-import Unsplash from "../assets/unsplash.png";
-import Grammarly from "../assets/grammarly.png";
-import Descript from "../assets/descript.png";
-import Intercom from "../assets/intercom.png";
+import Ramana from "../assets/ramana.jpg";
+import PaatiVeedu from "../assets/paati-veedu.jpg";
+import Khalidas from "../assets/khalidas.jpg";
+import Manjal from "../assets/manjal.jpg";
+import Nalams from "../assets/nalams.jpg";
+import PandiNadu from "../assets/pandi-nadu.jpg";
 
-const logos = [Notion, Unsplash, Grammarly, Descript, Intercom];
+const logos = [Ramana, PaatiVeedu, Khalidas, Manjal, Nalams, PandiNadu];
 
 const TrustedCompanies = () => {
     return (
@@ -15,13 +16,8 @@ const TrustedCompanies = () => {
                 </h2>
                 <div className="mt-[50px] relative overflow-hidden">
                     <div className="flex items-center gap-x-[50px] lg:gap-x-[60px] xl:gap-x-[75px] 2xl:gap-x-[100px] animate-scroll whitespace-nowrap w-max">
-                        {[...logos, ...logos].map((logo, index) => (
-                            <img
-                                key={index}
-                                className="h-[30px] lg:h-[38px]"
-                                src={logo}
-                                alt={`Company Logo ${index + 1}`}
-                            />
+                        {logos.map((logo, index) => (
+                            <img key={`original-${index}`} className="h-[100px]" src={logo} alt={`Company Logo ${index + 1}`} />
                         ))}
                     </div>
                 </div>

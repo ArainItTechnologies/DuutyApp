@@ -5,16 +5,11 @@ import BannerImageMob from "../assets/banner-image-mob.png";
 import FindEmp from "../assets/dream-kitchen.jpg";
 import Emp1 from "../assets/emp-1.png";
 import Emp2 from "../assets/emp-2.png";
-import Ramana from "../assets/ramana.jpg";
-import PaatiVeedu from "../assets/paati-veedu.jpg";
-import Khalidas from "../assets/khalidas.jpg";
-import Manjal from "../assets/manjal.jpg";
-import Nalams from "../assets/nalams.jpg";
-import PandiNadu from "../assets/pandi-nadu.jpg";
 
 import WavePatten1 from "../assets/wave-patten1.svg";
 import WavePatten2 from "../assets/wave-patten2.svg";
 
+import TrustedCompanies from "./TrustedCompanies";
 import TestimonialSection from "../components/Testimonial";
 import RegistrationTabs from "./user/RegistrationTabs";
 import LanguageSelectionModal from "./LanguageSelectionModal";
@@ -125,21 +120,7 @@ export const Home = () => {
             </div>
 
 
-            <div id="trusted-companies" className="trusted-brands-wrapper lg:pt-[70px] lg:pb-[70px] overflow-hidden">
-                <div className="container-wrapper">
-                    <h2 className="text-[28px] lg:text-[34px] xl:text-[40px] font-[AvenirNextBold] text-center">
-                        Trusted by 25+ Restaurants
-                    </h2>
-                    <div className="mt-[50px] relative overflow-hidden">
-                        <div className="flex items-center gap-x-[50px] lg:gap-x-[60px] xl:gap-x-[75px] 2xl:gap-x-[100px] animate-scroll whitespace-nowrap w-max">
-                            {/* Original content */}
-                            {[Ramana,  PaatiVeedu, Khalidas, Manjal, Nalams, PandiNadu].map((logo, index) => (
-                                <img key={`original-${index}`} className="h-[100px] lg:h-[38px]" src={logo} alt={`Company Logo ${index + 1}`} />
-                            ))}
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <TrustedCompanies/>
 
             <TestimonialSection />
 
