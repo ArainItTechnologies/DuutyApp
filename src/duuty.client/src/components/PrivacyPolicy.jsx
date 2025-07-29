@@ -265,7 +265,6 @@ export default function PrivacyPolicy() {
                   <div>
                     <h3 className="font-semibold text-gray-900">Mobile</h3>
                     <p className="text-gray-600">+91 9566344191</p>
-                    <p className="text-gray-600">Mon-Sat, 9AM-6PM IST</p>
                   </div>
                 </div>
 

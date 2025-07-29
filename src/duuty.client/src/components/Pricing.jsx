@@ -2,7 +2,35 @@ import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import { useNavigate } from "react-router-dom";
 
 const Pricing = () => {
-  const navigate = useNavigate();
+    const navigate = useNavigate();
+
+    // Razorpay payment handler
+    const handleRazorpayPayment = async (amount, description) => {
+        // Ideally, fetch order_id from your backend here
+        const options = {
+            key: "YOUR_RAZORPAY_KEY_ID", // Replace with your Razorpay key
+            amount: amount * 100, // Amount in paise
+            currency: "INR",
+            name: "Your Company Name",
+            description: description,
+            // order_id: "order_DBJOWzybf0sJbb", // Get this from your backend
+            handler: function (response) {
+                alert("Payment successful! Payment ID: " + response.razorpay_payment_id);
+                // You can verify payment on the backend here
+            },
+            prefill: {
+                name: "",
+                email: "",
+                contact: "",
+            },
+            theme: {
+                color: "#6366f1",
+            },
+        };
+        const rzp = new window.Razorpay(options);
+        rzp.open();
+    };
+
   return (
     <section className="bg-[#f4f2ff] min-h-screen py-12 px-4">
       <div className="container-wrapper mx-auto">
@@ -33,7 +61,9 @@ const Pricing = () => {
               </span> */}
             </p>
             <p className="text-gray-500 mb-6">Monthly Payment</p>
-            <button className="bg-linear-(--gradient-bg) text-white py-2 w-full rounded-lg mb-2 cursor-pointer">
+                      <button className="bg-linear-(--gradient-bg) text-white py-2 w-full rounded-lg mb-2 cursor-pointer"
+                          onClick={() => handleRazorpayPayment(999, "1 - Month Plan")}
+                      >
               Pay Now
             </button>
             <div className="border-t border-gray-300 my-6"></div>
@@ -153,7 +183,7 @@ const Pricing = () => {
           </div>
 
           <div className="bg-white rounded-2xl shadow p-6">
-            <h3 className="text-2xl font-semibold mb-2">3 - Month</h3>
+            <h3 className="text-2xl font-semibold mb-2">3 - Months</h3>
             <p className="text-gray-500 text-[16px] mb-4">
               Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nostrum
               quam
@@ -165,7 +195,9 @@ const Pricing = () => {
               </span> */}
             </p>
             <p className="text-gray-500 mb-6">Quarterly Payment</p>
-            <button className="bg-linear-(--gradient-bg) text-white py-2 w-full rounded-lg mb-2 cursor-pointer">
+                      <button className="bg-linear-(--gradient-bg) text-white py-2 w-full rounded-lg mb-2 cursor-pointer"
+                          onClick={() => handleRazorpayPayment(999, "3 - Months Plan")}
+                      >
               Pay Now
             </button>
             <div className="border-t border-gray-300 my-6"></div>
@@ -297,7 +329,9 @@ const Pricing = () => {
               </span> */}
             </p>
             <p className="text-gray-500 mb-6">Yearly Payment</p>
-            <button className="bg-linear-(--gradient-bg) text-white py-2 w-full rounded-lg mb-2 cursor-pointer">
+                      <button className="bg-linear-(--gradient-bg) text-white py-2 w-full rounded-lg mb-2 cursor-pointer"
+                          onClick={() => handleRazorpayPayment(999, "1 - Month Plan")}
+                      >
               Pay Now
             </button>
             <div className="border-t border-gray-300 my-6"></div>

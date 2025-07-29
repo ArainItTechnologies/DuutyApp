@@ -73,9 +73,9 @@ const Footer = () => {
             <p className="mb-4">
               <Link to={ROUTES.PRIVACY_POLICY}>Privacy Policy</Link>
             </p>
-            {/* <p className="mb-4">
-              <Link to="find-job">Careers</Link>
-            </p> */}
+            <p className="mb-4">
+              <Link to={ROUTES.PRICING}>Pricing</Link>
+            </p>
           </div>
           <div>
             <h6 className="mb-4 flex justify-center font-bold md:justify-start">

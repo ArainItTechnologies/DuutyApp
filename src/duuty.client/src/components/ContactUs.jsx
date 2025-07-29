@@ -4,6 +4,7 @@ import {
   Phone,
   MapPin,
   Send,
+  Timer,
   CheckCircle,
   AlertCircle,
 } from "lucide-react";
@@ -153,7 +154,6 @@ const ContactUs = () => {
                   <div>
                     <h3 className="font-semibold text-gray-900">Mobile</h3>
                     <p className="text-gray-600">+91 9566344191</p>
-                    <p className="text-gray-600">Mon-Sat, 9AM-6PM IST</p>
                   </div>
                 </div>
 
@@ -185,7 +185,7 @@ const ContactUs = () => {
                   </div>
                   <div className="flex justify-between">
                     <span>Saturday</span>
-                    <span>10:00 AM - 4:00 PM</span>
+                    <span>10:00 AM - 5:00 PM</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Sunday</span>

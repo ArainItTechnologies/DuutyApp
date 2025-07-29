@@ -27,7 +27,7 @@ const JobListing = () =>{
           </h1>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {filteredJobs.map((job) => (
             <div
               key={job.id}
@@ -36,7 +36,7 @@ const JobListing = () =>{
               <img
                 src={job.image}
                 alt={job.name}
-                className="rounded-[20px] mb-4 w-full h-48 object-cover"
+                className="rounded-[20px] mb-4 w-full h-58 object-cover"
               />
               <h2 className="text-lg font-medium mb-2">
                 {job.name}
