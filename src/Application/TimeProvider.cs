@@ -1,5 +1,4 @@
-﻿using SharedKernel;
-using SharedKernel.Services;
+﻿using SharedKernel.Services;
 
 namespace Application;
 

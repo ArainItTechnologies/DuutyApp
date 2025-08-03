@@ -2,6 +2,6 @@
 
 namespace DataAccess.Repository.Interfaces;
 
-public interface IOrganisationRepository : IRepository<Organisation>
+public interface IPaymentTransactionRepository : IRepository<PaymentTransaction>
 {
 }

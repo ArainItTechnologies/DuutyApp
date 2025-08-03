@@ -45,7 +45,8 @@ public class RegisterEndpoint : Endpoint<RegisterModel, RegistrationResponse>
         {
             UserName = userName,
             Email = model.Email,
-            PhoneNumber = model.PhoneNumber
+            PhoneNumber = model.PhoneNumber,
+            TwoFactorEnabled = true,
         };
 
         var result = await _userManager.CreateAsync(user, model.Password);
@@ -56,18 +57,45 @@ public class RegisterEndpoint : Endpoint<RegisterModel, RegistrationResponse>
             return;
         }
 
+        if (!string.IsNullOrEmpty(model.PhoneNumber))
+        {
+            await _userManager.GenerateTwoFactorTokenAsync(user, TokenOptions.DefaultPhoneProvider)
+               .ContinueWith(async otp =>
+               {
+                   if (otp.IsCompletedSuccessfully)
+                   {
+                       await _emailSender.SendEmailAsync(
+                           model.PhoneNumber!,
+                           EmailType.Otp,
+                           otp.Result);
+                   }
+               }, ct);
+        }
+
         if (!string.IsNullOrWhiteSpace(model.Email))
         {
-            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            //var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 
-            var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
+            //var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
 
-            var confirmationLink = $"{_configuration["ClientAppBaseUrl"]}/confirm?userId={user.Id}&token={encodedToken}";
+            //var confirmationLink = $"{_configuration["ClientAppBaseUrl"]}/confirm?userId={user.Id}&token={encodedToken}";
 
-            await _emailSender.SendEmailAsync(
-                model.Email,
-                EmailType.Confirm,
-                confirmationLink);
+            //await _emailSender.SendEmailAsync(
+            //    model.Email,
+            //    EmailType.Confirm,
+            //    confirmationLink);
+
+            await _userManager.GenerateTwoFactorTokenAsync(user, TokenOptions.DefaultEmailProvider)
+                .ContinueWith(async otp =>
+                {
+                    if (otp.IsCompletedSuccessfully)
+                    {
+                        await _emailSender.SendEmailAsync(
+                            model.Email!,
+                            EmailType.Otp,
+                            otp.Result);
+                    }
+                }, ct);
         }
 
         await _userManager.AddToRoleAsync(user, "User");

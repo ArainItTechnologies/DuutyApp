@@ -36,41 +36,55 @@ public class EmailSender : IEmailSender
                         <h2>Password Updated</h2>
                         <p>Your password has been successfully updated.</p>
                         <p>If you did not perform this action, please contact support immediately.</p>",
+
             EmailType.Verified => $@"
                         <h2>Email Successfully Verified</h2>
                         <p>Your email address has been successfully verified. You can now access all features of your account.</p>
                         <p>Thanks for verifying your email!</p>",
+            EmailType.Otp => $@"
+                        <h2>Your One-Time Password (OTP)</h2>
+                        <p>Your OTP code is: <strong>{message}</strong></p>
+                        <p>This code is valid for 5 minutes. If you did not request this, please ignore this email.</p>",
 
             _ => $"<p>{message}</p>"
         };
 
-        string htmlMessage = $@"
-                    <html>
-                        <head>
-                            <style>
-                                body {{ font-family: Arial, sans-serif; line-height: 1.6; color: #333; }}
-                                .container {{ width: 100%; max-width: 600px; margin: 0 auto; }}
-                                .header {{ text-align: center; background-color: #f4f4f4; padding: 20px; }}
-                                .content {{ padding: 20px; }}
-                                .footer {{ text-align: center; font-size: 12px; color: #777; }}
-                                .link-text {{ color: #007bff; text-decoration: none; font-weight: bold; }}
-                                .link-text:hover {{ text-decoration: underline; }}
-                            </style>
-                        </head>
-                        <body>
-                            <div className='container'>
-                                <div className='header'>
-                                    <h1>DUUTY</h1>
-                                </div>
-                                <div className='content'>
-                                    {htmlContent}
-                                </div>
-                                <div className='footer'>
-                                    <p>&copy; 2025 DUUTY. All Rights Reserved.</p>
-                                </div>
-                            </div>
-                        </body>
-                    </html>";
+        string htmlMessage = $@"<html>
+                                    <head>
+                                        <style>
+                                            body {{ font-family: Arial, sans-serif; line-height: 1.6; color: #333; background-color: #ffffff; }}
+                                            .container {{ width: 100%; max-width: 600px; margin: 0 auto; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden; }}
+                                            .header {{
+                                                text-align: center;
+                                                background-color: #4B0082; /* Indigo */
+                                                padding: 30px 20px;
+                                                color: #ffffff;
+                                                font-size: 28px;
+                                                font-weight: bold;
+                                                letter-spacing: 2px;
+                                            }}
+                                            .header svg {{ width: 120px; height: auto; }}
+                                            .content {{ padding: 20px; color: #333; }}
+                                            .footer {{ text-align: center; font-size: 12px; color: #777; background-color: #f4f4f4; padding: 10px 20px; }}
+                                            .link-text {{ color: #4B0082; text-decoration: none; font-weight: bold; }}
+                                            .link-text:hover {{ text-decoration: underline; }}
+                                        </style>
+                                    </head>
+                                    <body>
+                                        <div class='container'>
+                                            <div class='header'>
+                                                DUUTY
+                                            </div>
+                                            <div class='content'>
+                                                {htmlContent}
+                                            </div>
+                                            <div class='footer'>
+                                                <p>&copy; 2025 DUUTY. All Rights Reserved.</p>
+                                            </div>
+                                        </div>
+                                    </body>
+                                </html>";
+
 
         var bodyBuilder = new BodyBuilder
         {
@@ -82,7 +96,7 @@ public class EmailSender : IEmailSender
         using var smtp = new SmtpClient();
         try
         {
-            await smtp.ConnectAsync(_emailSettings.SmtpServer, _emailSettings.SmtpPort, SecureSocketOptions.Auto, CancellationToken.None);
+            await smtp.ConnectAsync(_emailSettings.SmtpServer, _emailSettings.SmtpPort, SecureSocketOptions.SslOnConnect, CancellationToken.None);
             await smtp.AuthenticateAsync(_emailSettings.Username, _emailSettings.Password);
             await smtp.SendAsync(email);
         }

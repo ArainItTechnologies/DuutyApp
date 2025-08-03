@@ -1,5 +1,4 @@
-﻿using Domain.Entities;
-using SharedKernel.Repository;
+﻿using SharedKernel.Repository;
 
 namespace DataAccess.Repository.Interfaces;
 

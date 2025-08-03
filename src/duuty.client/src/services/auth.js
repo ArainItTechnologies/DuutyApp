@@ -109,3 +109,40 @@ export const applyJob = async (applicationData, token) => {
     throw error.response?.data || { message: "Apply job failed" };
   }
 }
+
+export const createOrder = async (orderData, token) => {
+  try {
+    const response = await axios.post("/api/create-order", orderData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || { message: "Create order failed" };
+  }
+}
+
+export const verifyPayment = async (paymentData, token) => {
+  try {
+    const response = await axios.post("/api/verify-payment", paymentData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || { message: "Verify payment failed" };
+  }
+}
+
+export const verifyOtp = async (otpData) => {
+  try {
+    const response = await axios.post("/api/verify-otp", otpData);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || { message: "OTP verification failed" };
+  }
+};

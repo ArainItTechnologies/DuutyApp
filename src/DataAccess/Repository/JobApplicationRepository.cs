@@ -1,7 +1,4 @@
-﻿using DataAccess.Repository.Interfaces;
-using Domain.Entities;
-
-namespace DataAccess.Repository;
+﻿namespace DataAccess.Repository;
 
 public class JobApplicationRepository: GenericRepository<JobApplication>, IJobApplicationRepository
 {

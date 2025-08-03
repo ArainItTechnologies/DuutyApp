@@ -202,7 +202,11 @@ export const PrimaryButton = ({
       type={type}
       disabled={disabled}
       onClick={onClick}
-      className="cursor-pointer flex w-full justify-center rounded-xl sm:h-[50px] h-[40px] bg-linear-(--gradient-bg) sm:p-3 px-3 py-2 text-sm/6 font-semibold text-white shadow-xs hover:bg-primary-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+      className={`cursor-pointer flex w-full justify-center rounded-xl sm:h-[50px] h-[40px] bg-linear-(--gradient-bg) sm:p-3 px-3 py-2 text-sm/6 font-semibold text-white shadow-xs hover:bg-primary-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 ${
+        disabled 
+          ? 'opacity-50 cursor-not-allowed hover:bg-gray-400' 
+          : 'cursor-pointer hover:bg-primary-500'
+      } ${className}`}
     >
       {children}
     </button>

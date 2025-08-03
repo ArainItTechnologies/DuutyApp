@@ -1,6 +1,5 @@
 ﻿using DataAccess.Identity;
 using DataAccess.SeedConfiguration;
-using Domain.Entities;
 using Domain.Enums;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -50,6 +49,27 @@ public class ApplicationDbContext : IdentityDbContext<ArainUser, ArainRole, stri
             .WithMany(s => s.Employers)
             .HasForeignKey(e => e.EmployerSubscriptionId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<PaymentOrder>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Amount).HasColumnType("decimal(18,2)");
+            entity.Property(e => e.RazorpayOrderId).HasMaxLength(100);
+            entity.Property(e => e.Receipt).HasMaxLength(40);
+            entity.HasIndex(e => e.RazorpayOrderId).IsUnique();
+        });
+
+        modelBuilder.Entity<PaymentTransaction>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Amount).HasColumnType("decimal(18,2)");
+            entity.Property(e => e.RazorpayPaymentId).HasMaxLength(100);
+            entity.HasIndex(e => e.RazorpayPaymentId).IsUnique();
+
+            entity.HasOne(d => d.PaymentOrder)
+                  .WithMany(p => p.Transactions)
+                  .HasForeignKey(d => d.PaymentOrderId);
+        });
 
         modelBuilder.ApplyConfiguration(new OrganisationConfiguration());
         modelBuilder.ApplyConfiguration(new AddressConfiguration());

@@ -1,5 +1,4 @@
 ﻿using System.Linq.Expressions;
-using Microsoft.EntityFrameworkCore;
 using SharedKernel.BaseEntity;
 using SharedKernel.Repository;
 using SharedKernel.Service;

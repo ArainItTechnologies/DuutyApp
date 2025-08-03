@@ -19,6 +19,9 @@ const TrustedCompanies = () => {
                         {logos.map((logo, index) => (
                             <img key={`original-${index}`} className="h-[100px]" src={logo} alt={`Company Logo ${index + 1}`} />
                         ))}
+                        {logos.map((logo, index) => (
+                            <img key={`original-${index}`} className="h-[100px]" src={logo} alt={`Company Logo ${index + 1}`} />
+                        ))}
                     </div>
                 </div>
             </div>

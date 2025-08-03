@@ -23,6 +23,16 @@ public class LoginEndpoint(UserManager<ArainUser> userManager, JwtHandler jwtHan
             return;
         }
 
+        if (!user.EmailConfirmed)
+        {
+            await SendAsync(new LoginResponse
+            {
+                IsAuthSuccessful = false,
+                ErrorMessage = "Email is not confirmed."
+            }, 403, ct);
+            return;
+        }
+
         var roles = await userManager.GetRolesAsync(user);
 
         var token = jwtHandler.CreateToken(user, roles);

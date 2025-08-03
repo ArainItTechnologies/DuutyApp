@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Razorpay.Api;
 
 namespace Infrastructure;
 
@@ -16,7 +17,7 @@ public static class InfrastructureServiceRegistration
 {
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
-        
+
         services.AddIdentity<ArainUser, ArainRole>(options =>
         {
             options.SignIn.RequireConfirmedEmail = true;
@@ -69,6 +70,9 @@ public static class InfrastructureServiceRegistration
         services.AddSingleton<JwtHandler>();
 
         services.AddScoped<IOrganisationService, OrganisationService>()
+                .AddScoped<IPaymentOrderService, PaymentOrderService>()
+                .AddScoped<IPaymentTransactionService, PaymentTransactionService>()
+                .AddScoped<IRazorpayService, RazorpayService>()
                 .AddScoped<IJobListingService, JobListingService>()
                 .AddScoped<IAddressService, AddressService>()
                 .AddScoped<IEmployerSubscriptionService, EmployerSubscriptionService>()

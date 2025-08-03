@@ -2,17 +2,26 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { FormInput, FormPasswordInput, FormSelect, PrimaryButton } from "../custom/FormElements";
 import SelectRole from "../user/SelectRole";
-import { registerUser } from "../../services/auth";
+import { registerUser, verifyOtp } from "../../services/auth";
 import { CHEF_OPTIONS } from "../../Constants";
 import { useAppState } from "../../hooks/Hooks";
+import { validateMobileNumber, validateEmail } from "../../utils/ValidationUtils";
+import VerifyOtp from "./VerifyOtp";
 
 const EmployeeRegister = () => {
   const { setIsLoading } = useAppState();
-  
+
   const [showSelectRole, setShowSelectRole] = useState(false);
   const [selectedRole, setSelectedRole] = useState(null);
   const [selectedSubRole, setSelectedSubRole] = useState(null);
   const [roleOptions, setRoleOptions] = useState([{ id: "", name: "Select Role" }]);
+
+  const [phoneError, setPhoneError] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [confirmPasswordError, setConfirmPasswordError] = useState("");
+
+  const [isVerifyOpen, setIsVerifyOpen] = useState(false);
 
   const chefOptionsWithPlaceholder = [
     { id: "", name: "Select Sub Role" },
@@ -21,8 +30,7 @@ const EmployeeRegister = () => {
 
   const location = useLocation();
   const navigate = useNavigate();
-
-  const from = location.state?.from || "/";
+  const [from] = useState(location.state?.from || "/");
 
   const [formData, setFormData] = useState({
     name: "",
@@ -42,6 +50,35 @@ const EmployeeRegister = () => {
       ...prev,
       [name]: value,
     }));
+
+    if (name === 'mobile') {
+      setPhoneError("");
+      // Validate mobile number if value exists
+      if (value && !validateMobileNumber(value)) {
+        setPhoneError("Please enter a valid mobile number");
+      }
+    }
+
+    if (name === 'email') {
+      setEmailError("");
+      if (value && !validateEmail(value)) {
+        setEmailError("Please enter a valid email address");
+      }
+    }
+
+    if (name === 'password') {
+      setPasswordError("");
+      if (value && value.length < 8) {
+        setPasswordError("Password must be at least 8 characters long");
+      }
+    }
+
+    if (name === 'confirmPassword') {
+      setConfirmPasswordError("");
+      if (value && value !== formData.password) {
+        setConfirmPasswordError("Passwords do not match");
+      }
+    }
   };
 
   // Handle form submission
@@ -62,8 +99,8 @@ const EmployeeRegister = () => {
       setSuccess(
         "Registration successful! Please check your email for confirmation."
       );
+      setIsVerifyOpen(true);
       setError("");
-      navigate(from); // Redirect to the previous page
     } catch (err) {
       setIsLoading(false);
       setError(err.message || "Something went wrong");
@@ -91,14 +128,21 @@ const EmployeeRegister = () => {
         />
 
         {!formData.email && (
-          <FormInput
-            label="Mobile Number"
-            name="mobile"
-            type="tel"
-            id="mobile"
-            value={formData.mobile}
-            onChange={handleChange}
-            required />
+          <div>
+            <FormInput
+              label="Mobile Number"
+              name="mobile"
+              type="tel"
+              id="mobile"
+              value={formData.mobile}
+              onChange={handleChange}
+              required />
+            {phoneError && (
+              <p className="mt-1 text-sm text-red-600" role="alert">
+                {phoneError}
+              </p>
+            )}
+          </div>
         )}
 
         {!formData.mobile && !formData.email && (
@@ -110,15 +154,22 @@ const EmployeeRegister = () => {
         )}
 
         {!formData.mobile && (
-          <FormInput
-            label="Email Address"
-            name="email"
-            type="email"
-            id="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
+          <div>
+            <FormInput
+              label="Email Address"
+              name="email"
+              type="email"
+              id="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
+            {emailError && (
+              <p className="mt-1 text-sm text-red-600" role="alert">
+                {emailError}
+              </p>
+            )}
+          </div>
         )}
 
         <FormSelect
@@ -142,29 +193,43 @@ const EmployeeRegister = () => {
           />
         )}
 
-        <FormPasswordInput
-          label="Password"
-          name="password"
-          type="password"
-          id="password"
-          value={formData.password}
-          onChange={handleChange}
-          required />
+        <div>
+          <FormPasswordInput
+            label="Password"
+            name="password"
+            type="password"
+            id="password"
+            value={formData.password}
+            onChange={handleChange}
+            required />
+          {passwordError && (
+            <p className="mt-1 text-sm text-red-600" role="alert">
+              {passwordError}
+            </p>
+          )}
+        </div>
 
-        <FormPasswordInput
-          label="Confirm Password"
-          name="confirmPassword"
-          type="password"
-          id="confirmPassword"
-          value={formData.confirmPassword}
-          onChange={handleChange}
-          required
-        />
+        <div>
+          <FormPasswordInput
+            label="Confirm Password"
+            name="confirmPassword"
+            type="password"
+            id="confirmPassword"
+            value={formData.confirmPassword}
+            onChange={handleChange}
+            required
+          />
+          {confirmPasswordError && (
+            <p className="mt-1 text-sm text-red-600" role="alert">
+              {confirmPasswordError}
+            </p>
+          )}
+        </div>
 
         {error && <p className="text-sm text-red-600">{error}</p>}
         {success && <p className="text-sm text-green-600">{success}</p>}
 
-        <PrimaryButton type="submit">
+        <PrimaryButton type="submit" disabled={emailError || phoneError || passwordError || confirmPasswordError || !formData.name || !selectedRole}>
           Sign Up
         </PrimaryButton>
 
@@ -185,6 +250,23 @@ const EmployeeRegister = () => {
           onClose={() => setShowSelectRole(false)}
           onRoleSelect={handleRoleSelect}
           selectedRole={selectedRole}
+        />
+      )}
+
+      {isVerifyOpen && (
+        <VerifyOtp
+          isOpen={isVerifyOpen}
+          onClose={() => setIsVerifyOpen(false)}
+          onVerify={async (otpCode) => {
+            try {
+              await verifyOtp({ otp: otpCode, phoneNumber: formData.mobile, userEmail: formData.email })
+            } catch (err) {
+              setError(err.message || "OTP verification failed");
+              return;
+            }
+
+            navigate(from);
+          }}
         />
       )}
     </div>

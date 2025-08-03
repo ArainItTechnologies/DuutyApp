@@ -6,5 +6,6 @@ public static class EmailType
     public const string Reset = nameof(Reset);
     public const string PasswordUpdated = nameof(PasswordUpdated);
     public const string Verified = nameof(Verified);
+    public const string Otp = nameof(Otp);
 }
 
