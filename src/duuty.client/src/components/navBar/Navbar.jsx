@@ -72,7 +72,7 @@ export default function Navbar() {
                   {t("findajob")}
                 </Link>
                 <Link
-                  to="/job-listing"
+                  to={ROUTES.JOB_LISTING}
                   className="text-[12px] text-[#3B31FF] font-medium inline-block rounded-[11px] py-2 px-4 border-1 border-[#3B31FF]"
                 >
                   Hire Now

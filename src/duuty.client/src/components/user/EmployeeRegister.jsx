@@ -3,7 +3,7 @@ import { useState } from "react";
 import { FormInput, FormPasswordInput, FormSelect, PrimaryButton } from "../custom/FormElements";
 import SelectRole from "../user/SelectRole";
 import { registerUser, verifyOtp } from "../../services/auth";
-import { CHEF_OPTIONS } from "../../Constants";
+import { CHEF_OPTIONS, ROUTES } from "../../Constants";
 import { useAppState } from "../../hooks/Hooks";
 import { validateMobileNumber, validateEmail } from "../../utils/ValidationUtils";
 import VerifyOtp from "./VerifyOtp";
@@ -265,7 +265,7 @@ const EmployeeRegister = () => {
               return;
             }
 
-            navigate(from);
+            navigate(ROUTES.LOGIN, { replace: true });
           }}
         />
       )}

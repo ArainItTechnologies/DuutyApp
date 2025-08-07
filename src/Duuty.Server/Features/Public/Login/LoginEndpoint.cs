@@ -17,8 +17,8 @@ public class LoginEndpoint(UserManager<ArainUser> userManager, JwtHandler jwtHan
         {
             await SendAsync(new LoginResponse
             {
-                IsAuthSuccessful = false,
-                ErrorMessage = "Invalid Email or password."
+                Success = false,
+                Message = "Invalid Email or password."
             }, 401, ct);
             return;
         }
@@ -27,8 +27,8 @@ public class LoginEndpoint(UserManager<ArainUser> userManager, JwtHandler jwtHan
         {
             await SendAsync(new LoginResponse
             {
-                IsAuthSuccessful = false,
-                ErrorMessage = "Email is not confirmed."
+                Success = false,
+                Message = "Email is not confirmed."
             }, 403, ct);
             return;
         }
@@ -39,10 +39,10 @@ public class LoginEndpoint(UserManager<ArainUser> userManager, JwtHandler jwtHan
 
         await SendAsync(new LoginResponse
         {
-            IsAuthSuccessful = true,
+            Success = true,
             UserId = user.Id,
             Token = token,
-            ErrorMessage = roles.Count == 0 ? "User has no roles." : null
+            Message = roles.Count == 0 ? "User has no roles." : null
         }, 200, ct);
         return;
     }
@@ -58,7 +58,7 @@ public class LoginRequest
 public class LoginResponse
 {
     public string? UserId { get; set; }
-    public bool IsAuthSuccessful { get; set; }
-    public string? ErrorMessage { get; set; }
+    public bool Success { get; set; }
+    public string? Message { get; set; }
     public string? Token { get; set; }
 }

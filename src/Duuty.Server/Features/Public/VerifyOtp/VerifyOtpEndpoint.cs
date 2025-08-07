@@ -1,4 +1,5 @@
-﻿using DataAccess.Identity;
+﻿using System.Net;
+using DataAccess.Identity;
 using FastEndpoints;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -14,37 +15,41 @@ public class VerifyOtpEndpoint(UserManager<ArainUser> userManager) : Endpoint<Ve
         var isPhone = !string.IsNullOrWhiteSpace(request.PhoneNumber);
         var userName = isPhone ? request.PhoneNumber : request.UserEmail;
         var tokenProvider = isPhone ? TokenOptions.DefaultPhoneProvider : TokenOptions.DefaultEmailProvider;
-
-        var user = await userManager.FindByNameAsync(userName!);
-
-        if (user is null)
+        try
         {
-            await SendNotFoundAsync(ct);
-            return;
-        }
+            var user = await userManager.FindByNameAsync(userName!);
 
-        await userManager.VerifyTwoFactorTokenAsync(user, tokenProvider, request.Otp)
-            .ContinueWith(async response =>
+            if (user is null)
             {
-                if (response.Result)
-                {
-                    if (!isPhone)
-                    {
-                        var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
-                        await userManager.ConfirmEmailAsync(user, token);
-                    }
-                    await SendOkAsync(new VerifyOtpResponse { IsVerified = true }, ct);
-                    return;
-                }
+                await SendNotFoundAsync(ct);
+                return;
+            }
+
+            var result = await userManager.VerifyTwoFactorTokenAsync(user, tokenProvider, request.Otp);
+            if (!result)
+            {
                 await SendUnauthorizedAsync(ct);
                 return;
-            }, ct);
+            }
+
+            var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
+            await userManager.ConfirmEmailAsync(user, token);
+
+            await SendAsync(new VerifyOtpResponse { IsVerified = true }, (int)HttpStatusCode.OK, ct);
+            return;
+        }
+        catch (Exception ex)
+        {
+            await SendAsync(new VerifyOtpResponse { IsVerified = false, Message = ex.Message }, (int)HttpStatusCode.InternalServerError, ct);
+            return;
+        }
     }
 }
 
 public class VerifyOtpResponse
 {
     public bool IsVerified { get; set; }
+    public string? Message { get; set; }
 }
 
 public class VerifyOtpRequest

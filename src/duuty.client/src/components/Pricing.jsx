@@ -1,35 +1,66 @@
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import { useNavigate } from "react-router-dom";
+import { createOrder, verifyPayment } from "../services/auth";
+import { useUser } from "../hooks/Hooks";
 
 const Pricing = () => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
+  const { user } = useUser();
+  const handleRazorpayPayment = async (amount, description) => {
 
-    // Razorpay payment handler
-    const handleRazorpayPayment = async (amount, description) => {
-        // Ideally, fetch order_id from your backend here
-        const options = {
-            key: "YOUR_RAZORPAY_KEY_ID", // Replace with your Razorpay key
-            amount: amount * 100, // Amount in paise
-            currency: "INR",
-            name: "Your Company Name",
-            description: description,
-            // order_id: "order_DBJOWzybf0sJbb", // Get this from your backend
-            handler: function (response) {
-                alert("Payment successful! Payment ID: " + response.razorpay_payment_id);
-                // You can verify payment on the backend here
-            },
-            prefill: {
-                name: "",
-                email: "",
-                contact: "",
-            },
-            theme: {
-                color: "#6366f1",
-            },
-        };
-        const rzp = new window.Razorpay(options);
-        rzp.open();
+    if (!user) {
+      console.log('Only Loggedin Users can make payment');
+      return;
+    }
+    const orderData = await createOrder({
+      amount: amount,
+      currency: 'INR',
+      description: description,
+      userId: user.userId
+    }, user.token);
+
+    // Ideally, fetch order_id from your backend here
+    const options = {
+      key: "rzp_test_VYrociEO8aKhp6", // Replace with your Razorpay key
+      amount: amount * 100, // Amount in paise
+      currency: "INR",
+      name: "Duuty.in",
+      description: description,
+      order_id: orderData.Id, // Get this from your backend
+      handler: async function (response) {
+        try {
+          console.log('Payment completed, verifying...');
+
+          const verifyData = await verifyPayment({
+            paymentId: response.razorpay_payment_id,
+            orderId: response.razorpay_order_id,
+            signature: response.razorpay_signature
+          }, token);
+
+          if (verifyData.success) {
+            alert("Payment successful!");
+            console.log('Payment verified successfully:', verifyData);
+          } else {
+            alert("Payment verification failed! Please contact support.");
+            console.error('Payment verification failed:', verifyData);
+          }
+        } catch (verificationError) {
+          console.error('Payment verification error:', verificationError);
+          alert(`Payment verification failed! ${verificationError.message}`);
+        }
+      },
+      prefill: {
+        name: "",
+        email: "",
+        contact: "",
+      },
+      theme: {
+        color: "#6366f1",
+      },
     };
+    const rzp = new window.Razorpay(options);
+    rzp.open();
+  };
 
   return (
     <section className="bg-[#f4f2ff] min-h-screen py-12 px-4">
@@ -61,9 +92,9 @@ const Pricing = () => {
               </span> */}
             </p>
             <p className="text-gray-500 mb-6">Monthly Payment</p>
-                      <button className="bg-linear-(--gradient-bg) text-white py-2 w-full rounded-lg mb-2 cursor-pointer"
-                          onClick={() => handleRazorpayPayment(999, "1 - Month Plan")}
-                      >
+            <button className="bg-linear-(--gradient-bg) text-white py-2 w-full rounded-lg mb-2 cursor-pointer"
+              onClick={() => handleRazorpayPayment(999, "1 - Month Plan")}
+            >
               Pay Now
             </button>
             <div className="border-t border-gray-300 my-6"></div>
@@ -195,9 +226,9 @@ const Pricing = () => {
               </span> */}
             </p>
             <p className="text-gray-500 mb-6">Quarterly Payment</p>
-                      <button className="bg-linear-(--gradient-bg) text-white py-2 w-full rounded-lg mb-2 cursor-pointer"
-                          onClick={() => handleRazorpayPayment(999, "3 - Months Plan")}
-                      >
+            <button className="bg-linear-(--gradient-bg) text-white py-2 w-full rounded-lg mb-2 cursor-pointer"
+              onClick={() => handleRazorpayPayment(999, "3 - Months Plan")}
+            >
               Pay Now
             </button>
             <div className="border-t border-gray-300 my-6"></div>
@@ -329,9 +360,9 @@ const Pricing = () => {
               </span> */}
             </p>
             <p className="text-gray-500 mb-6">Yearly Payment</p>
-                      <button className="bg-linear-(--gradient-bg) text-white py-2 w-full rounded-lg mb-2 cursor-pointer"
-                          onClick={() => handleRazorpayPayment(999, "1 - Month Plan")}
-                      >
+            <button className="bg-linear-(--gradient-bg) text-white py-2 w-full rounded-lg mb-2 cursor-pointer"
+              onClick={() => handleRazorpayPayment(999, "1 - Month Plan")}
+            >
               Pay Now
             </button>
             <div className="border-t border-gray-300 my-6"></div>

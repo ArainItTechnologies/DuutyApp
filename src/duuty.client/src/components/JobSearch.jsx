@@ -8,16 +8,17 @@ import Chinese from "../assets/Chinese.png";
 import JobDetails from "./JobDetails";
 import { fetchJobs } from "../services/auth";
 import { CITIES, ROUTES, STATES, pageSizeOptions } from "../Constants";
-import { FormSelect } from "./custom/FormElements";
+import { CustomButton, FormSelect } from "./custom/FormElements";
 import SelectRole from "./user/SelectRole";
 import { useAppState, useUser } from "../hooks/Hooks";
 import { applyJob } from "../services/auth";
 import { useNavigate } from "react-router-dom";
-
+import { useNotification } from "../context/NotificationContext";
 
 const JobSearch = () => {
   const { user } = useUser();
   const navigate = useNavigate();
+  const { showSuccess, showError } = useNotification();
 
   const { setIsLoading } = useAppState(false);
   const [roleOptions, setRoleOptions] = useState([{ id: "", name: "Search job by Role" }]);
@@ -77,7 +78,7 @@ const JobSearch = () => {
   useEffect(() => {
     const getJobs = async () => {
       setIsLoading(true);
-      const data = await fetchJobs(jobLocation, jobState, selectedRole, user?.token);
+      const data = await fetchJobs(jobLocation, jobState, selectedRole, user);
       setJobs(data.jobs);
       setIsLoading(false);
     };
@@ -94,10 +95,24 @@ const JobSearch = () => {
 
   const handleApply = async (jobId) => {
     setIsLoading(true);
-    await applyJob({ jobListingId: jobId, userId: user.userId }, user?.token);
-    setIsLoading(false);
-    navigate(ROUTES.JOB_LISTING, { replace: true });
-  }
+    try {
+      const data = await applyJob({ jobListingId: jobId, userId: user.userId }, user?.token);
+
+      if (!data.success) {
+        showFailure(data.message || "Failed to apply for the job");
+        setIsLoading(false);
+        return;
+      }
+      showSuccess("Successfully applied for the job");
+      navigate(ROUTES.JOB_LISTING, { replace: true });
+    } catch (error) {
+      showError(error.message || "Error applying for the job");
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -150,7 +165,7 @@ const JobSearch = () => {
       <div className="container-wrapper min-h-screen py-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {currentJobs.map((job) => (
-            <div key={job.id} className="bg-white rounded-[20px] shadow-md p-4 hover:shadow-lg transition duration-300">
+            <div key={job.jobId} className="bg-white rounded-[20px] shadow-md p-4 hover:shadow-lg transition duration-300">
               <img
                 src={Chinese}
                 alt={job.jobTitle}
@@ -158,9 +173,6 @@ const JobSearch = () => {
               />
               <h2 className="text-lg font-medium mb-2">
                 {job.jobTitle}
-                {/* <span className="ml-2 bg-green-100 text-green-700 text-xs font-semibold px-2 py-1 rounded">
-                  {job.jobType}
-                </span> */}
               </h2>
               <p className="text-xl font-bold"> &#8377; {job.salaryRange.substring(0, 20)}</p>
               <p className="flex items-center text-sm text-gray-500 mt-1">
@@ -199,12 +211,15 @@ const JobSearch = () => {
                 </button>
 
                 {/* Apply Job Button */}
-                <button
+
+                {!job.isApplied ? <CustomButton disabled={job.isApplied}
                   onClick={() => handleApply(job.id)}
                   className="flex-grow text-purple-600 border border-purple-400 hover:bg-purple-600 hover:text-white hover:font-bold font-medium py-2 px-4 rounded-[10px] transition cursor-pointer"
                 >
                   Apply Job
-                </button>
+                </CustomButton> : <span className="ml-2 bg-green-100 text-green-700 text-xs font-semibold py-3 px-4 rounded-[10px] w-full text-center">
+                  Applied
+                </span>}
               </div>
             </div>
           ))}

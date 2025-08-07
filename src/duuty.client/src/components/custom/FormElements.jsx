@@ -157,7 +157,7 @@ export const FormSelect = ({
   options = [],
 }) => {
   return (
-    <div>
+    <div className="mt-2">
       {label && (
         <label
           htmlFor={name}
@@ -167,9 +167,9 @@ export const FormSelect = ({
           {required && <span className="text-red-500"> *</span>}
         </label>
       )}
-      <div className="mt-2 select-wrapper relative">
+      <div className="select-wrapper relative">
         <select
-        className="appearance-none cursor-pointer block w-full rounded-xl sm:h-[50px] h-[40px] bg-white sm:pr-10 pr-8 sm:p-3 px-3 py-2 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-[16px] text-[14px]"
+          className="appearance-none cursor-pointer block w-full rounded-xl sm:h-[50px] h-[40px] bg-white sm:pr-10 pr-8 sm:p-3 px-3 py-2 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-[16px] text-[14px]"
           value={value || ""}
           onMouseDown={(e) => {
             if (onMouseDown) {
@@ -202,11 +202,29 @@ export const PrimaryButton = ({
       type={type}
       disabled={disabled}
       onClick={onClick}
-      className={`cursor-pointer flex w-full justify-center rounded-xl sm:h-[50px] h-[40px] bg-linear-(--gradient-bg) sm:p-3 px-3 py-2 text-sm/6 font-semibold text-white shadow-xs hover:bg-primary-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 ${
-        disabled 
-          ? 'opacity-50 cursor-not-allowed hover:bg-gray-400' 
+      className={`cursor-pointer flex w-full justify-center rounded-xl sm:h-[50px] h-[40px] bg-linear-(--gradient-bg) sm:p-3 px-3 py-2 text-sm/6 font-semibold text-white shadow-xs hover:bg-primary-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 ${disabled
+          ? 'opacity-50 cursor-not-allowed hover:bg-gray-400'
           : 'cursor-pointer hover:bg-primary-500'
-      } ${className}`}
+        } ${className}`}
+    >
+      {children}
+    </button>
+  );
+};
+
+export const CustomButton = ({
+  type = "button",
+  onClick,
+  children,
+  className = "",
+  disabled = false,
+}) => {
+  return (
+    <button
+      type={type}
+      disabled={disabled}
+      onClick={onClick}
+      className={className}
     >
       {children}
     </button>

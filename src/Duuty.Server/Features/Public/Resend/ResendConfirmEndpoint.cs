@@ -10,7 +10,7 @@ using System.Text;
 
 namespace Web.Server.Features.Public.Resend
 {
-    [HttpPost("/api/confirm/resend")]
+    [HttpPost("/api/resend/confirm")]
     [AllowAnonymous]
     public class ResendConfirmEndpoint : Endpoint<ResendRequest, AuthResponse>
     {

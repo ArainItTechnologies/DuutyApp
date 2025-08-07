@@ -58,13 +58,13 @@ export const Home = () => {
                             Whether you're a restaurant owner seeking reliable kitchen staff or a talented individual looking for your next culinary adventure, Duuty has you covered.
                         </p>
                         <Link
-                            to="/find-job"
+                            to={ROUTES.JOB_RESULTS}
                             className="hidden text-[15px] text-white font-medium sm:inline-block rounded-[11px] bg-linear-(--gradient-bg) px-[25px] py-[15px] mr-[12px]"
                         >
                             Find a Job
                         </Link>
                         <Link
-                            to="/job-listing"
+                            to={ROUTES.JOB_LISTING}
                             className="hidden hover:bg-[#ECEFFF] text-[15px] text-[#3B31FF] font-medium sm:inline-block rounded-[11px] px-[25px] py-[15px] border-1 border-[#ECEFFF"
                         >
                             Hire Now

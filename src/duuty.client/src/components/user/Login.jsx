@@ -1,24 +1,52 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { loginUser } from "../../services/auth";
+import { loginUser, verifyOtp, resendOtp } from "../../services/auth";
 import { useAppState, useUser } from "../../hooks/Hooks";
 import { jwtDecode } from "jwt-decode";
 import { normalizeClaims } from "../../utils/ClaimsUtility";
 import { FormInput, FormPasswordInput, PrimaryButton } from "../custom/FormElements";
 import { ROUTES } from "../../Constants";
-
+import { validateMobileNumber, validateEmail } from "../../utils/ValidationUtils";
+import VerifyOtp from "./VerifyOtp";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [password, setPassword] = useState("");
+  const [phoneError, setPhoneError] = useState("");
+  const [emailError, setEmailError] = useState("");
+
+  const [isVerifyOpen, setIsVerifyOpen] = useState(false);
+
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   const location = useLocation();
   const navigate = useNavigate();
   const { setIsLoading } = useAppState();
-  
+
   const from = location.state?.from || "/";
 
   const { setUser } = useUser();
+
+  const handlePhoneNumberChange = (e) => {
+    const value = e.target.value;
+    setPhoneNumber(value);
+    setPhoneError("");
+
+    if (value && !validateMobileNumber(value)) {
+      setPhoneError("Please enter a valid mobile number");
+    }
+  };
+
+  const handleEmailChange = (e) => {
+    const value = e.target.value;
+    setEmail(value);
+    setEmailError("");
+
+    if (value && !validateEmail(value)) {
+      setEmailError("Please enter a valid email address");
+    }
+  };
 
   const getUserDetailsFromToken = (token) => {
     const decoded = jwtDecode(token);
@@ -30,22 +58,46 @@ const Login = () => {
     return { name: normalized.name, email: normalized.email, role };
   };
 
+  const handleResendOtp = async () => {
+    try {
+      await resendOtp(email, phoneNumber);
+    } catch (error) {
+      setError(error.message);
+    }
+  };
+
   const handleLogin = async (e) => {
     e.preventDefault();
+    setError("");
+    setSuccess("");
     setIsLoading(true);
-    const result = await loginUser({ phoneNumber, email, password });
-    const userInfo = getUserDetailsFromToken(result.token);
+    try {
+      const result = await loginUser({ phoneNumber, email, password });
 
-    userInfo.token = result.token;
-    userInfo.userId = result.userId;
+      if (result.success) {
+        var data = result.data;
+        const userInfo = getUserDetailsFromToken(data.token);
 
-    setUser(userInfo);
-    setIsLoading(false);
+        userInfo.token = data.token;
+        userInfo.userId = data.userId;
 
-    if (from === ROUTES.HIRE_NOW) {
-      navigate(ROUTES.JOB_LISTING, { replace: true });
-    } else {
-      navigate(from, { replace: true });
+        setUser(userInfo);
+        setIsLoading(false);
+        setSuccess("Login successful!");
+
+        if (from === ROUTES.HIRE_NOW) {
+          navigate(ROUTES.JOB_LISTING, { replace: true });
+        } else {
+          navigate(from, { replace: true });
+        }
+      } else {
+        setIsLoading(false);
+        setIsVerifyOpen(result.requiresVerification);
+      }
+
+    } catch (error) {
+      setIsLoading(false);
+      setError(error.errorMessage);
     }
   };
 
@@ -60,14 +112,21 @@ const Login = () => {
 
         <div className="mt-5 sm:mx-auto sm:w-full sm:max-w-sm">
           <form onSubmit={handleLogin} className="sm:space-y-6 space-y-4">
-            {!email && <FormInput
-              label="Mobile Number"
-              name="phoneNumber"
-              type="text"
-              value={phoneNumber}
-              onChange={(e) => setPhoneNumber(e.target.value)}
-              required
-            />
+            {!email && <div>
+              <FormInput
+                label="Mobile Number"
+                name="phoneNumber"
+                type="text"
+                value={phoneNumber}
+                onChange={handlePhoneNumberChange}
+                required
+              />
+              {phoneError && (
+                <p className="mt-1 text-sm text-red-600" role="alert">
+                  {phoneError}
+                </p>
+              )}
+            </div>
             }
 
             {!phoneNumber && !email && <div className="flex items-center my-4">
@@ -76,14 +135,22 @@ const Login = () => {
               <hr className="flex-grow border-t border-gray-300" />
             </div>}
 
-            {!phoneNumber && <FormInput
-              label="Email address"
-              name="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />}
+            {!phoneNumber &&
+
+              <div><FormInput
+                label="Email address"
+                name="email"
+                type="email"
+                value={email}
+                onChange={handleEmailChange}
+                required
+              />
+                {emailError && (
+                  <p className="mt-1 text-sm text-red-600" role="alert">
+                    {emailError}
+                  </p>
+                )}
+              </div>}
 
             <FormPasswordInput
               label="Password"
@@ -95,7 +162,11 @@ const Login = () => {
               forgotPassword
               autoComplete="current-password" />
 
-            <PrimaryButton type="submit">
+            {error && <p className="text-sm text-red-600">{error}</p>}
+            {success && <p className="text-sm text-green-600">{success}</p>}
+
+
+            <PrimaryButton type="submit" disabled={phoneError || emailError || !password}>
               Sign in
             </PrimaryButton>
           </form>
@@ -111,6 +182,23 @@ const Login = () => {
           </p>
         </div>
       </div>
+      {isVerifyOpen && (
+        <VerifyOtp
+          isOpen={isVerifyOpen}
+          onClose={() => setIsVerifyOpen(false)}
+          handleResend={handleResendOtp}
+          onVerify={async (otpCode) => {
+            try {
+              await verifyOtp({ otp: otpCode, phoneNumber, userEmail: email })
+            } catch (err) {
+              setError(err.message || "OTP verification failed");
+              return;
+            }
+
+            navigate(ROUTES.LOGIN, { replace: true });
+          }}
+        />
+      )}
     </section>
   );
 };

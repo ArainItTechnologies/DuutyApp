@@ -1,7 +1,11 @@
 import { useState } from "react";
-import { FormInput } from "../custom/FormElements";
+import { FormInput, CustomButton } from "../custom/FormElements";
+import {
+    CheckCircleIcon,
+    ArrowPathIcon
+} from "@heroicons/react/24/outline";
 
-const VerifyOtp = ({ isOpen, onClose, onVerify }) => {
+const VerifyOtp = ({ isOpen, onClose, onVerify, handleResend }) => {
 
     const [otpCode, setOtpCode] = useState("");
     const handleSubmit = () => {
@@ -54,18 +58,19 @@ const VerifyOtp = ({ isOpen, onClose, onVerify }) => {
 
                     {/* Modal Footer */}
                     <div className="px-6 py-4 bg-gray-50 rounded-b-lg flex justify-between">
-                        <button
-                            onClick={onClose}
-                            className="cursor-pointer text-[15px] text-gray-700 font-medium inline-block rounded-[11px] border-2 border-gray-300 px-[25px] py-[10px] hover:bg-gray-100"
-                        >
-                            Cancel
-                        </button>
-                        <button
+                        <CustomButton
+                            className="flex items-center gap-2 rounded-xl border border-gray-300 bg-gray-100 px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
+                            onClick={handleResend}>
+                            <ArrowPathIcon className="w-5 h-5 text-black" />
+                            <span className="ml-1">Resend</span>
+                        </CustomButton>
+                        <CustomButton
+                            className="cursor-pointer flex items-center justify-center p-3 rounded-[11px] bg-indigo-600 text-white hover:bg-indigo-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
                             onClick={handleSubmit}
-                            className="cursor-pointer text-[15px] text-white font-medium inline-block rounded-[11px] bg-linear-(--gradient-bg) px-[25px] py-[10px] mr-[12px]"
                         >
-                            Verify
-                        </button>
+                            <CheckCircleIcon className="w-5 h-5 text-white" />
+                            <span className="ml-1">Verify</span>
+                        </CustomButton>
                     </div>
                 </div>
             </div>

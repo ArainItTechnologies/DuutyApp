@@ -4,11 +4,10 @@ import App from "./App";
 import { UserProvider,LoadingContextProvider } from "./context/UserContext";
 import AlertProvider from "./context/AlertContext";
 import { TranslationProvider } from "./translations/TranslationProvider";
-import Alert from "./components/Alert";
+import {NotificationProvider} from "./context/NotificationContext";
 import Loader from "./components/Loader";
 import Hooks from "./hooks/Hooks";
 import "./index.css";
-
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
@@ -16,8 +15,10 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <UserProvider>
         <LoadingContextProvider>
           <TranslationProvider>
-            <App />
-            <Loader />
+            <NotificationProvider>
+              <App />
+              <Loader />
+            </NotificationProvider>
             <Hooks />
           </TranslationProvider>
         </LoadingContextProvider>

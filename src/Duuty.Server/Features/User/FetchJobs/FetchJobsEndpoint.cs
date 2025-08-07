@@ -9,7 +9,7 @@ namespace Duuty.Server.Features.User.FetchJobs;
 
 [HttpGet("/api/jobs")]
 [AllowAnonymous]
-public class FetchJobsEndpoint(IJobListingService jobListingService) : Endpoint<FetchJobsRequest, FetchJobsResponse>
+public class FetchJobsEndpoint(IJobListingService jobListingService, IJobApplicationService applicationService) : Endpoint<FetchJobsRequest, FetchJobsResponse>
 {
     public override async Task HandleAsync(FetchJobsRequest req, CancellationToken ct)
     {
@@ -19,11 +19,13 @@ public class FetchJobsEndpoint(IJobListingService jobListingService) : Endpoint<
 
         try
         {
+            var appliedJobIds = await applicationService.Get(x => x.UserId == req.UserId).Select(y => y.JobListingId).ToListAsync();
+
             var query = jobListingService.Get(x => x.IsActive);
             if (string.IsNullOrWhiteSpace(preferredJob) && string.IsNullOrEmpty(jobState) && string.IsNullOrEmpty(jobLocation))
             {
-                var defaultJobs = await jobListingService.Get(x => x.IsActive).ToListAsync(ct);
-                defaultJobs = defaultJobs.Take(10).ToList();
+                var jobListings = await jobListingService.Get(x => x.IsActive).ToListAsync(ct);
+                var defaultJobs = jobListings.Select(job => JobPostDto.ToDto(job, appliedJobIds)).ToList();
                 await SendAsync(new FetchJobsResponse(true, defaultJobs), (int)HttpStatusCode.OK, ct);
                 return;
             }
@@ -42,17 +44,11 @@ public class FetchJobsEndpoint(IJobListingService jobListingService) : Endpoint<
                 query = query.Where(x => x.JobState.ToLower().Contains(jobState));
             }
 
-            List<JobListing> jobs;
-            if (string.IsNullOrWhiteSpace(preferredJob) && string.IsNullOrWhiteSpace(jobLocation) && string.IsNullOrWhiteSpace(jobState))
-            {
-                jobs = await query.Take(10).ToListAsync(ct);
-            }
-            else
-            {
-                jobs = await query.ToListAsync(ct);
-            }
+            var jobs = await query.ToListAsync(ct);
 
-            await SendAsync(new FetchJobsResponse(true, jobs), (int)HttpStatusCode.OK, ct);
+            var jobPosts = jobs.Select(job => JobPostDto.ToDto(job, appliedJobIds)).ToList();
+
+            await SendAsync(new FetchJobsResponse(true, jobPosts), (int)HttpStatusCode.OK, ct);
             return;
         }
         catch (Exception ex)
@@ -72,7 +68,35 @@ public class FetchJobsRequest
     public string JobState { get; set; } = string.Empty;
     [QueryParam]
     public string PreferredJob { get; set; } = string.Empty;
+
+    public required string UserId { get; set; }
 }
 
-public record FetchJobsResponse(bool IsSuccess, List<JobListing> Jobs, string? ErrorMessage = "");
+public record FetchJobsResponse(bool IsSuccess, List<JobPostDto> Jobs, string? ErrorMessage = "");
+
+
+public class JobPostDto
+{
+    public long JobId { get; set; }
+    public bool IsApplied { get; set; }
+    public bool IsActive { get; set; }
+    public required string JobTitle { get; set; }
+    public required string JobLocation { get; set; }
+    public required string SalaryRange { get; set; }
+    public long? EmployerId { get; set; }
+
+    public static JobPostDto ToDto(JobListing job, List<long> appliedJobIds)
+    {
+        return new JobPostDto
+        {
+            JobId = job.Id,
+            IsApplied = appliedJobIds.Contains(job.Id),
+            IsActive = job.IsActive,
+            JobTitle = job.JobTitle,
+            JobLocation = job.JobLocation,
+            SalaryRange = job.SalaryRange,
+            EmployerId = job.EmployerId
+        };
+    }
+}
 

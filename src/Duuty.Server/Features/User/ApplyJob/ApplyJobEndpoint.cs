@@ -44,7 +44,7 @@ public class ApplyJobEndpoint(IJobListingService jobListingService, IJobApplicat
     }
 }
 
-public record ApplyJobResponse(bool IsSuccess, string? ErrorMessage = null);
+public record ApplyJobResponse(bool Success, string? ErrorMessage = null);
 
 public class ApplyJobRequest
 {
