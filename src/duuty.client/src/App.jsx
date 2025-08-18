@@ -22,8 +22,11 @@ import PrivacyPolicy from "./components/PrivacyPolicy";
 import JobSearch from "./components/JobSearch";
 import ContactUs from "./components/ContactUs";
 import ScrollToTop from "./components/ScrollToTop";
-import JobDashboard from "./components/JobDashboard";
 import Navbar from "./components/navBar/Navbar";
+import ManageJobs from "./components/employer/ManageJobs";
+
+import EmployerDashboard from "./components/employer/EmployerDashboard";
+import AdminDashboard from "./components/admin/AdminDashboard";
 
 function App() {
   return (
@@ -50,8 +53,10 @@ function App() {
         <Route path={ROUTES.CONTACT_US} element={<ContactUs />} />
         <Route path={ROUTES.ABOUT_US} element={<AboutUs />} />
         <Route path={ROUTES.PRIVACY_POLICY} element={<PrivacyPolicy />} />
+        <Route path={ROUTES.MANAGE_JOBS} element={<ManageJobs />} />
+        <Route path={ROUTES.EMPLOYER_DASHBOARD} element={<EmployerDashboard />} />
+        <Route path={ROUTES.ADMIN_DASHBOARD} element={<AdminDashboard />} />
         <Route path="*" element={<Notfound />} />
-        <Route path="/ddd" element={<JobDashboard />} />
       </Routes>
       <Footer />
     </Router>

@@ -17,14 +17,14 @@ public class PostJobEndpoint(IJobListingService jobListingService, IEmployerServ
     {
         try
         {
-            if (string.IsNullOrEmpty(request.UserId)) 
+            if (string.IsNullOrEmpty(request.UserId))
             {
                 await SendAsync(new PostJobResponse(false, "User ID is required."), (int)HttpStatusCode.BadRequest, ct);
                 return;
             }
-            var employer =await employerService.Get(employer => employer.UserId == request.UserId).SingleOrDefaultAsync();
+            var employer = await employerService.Get(employer => employer.UserId == request.UserId).SingleOrDefaultAsync();
 
-            if(employer is null)
+            if (employer is null)
             {
                 await SendAsync(new PostJobResponse(false, "Employer not found for the given user ID."), (int)HttpStatusCode.NotFound, ct);
                 return;
@@ -48,12 +48,12 @@ public class PostJobEndpoint(IJobListingService jobListingService, IEmployerServ
 
             await jobListingService.CreateAsync(jobListingEntity);
 
-            if(jobListingEntity.Id <= 0)
+            if (jobListingEntity.Id <= 0)
             {
                 await SendAsync(new PostJobResponse(false, "Failed to create job listing."), (int)HttpStatusCode.InternalServerError, ct);
                 return;
             }
-          
+
             await SendAsync(new PostJobResponse(true), (int)HttpStatusCode.OK, ct);
             return;
         }

@@ -94,6 +94,13 @@ const JobSearch = () => {
   };
 
   const handleApply = async (jobId) => {
+
+    if(user === null || user.userId === null) {
+      showError("User not authenticated");
+      navigate(ROUTES.LOGIN, { state: { from: ROUTES.JOB_SEARCH } });
+      return;
+    }
+
     setIsLoading(true);
     try {
       const data = await applyJob({ jobListingId: jobId, userId: user.userId }, user?.token);
@@ -104,7 +111,6 @@ const JobSearch = () => {
         return;
       }
       showSuccess("Successfully applied for the job");
-      navigate(ROUTES.JOB_LISTING, { replace: true });
     } catch (error) {
       showError(error.message || "Error applying for the job");
       console.error(error);

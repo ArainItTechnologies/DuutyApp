@@ -1,4 +1,5 @@
 import { createContext, useState, useEffect } from "react";
+import { roleChecks } from "../Constants";
 
 // Create the User context
 export const UserContext = createContext();
@@ -21,7 +22,7 @@ export const UserProvider = ({ children }) => {
   }, [user]);
 
   return (
-    <UserContext.Provider value={{ user, setUser }}>
+    <UserContext.Provider value={{ user, setUser, ...roleChecks(user) }}>
       {children}
     </UserContext.Provider>
   );
@@ -33,7 +34,7 @@ export const LoadingContextProvider = ({ children }) => {
   const [isError, setError] = useState(false);
 
   return (
-    <LoadingContext.Provider value={{isLoading, setIsLoading, isError, setError}}>
+    <LoadingContext.Provider value={{ isLoading, setIsLoading, isError, setError }}>
       {children}
     </LoadingContext.Provider>
   );

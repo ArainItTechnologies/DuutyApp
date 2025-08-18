@@ -49,12 +49,35 @@ public class RegisterEndpoint : Endpoint<RegisterModel, RegistrationResponse>
             TwoFactorEnabled = true,
         };
 
-        var result = await _userManager.CreateAsync(user, model.Password);
+        IdentityResult result;
+        if (string.IsNullOrEmpty(model.Password))
+        {
+            result = await _userManager.CreateAsync(user);
+        }
+        else
+        {
+            result = await _userManager.CreateAsync(user, model.Password);
+        }
+
         if (!result.Succeeded)
         {
             AddError("registration", string.Join(", ", result.Errors.Select(e => e.Description)));
             await SendErrorsAsync(cancellation: ct);
             return;
+        }
+
+        if (string.IsNullOrEmpty(model.Password))
+        {
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user!);
+
+            var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
+
+            var resetLink = $"{_configuration["ClientAppBaseUrl"]}/resetPassword?userId={user!.Id}&token={encodedToken}";
+
+            await _emailSender.SendEmailAsync(
+                model.Email!,
+                EmailType.Reset,
+                resetLink);
         }
 
         if (!string.IsNullOrEmpty(model.PhoneNumber))
@@ -74,17 +97,6 @@ public class RegisterEndpoint : Endpoint<RegisterModel, RegistrationResponse>
 
         if (!string.IsNullOrWhiteSpace(model.Email))
         {
-            //var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-
-            //var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
-
-            //var confirmationLink = $"{_configuration["ClientAppBaseUrl"]}/confirm?userId={user.Id}&token={encodedToken}";
-
-            //await _emailSender.SendEmailAsync(
-            //    model.Email,
-            //    EmailType.Confirm,
-            //    confirmationLink);
-
             await _userManager.GenerateTwoFactorTokenAsync(user, TokenOptions.DefaultEmailProvider)
                 .ContinueWith(async otp =>
                 {

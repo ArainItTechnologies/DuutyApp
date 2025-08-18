@@ -16,7 +16,7 @@ import MobileSideNav from "./MobileSideNav";
 export default function Navbar() {
   const { t, reset } = useTranslation();
 
-  const { user, setUser } = useUser();
+  const { user, setUser, isEmployer } = useUser();
   const [open, setOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
@@ -46,7 +46,7 @@ export default function Navbar() {
 
   return (
     <div className="bg-[#F4F3FF] sticky top-0 z-5">
-      <MobileSideNav open={open} onClose={setOpen} user={user} handleLogout={handleLogout}/>
+      <MobileSideNav open={open} onClose={setOpen} user={user} handleLogout={handleLogout} />
       <header className="relative bg-white">
         <nav aria-label="Top" className="mx-auto px-0 bg-[#F4F3FF]">
           <div className="container-wrapper">
@@ -101,12 +101,17 @@ export default function Navbar() {
                   </div>
                 </div>
 
-                <Link
-                  to={ROUTES.JOB_RESULTS}
+                {isEmployer ? <Link
+                  to={ROUTES.EMPLOYER_DASHBOARD}
                   className="text-[15px] text-white font-medium inline-block rounded-[11px] bg-linear-(--gradient-bg) px-[25px] py-[10px] mr-[12px]"
                 >
+                  Dashboard
+                </Link> : <Link
+                    to={ROUTES.JOB_RESULTS}
+                    className="text-[15px] text-white font-medium inline-block rounded-[11px] bg-linear-(--gradient-bg) px-[25px] py-[10px] mr-[12px]"
+                  >
                   {t("findajob")}
-                </Link>
+                </Link>}
                 <Link
                   to={ROUTES.JOB_LISTING}
                   className="hover:bg-[#ECEFFF] text-[15px] text-[#3B31FF] font-medium inline-block rounded-[11px] px-[25px] py-[10px] border-1 border-[#ECEFFF"

@@ -8,6 +8,8 @@ import { FormInput, FormPasswordInput, PrimaryButton } from "../custom/FormEleme
 import { ROUTES } from "../../Constants";
 import { validateMobileNumber, validateEmail } from "../../utils/ValidationUtils";
 import VerifyOtp from "./VerifyOtp";
+import { roleChecks } from "../../Constants";
+
 const Login = () => {
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -50,13 +52,10 @@ const Login = () => {
 
   const getUserDetailsFromToken = (token) => {
     const decoded = jwtDecode(token);
-    var normalized = normalizeClaims(decoded);
-
-    var role = Array.isArray(normalized.role)
-      ? normalized.role
-      : [normalized.role];
-    return { name: normalized.name, email: normalized.email, role };
+    const normalized = normalizeClaims(decoded);
+    return { ...normalized };
   };
+
 
   const handleResendOtp = async () => {
     try {
@@ -77,6 +76,7 @@ const Login = () => {
       if (result.success) {
         var data = result.data;
         const userInfo = getUserDetailsFromToken(data.token);
+        var roleCheck = roleChecks(userInfo);
 
         userInfo.token = data.token;
         userInfo.userId = data.userId;
@@ -88,7 +88,17 @@ const Login = () => {
         if (from === ROUTES.HIRE_NOW) {
           navigate(ROUTES.JOB_LISTING, { replace: true });
         } else {
-          navigate(from, { replace: true });
+          if (roleCheck.isSuperAdmin) {
+            navigate(ROUTES.SUPER_ADMIN_DASHBOARD, { replace: true });
+          } else if (roleCheck.isAdmin) {
+            navigate(ROUTES.ADMIN_DASHBOARD, { replace: true });
+          } else if (roleCheck.isEmployer) {
+            navigate(ROUTES.EMPLOYER_DASHBOARD, { replace: true });
+          } else if (roleCheck.isEmployee) {
+            navigate(ROUTES.JOB_RESULTS, { replace: true });
+          } else {
+            navigate(from, { replace: true });
+          }
         }
       } else {
         setIsLoading(false);

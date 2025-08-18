@@ -86,7 +86,6 @@ const EmployerRegister = () => {
   };
 
   const handleSaveRestaurant = async (restaurantData) => {
-    console.log("Restaurant Data:", restaurantData);
     try {
       await becomeEmployer(restaurantData);
       setIsModalOpen(false);

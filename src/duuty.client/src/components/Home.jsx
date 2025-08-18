@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import BannerImage from "../assets/image-banner.png";
 import BannerImageMob from "../assets/banner-image-mob.png";
 import FindEmp from "../assets/dream-kitchen.jpg";
@@ -22,13 +22,22 @@ export const Home = () => {
     const [activeTab, setActiveTab] = useState("employeeForm");
     const [selectLanguage, setSelectLanguage] = useState(false);
     const selectedLanguage = localStorage.getItem("selectedLanguage");
+      const navigate = useNavigate();
 
-    const { user } = useUser();
+    const { user, isSuperAdmin, isAdmin, isEmployer, isEmployee } = useUser();
 
     const location = useLocation();
 
     useEffect(() => {
-        if (location.pathname === ROUTES.HOME && selectedLanguage===null) {
+        if (isSuperAdmin) {
+            navigate(ROUTES.SUPER_ADMIN_DASHBOARD, { replace: true });
+        } else if (isAdmin) {
+            navigate(ROUTES.ADMIN_DASHBOARD, { replace: true });
+        } else if (isEmployer) {
+            navigate(ROUTES.EMPLOYER_DASHBOARD, { replace: true });
+        } else if (isEmployee) {
+            navigate(ROUTES.JOB_RESULTS, { replace: true });
+        } else if (location.pathname === ROUTES.HOME && selectedLanguage === null) {
             setSelectLanguage(true);
         }
     }, [location.pathname, user, setSelectLanguage]);
@@ -120,7 +129,7 @@ export const Home = () => {
             </div>
 
 
-            <TrustedCompanies/>
+            <TrustedCompanies />
 
             <TestimonialSection />
 
