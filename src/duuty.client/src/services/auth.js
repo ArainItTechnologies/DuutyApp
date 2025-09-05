@@ -162,6 +162,20 @@ export const verifyPayment = async (paymentData, token) => {
   }
 }
 
+export const subscribeToPlan = async (subscriptionData, token) => {
+  try {
+    const response = await axios.post("/api/subscribe", subscriptionData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || { message: "Subscription failed" };
+  }
+}
+
 export const verifyOtp = async (otpData) => {
   try {
     const response = await axios.post("/api/verify-otp", otpData);

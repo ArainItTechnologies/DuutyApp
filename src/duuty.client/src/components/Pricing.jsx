@@ -1,6 +1,6 @@
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import { useNavigate } from "react-router-dom";
-import { createOrder, verifyPayment } from "../services/auth";
+import { createOrder, subscribeToPlan, verifyPayment } from "../services/auth";
 import { useUser } from "../hooks/Hooks";
 import { useNotification } from "../context/NotificationContext";
 
@@ -10,7 +10,7 @@ const Pricing = () => {
   const navigate = useNavigate();
   const { user } = useUser();
 
-  const handleRazorpayPayment = async (amount, description) => {
+  const handleRazorpayPayment = async (amount, description, plan) => {
     if (!user) {
       showError('Only Loggedin Users can make payment');
       return;
@@ -22,10 +22,9 @@ const Pricing = () => {
       userId: user.userId
     }, user.token);
 
-    // Ideally, fetch order_id from your backend here
     const options = {
       key: "rzp_test_VYrociEO8aKhp6", // Replace with your Razorpay key
-      amount: amount * 100, // Amount in paise
+      amount: amount * 100,
       currency: "INR",
       name: "Duuty.in",
       description: description,
@@ -41,7 +40,7 @@ const Pricing = () => {
           if (verifyData.success) {
             showSuccess("Payment Successful!, Thanks for subscribing to DUUTY.");
             navigate("/");
-            // await saveSubscription({userId: user.userId, plan: description}, user.token);
+            await subscribeToPlan({userId: user.userId, plan}, user.token);
           } else {
             showError("Payment verification failed! Please contact support.");
           }
@@ -93,7 +92,7 @@ const Pricing = () => {
             </p>
             <p className="text-gray-500 mb-6">Monthly Payment</p>
             <button className="bg-linear-(--gradient-bg) text-white py-2 w-full rounded-lg mb-2 cursor-pointer"
-              onClick={() => handleRazorpayPayment(999, "Monthly")}
+              onClick={() => handleRazorpayPayment(999, "Monthly", 0)}
             >
               Pay Now
             </button>
@@ -227,7 +226,7 @@ const Pricing = () => {
             </p>
             <p className="text-gray-500 mb-6">Quarterly Payment</p>
             <button className="bg-linear-(--gradient-bg) text-white py-2 w-full rounded-lg mb-2 cursor-pointer"
-              onClick={() => handleRazorpayPayment(1999, "Quarterly")}
+              onClick={() => handleRazorpayPayment(1999, "Quarterly", 1)}
             >
               Pay Now
             </button>
@@ -361,7 +360,7 @@ const Pricing = () => {
             </p>
             <p className="text-gray-500 mb-6">Yearly Payment</p>
             <button className="bg-linear-(--gradient-bg) text-white py-2 w-full rounded-lg mb-2 cursor-pointer"
-              onClick={() => handleRazorpayPayment(6999, "Annually")}
+              onClick={() => handleRazorpayPayment(6999, "Annually", 2)}
             >
               Pay Now
             </button>

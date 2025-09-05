@@ -16,7 +16,7 @@ public class SubscriptionEndpoint(UserManager<ArainUser> userManager, IEmployerS
 {
     public override async Task HandleAsync(SubscriptionRequest request, CancellationToken ct)
     {
-        var user = await userManager.FindByEmailAsync(request.Email);
+        var user = await userManager.FindByIdAsync(request.UserId);
         if (user is null)
         {
             await SendNotFoundAsync(ct);
@@ -30,22 +30,23 @@ public class SubscriptionEndpoint(UserManager<ArainUser> userManager, IEmployerS
         }
 
         var now = timeProvider.UtcNow!.Value;
-        var expiry = request.Plan switch
+        var planSettings = request.Plan switch
         {
-            SubscriptionPlan.Monthly => now.AddMonths(1),
-            SubscriptionPlan.Quarterly => now.AddMonths(3),
-            SubscriptionPlan.Annually => now.AddYears(1),
-            SubscriptionPlan.EndToEnd => now.AddYears(1),
-            _ => now.AddMonths(1)
+            SubscriptionPlan.Monthly => new PlanSettings(now.AddMonths(1), 10),
+            SubscriptionPlan.Quarterly => new PlanSettings(now.AddMonths(3), 30),
+            SubscriptionPlan.Annually => new PlanSettings(now.AddYears(1), 50),
+            SubscriptionPlan.EndToEnd => new PlanSettings(now.AddYears(1), 200),
+            _ => new PlanSettings(now.AddMonths(1), 10)
         };
+
 
         var subscription = new EmployerSubscription
         {
             UserId = user.Id,
             Plan = request.Plan,
             StartDate = now,
-            ExpiryDate = expiry,
-            
+            ExpiryDate = planSettings.ExpiryDate,
+            RemainingToView = planSettings.RemainingToView,
             Status = SubscriptionStatus.Active
         };
 
@@ -57,8 +58,10 @@ public class SubscriptionEndpoint(UserManager<ArainUser> userManager, IEmployerS
 
 public class SubscriptionRequest
 {
-    public required string Email { get; set; }
+    public required string UserId { get; set; }
     public SubscriptionPlan Plan { get; set; }
 }
 
 public record SubscriptionResponse(bool Success, long? SubscriptionId, string? Message);
+
+public record PlanSettings(DateTimeOffset ExpiryDate, int RemainingToView);
