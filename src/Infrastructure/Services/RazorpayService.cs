@@ -11,13 +11,15 @@ public class RazorpayService : IRazorpayService
 {
     private readonly IPaymentTransactionService _paymentTransactionService;
     private readonly IPaymentOrderService _paymentOrderService;
-    private readonly IConfigurationSection _razorSettings;
+    private readonly IConfiguration _configuration;
+    private readonly RazorpayClient _razorpayClient;
 
-    public RazorpayService(IPaymentTransactionService paymentTransactionService, IPaymentOrderService paymentOrderService, IConfiguration configuration)
+    public RazorpayService(IPaymentTransactionService paymentTransactionService, IPaymentOrderService paymentOrderService, IConfiguration configuration, RazorpayClient razorpayClient)
     {
         _paymentTransactionService = paymentTransactionService;
         _paymentOrderService = paymentOrderService;
-        _razorSettings = configuration.GetSection("Razorpay");
+        _configuration = configuration;
+        _razorpayClient = razorpayClient;
     }
 
     public async Task<PaymentOrder> CreateOrderAsync(decimal amount, string currency, string description, string userId)
@@ -31,7 +33,7 @@ public class RazorpayService : IRazorpayService
             {"receipt", receipt}
         };
 
-        var razorpayOrder = new RazorpayClient(_razorSettings["KeyId"], _razorSettings["KeySecret"]).Order.Create(orderRequest);
+        var razorpayOrder = _razorpayClient.Order.Create(orderRequest);
 
         var paymentOrder = new PaymentOrder
         {
@@ -51,7 +53,7 @@ public class RazorpayService : IRazorpayService
 
     public Task<bool> VerifyPaymentSignature(string orderId, string paymentId, string signature)
     {
-        var keySecret = _razorSettings["KeySecret"];
+        var keySecret = _configuration["Razorpay:KeySecret"];
         var payload = $"{orderId}|{paymentId}";
 
         var computedSignature = ComputeHmacSha256(payload, keySecret);
@@ -60,12 +62,15 @@ public class RazorpayService : IRazorpayService
 
     public async Task<PaymentTransaction> ProcessPaymentAsync(string paymentId, string orderId, string signature)
     {
-        var paymentOrder = await _paymentOrderService.Get(x => x.RazorpayOrderId == orderId).FirstOrDefaultAsync();
+        var paymentOrder = await _paymentOrderService.Get(x => x.RazorpayOrderId == orderId).SingleOrDefaultAsync();
 
         if (paymentOrder == null)
             throw new InvalidOperationException("Order not found");
 
         var isValid = await VerifyPaymentSignature(orderId, paymentId, signature);
+
+        var payment = _razorpayClient.Payment.Fetch(paymentId);
+
 
         var transaction = new PaymentTransaction
         {
@@ -75,7 +80,8 @@ public class RazorpayService : IRazorpayService
             Amount = paymentOrder.Amount,
             Status = isValid ? "success" : "failed",
             PaymentOrderId = paymentOrder.Id,
-            Description = paymentOrder.Description
+            Description = paymentOrder.Description,
+            Method = payment["method"]
         };
 
         await _paymentTransactionService.CreateAsync(transaction);

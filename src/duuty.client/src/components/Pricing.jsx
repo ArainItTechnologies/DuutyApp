@@ -2,14 +2,17 @@ import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import { useNavigate } from "react-router-dom";
 import { createOrder, verifyPayment } from "../services/auth";
 import { useUser } from "../hooks/Hooks";
+import { useNotification } from "../context/NotificationContext";
 
 const Pricing = () => {
+  const { showSuccess, showError } = useNotification();
+
   const navigate = useNavigate();
   const { user } = useUser();
-  const handleRazorpayPayment = async (amount, description) => {
 
+  const handleRazorpayPayment = async (amount, description) => {
     if (!user) {
-      console.log('Only Loggedin Users can make payment');
+      showError('Only Loggedin Users can make payment');
       return;
     }
     const orderData = await createOrder({
@@ -26,27 +29,24 @@ const Pricing = () => {
       currency: "INR",
       name: "Duuty.in",
       description: description,
-      order_id: orderData.Id, // Get this from your backend
+      order_id: orderData.id,
       handler: async function (response) {
         try {
-          console.log('Payment completed, verifying...');
-
           const verifyData = await verifyPayment({
             paymentId: response.razorpay_payment_id,
             orderId: response.razorpay_order_id,
             signature: response.razorpay_signature
-          }, token);
+          }, user.token);
 
           if (verifyData.success) {
-            alert("Payment successful!");
-            console.log('Payment verified successfully:', verifyData);
+            showSuccess("Payment Successful!, Thanks for subscribing to DUUTY.");
+            navigate("/");
+            // await saveSubscription({userId: user.userId, plan: description}, user.token);
           } else {
-            alert("Payment verification failed! Please contact support.");
-            console.error('Payment verification failed:', verifyData);
+            showError("Payment verification failed! Please contact support.");
           }
         } catch (verificationError) {
-          console.error('Payment verification error:', verificationError);
-          alert(`Payment verification failed! ${verificationError.message}`);
+          showError(`Payment verification failed! ${verificationError.message}`);
         }
       },
       prefill: {
@@ -93,7 +93,7 @@ const Pricing = () => {
             </p>
             <p className="text-gray-500 mb-6">Monthly Payment</p>
             <button className="bg-linear-(--gradient-bg) text-white py-2 w-full rounded-lg mb-2 cursor-pointer"
-              onClick={() => handleRazorpayPayment(999, "1 - Month Plan")}
+              onClick={() => handleRazorpayPayment(999, "Monthly")}
             >
               Pay Now
             </button>
@@ -227,7 +227,7 @@ const Pricing = () => {
             </p>
             <p className="text-gray-500 mb-6">Quarterly Payment</p>
             <button className="bg-linear-(--gradient-bg) text-white py-2 w-full rounded-lg mb-2 cursor-pointer"
-              onClick={() => handleRazorpayPayment(999, "3 - Months Plan")}
+              onClick={() => handleRazorpayPayment(1999, "Quarterly")}
             >
               Pay Now
             </button>
@@ -361,7 +361,7 @@ const Pricing = () => {
             </p>
             <p className="text-gray-500 mb-6">Yearly Payment</p>
             <button className="bg-linear-(--gradient-bg) text-white py-2 w-full rounded-lg mb-2 cursor-pointer"
-              onClick={() => handleRazorpayPayment(999, "1 - Month Plan")}
+              onClick={() => handleRazorpayPayment(6999, "Annually")}
             >
               Pay Now
             </button>

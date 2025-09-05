@@ -45,6 +45,7 @@ public class SubscriptionEndpoint(UserManager<ArainUser> userManager, IEmployerS
             Plan = request.Plan,
             StartDate = now,
             ExpiryDate = expiry,
+            
             Status = SubscriptionStatus.Active
         };
 
