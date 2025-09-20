@@ -9,7 +9,7 @@ using SharedKernel.Services;
 
 namespace Web.Server.Features.User.BecomeEmployer;
 
-[HttpPost("/user/api/user/become-employer")]
+[HttpPost("/user/api/become-employer")]
 [AllowAnonymous]
 public class BecomeEmployerEndpoint(UserManager<ArainUser> userManager, IEmployerService employerService, IAddressService addressService, ITimeProvider timeProvider) : Endpoint<BecomeEmployerRequest>
 {

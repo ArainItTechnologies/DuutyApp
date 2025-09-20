@@ -7,9 +7,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Services;
 
-namespace Duuty.Server.Features.User.HireNow;
+namespace Duuty.Server.Features.Employer.HireNow;
 
-[HttpPost("/user/api/user/post-job")]
+[HttpPost("/employer/api/post-job")]
 [Authorize]
 public class PostJobEndpoint(IJobListingService jobListingService, IEmployerService employerService, ITimeProvider timeProvider) : Endpoint<PostJobRequest, PostJobResponse>
 {

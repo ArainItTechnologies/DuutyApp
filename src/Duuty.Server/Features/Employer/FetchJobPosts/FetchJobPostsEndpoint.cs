@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Duuty.Server.Features.Employer.FetchJobPosts;
 
-[HttpGet("/employer/api/job-posts")]
+[HttpGet("/employer/api/jobs")]
 [Authorize(Roles = "Employer")]
 public class FetchJobPostsEndpoint(UserManager<ArainUser> userManager, IJobListingService jobListingService, IEmployerService employerService) : Endpoint<FetchJobPostsRequest, FetchJobPostsResponse>
 {

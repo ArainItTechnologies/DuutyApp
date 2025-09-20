@@ -3,9 +3,9 @@ using FastEndpoints;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 
-namespace Web.Server.Features.Public.ChangePassword;
+namespace Duuty.Server.Features.User.ChangePassword;
 
-[HttpPost("/public/api/change-password")]
+[HttpPost("/user/api/change-password")]
 [Authorize]
 public class ChangePasswordEndpoint : Endpoint<ChangePasswordRequest, ChangePasswordResponse>
 {

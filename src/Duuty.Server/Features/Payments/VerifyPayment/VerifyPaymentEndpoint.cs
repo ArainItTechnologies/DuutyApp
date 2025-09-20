@@ -3,9 +3,9 @@ using FastEndpoints;
 using Infrastructure.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 
-namespace Duuty.Server.Features.User.VerifyPayment;
+namespace Duuty.Server.Features.Payments.VerifyPayment;
 
-[HttpPost("/user/api/verify-payment")]
+[HttpPost("/payments/api/verify-payment")]
 [Authorize]
 public class VerifyPaymentEndpoint(IRazorpayService razorpayService) : Endpoint<VerifyPaymentRequest, VerifyPaymentResponse>
 {

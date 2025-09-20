@@ -7,9 +7,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using SharedKernel.Services;
 
-namespace Duuty.Server.Features.User.Subscription;
+namespace Duuty.Server.Features.Payments.Subscription;
 
-[HttpPost("/user/api/subscribe")]
+[HttpPost("/payments/api/subscribe")]
 [Authorize]
 public class SubscriptionEndpoint(UserManager<ArainUser> userManager, IEmployerSubscriptionService service, ITimeProvider timeProvider) : Endpoint<SubscriptionRequest, SubscriptionResponse>
 {

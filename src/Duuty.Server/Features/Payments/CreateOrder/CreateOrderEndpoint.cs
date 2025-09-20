@@ -3,9 +3,9 @@ using FastEndpoints;
 using Infrastructure.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 
-namespace Duuty.Server.Features.User.Payments;
+namespace Duuty.Server.Features.Payments.CreateOrder;
 
-[HttpPost("/user/api/create-order")]
+[HttpPost("/payments/api/create-order")]
 [Authorize]
 public class CreateOrderEndpoint(IRazorpayService razorpayService) : Endpoint<CreateOrderRequest, CreateOrderResponse>
 {
