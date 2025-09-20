@@ -10,7 +10,7 @@ using SharedKernel.Services;
 
 namespace Duuty.Server.Features.User.Subscription;
 
-[HttpPost("/api/subscribe")]
+[HttpPost("/user/api/subscribe")]
 [Authorize]
 public class SubscriptionEndpoint(UserManager<ArainUser> userManager, IEmployerSubscriptionService service, ITimeProvider timeProvider) : Endpoint<SubscriptionRequest, SubscriptionResponse>
 {
@@ -19,13 +19,13 @@ public class SubscriptionEndpoint(UserManager<ArainUser> userManager, IEmployerS
         var user = await userManager.FindByIdAsync(request.UserId);
         if (user is null)
         {
-            await SendNotFoundAsync(ct);
+            await Send.NotFoundAsync(ct);
             return;
         }
 
         if (!Enum.IsDefined(typeof(SubscriptionPlan), request.Plan))
         {
-            await SendAsync(new SubscriptionResponse(false, null, "Invalid subscription plan."), (int)HttpStatusCode.BadRequest, ct);
+            await Send.NotFoundAsync(ct);
             return;
         }
 
@@ -52,7 +52,7 @@ public class SubscriptionEndpoint(UserManager<ArainUser> userManager, IEmployerS
 
         await service.CreateAsync(subscription);
 
-        await SendAsync(new SubscriptionResponse(true, subscription.Id, "Subscription created successfully."), (int)HttpStatusCode.OK, ct);
+        await Send.OkAsync(new SubscriptionResponse(true, subscription.Id, "Subscription created successfully."), ct);
     }
 }
 

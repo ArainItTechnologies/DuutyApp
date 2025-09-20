@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Duuty.Server.Features.Employer.FetchJobPosts;
 
-[HttpGet("/api/employer/job-posts")]
+[HttpGet("/employer/api/job-posts")]
 [Authorize(Roles = "Employer")]
 public class FetchJobPostsEndpoint(UserManager<ArainUser> userManager, IJobListingService jobListingService, IEmployerService employerService) : Endpoint<FetchJobPostsRequest, FetchJobPostsResponse>
 {
@@ -20,14 +20,14 @@ public class FetchJobPostsEndpoint(UserManager<ArainUser> userManager, IJobListi
 
         if (string.IsNullOrEmpty(request.UserId))
         {
-            await SendAsync(new FetchJobPostsResponse(false, "User ID is required."), (int)HttpStatusCode.BadRequest, ct);
+            await Send.NotFoundAsync(ct);
             return;
         }
         var employer = await employerService.Get(employer => employer.UserId == request.UserId).SingleOrDefaultAsync();
 
         if (employer is null)
         {
-            await SendAsync(new FetchJobPostsResponse(false, "Employer not found for the given user ID."), (int)HttpStatusCode.NotFound, ct);
+            await Send.NotFoundAsync(ct);
             return;
         }
 

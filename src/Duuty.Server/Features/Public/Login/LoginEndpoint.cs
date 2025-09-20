@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Web.Server.Features.Public.Login;
 
-[HttpPost("/api/login")]
+[HttpPost("/public/api/login")]
 [AllowAnonymous]
 public class LoginEndpoint(UserManager<ArainUser> userManager, JwtHandler jwtHandler) : Endpoint<LoginRequest, LoginResponse>
 {
@@ -15,21 +15,13 @@ public class LoginEndpoint(UserManager<ArainUser> userManager, JwtHandler jwtHan
         var user = await userManager.FindByEmailAsync(request.Email!);
         if (user is null || !await userManager.CheckPasswordAsync(user, request.Password))
         {
-            await SendAsync(new LoginResponse
-            {
-                Success = false,
-                Message = "Invalid Email or password."
-            }, 401, ct);
+            await Send.UnauthorizedAsync(ct);
             return;
         }
 
         if (!user.EmailConfirmed)
         {
-            await SendAsync(new LoginResponse
-            {
-                Success = false,
-                Message = "Email is not confirmed."
-            }, 403, ct);
+            await Send.ForbiddenAsync(ct);
             return;
         }
 
@@ -37,13 +29,13 @@ public class LoginEndpoint(UserManager<ArainUser> userManager, JwtHandler jwtHan
 
         var token = jwtHandler.CreateToken(user, roles);
 
-        await SendAsync(new LoginResponse
+        await Send.OkAsync(new LoginResponse
         {
             Success = true,
             UserId = user.Id,
             Token = token,
             Message = roles.Count == 0 ? "User has no roles." : null
-        }, 200, ct);
+        }, ct);
         return;
     }
 }

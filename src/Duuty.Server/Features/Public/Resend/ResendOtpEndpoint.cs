@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace Duuty.Server.Features.Public.Resend;
 
-[HttpPost("/api/resend/otp")]
+[HttpPost("/public/api/resend/otp")]
 [AllowAnonymous]
 public class ResendOtpEndpoint(UserManager<ArainUser> userManager, IEmailSender emailSender) : Endpoint<ResendOtpRequest, ResendOtpResponse>
 {
@@ -22,7 +22,7 @@ public class ResendOtpEndpoint(UserManager<ArainUser> userManager, IEmailSender 
 
         if (user is null)
         {
-            await SendAsync(new ResendOtpResponse(false, $"User not found with username {userName}"), (int)HttpStatusCode.NotFound, ct);
+            await Send.NotFoundAsync(ct);
             return;
         }
 
@@ -31,20 +31,20 @@ public class ResendOtpEndpoint(UserManager<ArainUser> userManager, IEmailSender 
            {
                if (otp.IsFaulted)
                {
-                   await SendAsync(new ResendOtpResponse(false, "Unable to resend OTP"), (int)HttpStatusCode.BadRequest, ct);
+                   await Send.ErrorsAsync((int)HttpStatusCode.BadRequest, ct);
                    return;
                }
 
                if (isPhone)
                {
                    // TODO: SMS/whatsapp Implementation
-                   await SendAsync(new ResendOtpResponse(true, "OTP resent successfully to phone"), (int)HttpStatusCode.OK, ct);
+                   await Send.OkAsync(new ResendOtpResponse(true, "OTP resent successfully to phone"), ct);
                    return;
                }
                else
                {
                    await emailSender.SendEmailAsync(request.Email!, EmailType.Otp, otp.Result);
-                   await SendAsync(new ResendOtpResponse(true, "OTP resent successfully to email"), (int)HttpStatusCode.OK, ct);
+                   await Send.OkAsync(new ResendOtpResponse(true, "OTP resent successfully to email"), ct);
                    return;
                }
 

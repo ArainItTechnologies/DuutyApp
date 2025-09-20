@@ -8,7 +8,7 @@ using SharedKernel.Services;
 
 namespace Duuty.Server.Features.User.ApplyJob;
 
-[HttpPost("/api/apply")]
+[HttpPost("/user/api/apply")]
 [Authorize]
 public class ApplyJobEndpoint(IJobListingService jobListingService, IJobApplicationService applicationService, ITimeProvider timeProvider): Endpoint<ApplyJobRequest, ApplyJobResponse>
 {
@@ -17,7 +17,7 @@ public class ApplyJobEndpoint(IJobListingService jobListingService, IJobApplicat
         var job = await jobListingService.Get(x => x.Id == req.JobListingId && x.IsActive).SingleOrDefaultAsync();
         if(job is null)
         {
-            await SendAsync(new ApplyJobResponse(false, "Job listing not found or inactive."), (int)HttpStatusCode.NotFound, ct);
+            await Send.NotFoundAsync(ct);
             return;
         }
 
@@ -25,7 +25,7 @@ public class ApplyJobEndpoint(IJobListingService jobListingService, IJobApplicat
 
         if(isAlreadyApplied)
         {
-            await SendAsync(new ApplyJobResponse(false, "You have already applied for this job."), (int)HttpStatusCode.Conflict, ct);
+            await Send.ErrorsAsync((int)HttpStatusCode.Conflict, ct);
             return;
         }
 
@@ -40,7 +40,7 @@ public class ApplyJobEndpoint(IJobListingService jobListingService, IJobApplicat
 
         await applicationService.CreateAsync(jobApplication);
 
-        await SendAsync(new ApplyJobResponse(true), (int)HttpStatusCode.OK, ct);
+        await Send.OkAsync(new ApplyJobResponse(true), ct);
     }
 }
 

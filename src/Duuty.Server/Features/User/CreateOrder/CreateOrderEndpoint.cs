@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Duuty.Server.Features.User.Payments;
 
-[HttpPost("/api/create-order")]
+[HttpPost("/user/api/create-order")]
 [Authorize]
 public class CreateOrderEndpoint(IRazorpayService razorpayService) : Endpoint<CreateOrderRequest, CreateOrderResponse>
 {
@@ -20,15 +20,15 @@ public class CreateOrderEndpoint(IRazorpayService razorpayService) : Endpoint<Cr
                 request.UserId
             );
 
-            await SendOkAsync(new CreateOrderResponse(true,order.RazorpayOrderId, order.Receipt, $"Successfully Created for the amount {(int)request.Amount*100}"), ct);
+            await Send.OkAsync(new CreateOrderResponse(true, order.RazorpayOrderId, order.Receipt, $"Successfully Created for the amount {(int)request.Amount * 100}"), ct);
             return;
         }
         catch (Exception ex)
         {
-            await SendAsync(new CreateOrderResponse(false, string.Empty, string.Empty, ex.Message), (int)HttpStatusCode.BadRequest, ct);
+            AddError(ex.Message);
+            ThrowIfAnyErrors((int)HttpStatusCode.InternalServerError);
             return;
         }
-
     }
 
 }

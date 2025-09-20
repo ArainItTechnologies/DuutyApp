@@ -10,7 +10,7 @@ using System.Text;
 
 namespace Web.Server.Features.Public.ForgotPassword;
 
-[HttpPost("/api/forgot-password")]
+[HttpPost("/public/api/forgot-password")]
 [AllowAnonymous]
 public class ForgotPasswordEndpoint : Endpoint<ForgotPasswordRequest, ForgotPasswordResponse>
 {
@@ -30,11 +30,7 @@ public class ForgotPasswordEndpoint : Endpoint<ForgotPasswordRequest, ForgotPass
         var user = await _userManager.FindByEmailAsync(request.Email);
         if (user is null)
         {
-            await SendAsync(new ForgotPasswordResponse
-            {
-                IsSuccess = false,
-                Message = "Un-recognised User"
-            }, (int)HttpStatusCode.BadRequest, cancellation: ct);
+            await Send.ErrorsAsync((int)HttpStatusCode.BadRequest, ct);
             return;
         }
 
@@ -49,10 +45,7 @@ public class ForgotPasswordEndpoint : Endpoint<ForgotPasswordRequest, ForgotPass
             EmailType.Reset,
             resetLink);
 
-        await SendAsync(new ForgotPasswordResponse
-        {
-            IsSuccess = true
-        }, (int)HttpStatusCode.OK, cancellation: ct);
+        await Send.OkAsync(ct);
         return;
     }
 }

@@ -9,7 +9,7 @@ using System.Net;
 
 namespace Web.Server.Features.User.BecomeEmployer;
 
-[HttpPost("/api/user/become-employer")]
+[HttpPost("/user/api/user/become-employer")]
 [AllowAnonymous]
 public class BecomeEmployerEndpoint(UserManager<ArainUser> userManager, IEmployerService employerService, IAddressService addressService, ITimeProvider timeProvider) : Endpoint<BecomeEmployerRequest>
 {
@@ -18,7 +18,7 @@ public class BecomeEmployerEndpoint(UserManager<ArainUser> userManager, IEmploye
         var user = await userManager.FindByIdAsync(req.UserId);
         if (user is null)
         {
-            await SendNotFoundAsync(ct);
+            await Send.NotFoundAsync(ct);
             return;
         }
         var addressEntity = new Address
@@ -51,9 +51,9 @@ public class BecomeEmployerEndpoint(UserManager<ArainUser> userManager, IEmploye
         var result = await userManager.AddToRoleAsync(user, "Employer");
         if (result.Succeeded)
         {
-            await SendOkAsync((int)HttpStatusCode.OK, ct);
+            await Send.OkAsync((int)HttpStatusCode.OK, ct);
             return;
         }
-        await SendErrorsAsync((int)HttpStatusCode.BadRequest, ct);
+        await Send.ErrorsAsync((int)HttpStatusCode.BadRequest, ct);
     }
 }

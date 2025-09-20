@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Duuty.Server.Features.User.VerifyPayment;
 
-[HttpPost("api/verify-payment")]
+[HttpPost("/user/api/verify-payment")]
 [Authorize]
 public class VerifyPaymentEndpoint(IRazorpayService razorpayService) : Endpoint<VerifyPaymentRequest, VerifyPaymentResponse>
 {
@@ -19,11 +19,12 @@ public class VerifyPaymentEndpoint(IRazorpayService razorpayService) : Endpoint<
                 request.Signature
             );
 
-            await SendOkAsync(new VerifyPaymentResponse(transaction.Status == "success", transaction.Id, transaction.Status), ct);
+            await Send.OkAsync(new VerifyPaymentResponse(transaction.Status == "success", transaction.Id, transaction.Status), ct);
         }
         catch (Exception ex)
         {
-             await SendAsync(new VerifyPaymentResponse(false, default, ex.Message), (int)HttpStatusCode.BadRequest, ct);
+            AddError(ex.Message);
+            ThrowIfAnyErrors((int)HttpStatusCode.InternalServerError);
             return;
         }
     }

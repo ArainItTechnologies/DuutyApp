@@ -12,7 +12,7 @@ using System.Text;
 
 namespace Web.Server.Features.Public.Register;
 
-[HttpPost("/api/register")]
+[HttpPost("/public/api/register")]
 [AllowAnonymous]
 public class RegisterEndpoint : Endpoint<RegisterModel, RegistrationResponse>
 {
@@ -62,7 +62,7 @@ public class RegisterEndpoint : Endpoint<RegisterModel, RegistrationResponse>
         if (!result.Succeeded)
         {
             AddError("registration", string.Join(", ", result.Errors.Select(e => e.Description)));
-            await SendErrorsAsync(cancellation: ct);
+            await Send.ErrorsAsync(cancellation: ct);
             return;
         }
 
@@ -122,7 +122,7 @@ public class RegisterEndpoint : Endpoint<RegisterModel, RegistrationResponse>
             });
         }
 
-        await SendAsync(new RegistrationResponse
+        await Send.OkAsync(new RegistrationResponse
         {
             IsSuccess = true,
             UserId = user.Id,

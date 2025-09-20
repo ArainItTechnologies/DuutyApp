@@ -1,22 +1,22 @@
 using Application;
-using Infrastructure;
 using DataAccess;
 using FastEndpoints;
+using FastEndpoints.Swagger;
+using Infrastructure;
 using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddHealthChecks();
-builder.Services.AddFastEndpoints();
-
 builder.Services
+    .AddFastEndpoints()
+    .SwaggerDocument()
     .AddApplicationServices(builder.Configuration)
     .AddInfrastructureServices(builder.Configuration)
     .AddDataAccessServices(builder.Configuration);
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
 builder.Services.AddAuthentication()
     .AddBearerToken(IdentityConstants.BearerScheme);
@@ -29,8 +29,6 @@ app.UseStaticFiles();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
 }
 
 app.MapHealthChecks("/health");
@@ -42,5 +40,6 @@ app.UseAuthorization();
 
 app.MapFallbackToFile("/index.html");
 
-app.UseFastEndpoints();
+app.UseFastEndpoints()
+    .UseSwaggerGen();
 app.Run();

@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Duuty.Server.Features.User.FetchJobs;
 
-[HttpGet("/api/jobs")]
+[HttpGet("/user/api/jobs")]
 [AllowAnonymous]
 public class FetchJobsEndpoint(IJobListingService jobListingService, IJobApplicationService applicationService) : Endpoint<FetchJobsRequest, FetchJobsResponse>
 {
@@ -26,7 +26,7 @@ public class FetchJobsEndpoint(IJobListingService jobListingService, IJobApplica
             {
                 var jobListings = await jobListingService.Get(x => x.IsActive).ToListAsync(ct);
                 var defaultJobs = jobListings.Select(job => JobPostDto.ToDto(job, appliedJobIds)).ToList();
-                await SendAsync(new FetchJobsResponse(true, defaultJobs), (int)HttpStatusCode.OK, ct);
+                await Send.OkAsync(new FetchJobsResponse(true, defaultJobs), ct);
                 return;
             }
 
@@ -48,15 +48,15 @@ public class FetchJobsEndpoint(IJobListingService jobListingService, IJobApplica
 
             var jobPosts = jobs.Select(job => JobPostDto.ToDto(job, appliedJobIds)).ToList();
 
-            await SendAsync(new FetchJobsResponse(true, jobPosts), (int)HttpStatusCode.OK, ct);
+            await Send.OkAsync(new FetchJobsResponse(true, jobPosts), ct);
             return;
         }
         catch (Exception ex)
         {
-            await SendAsync(new FetchJobsResponse(false, [], ex.Message), (int)HttpStatusCode.InternalServerError, ct);
+            AddError(ex.Message);
+            ThrowIfAnyErrors((int)HttpStatusCode.InternalServerError);
             return;
         }
-
     }
 }
 

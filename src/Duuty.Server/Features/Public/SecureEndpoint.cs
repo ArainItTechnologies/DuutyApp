@@ -9,7 +9,7 @@ public class SecureEndpoint : EndpointWithoutRequest<string>
 {
     public override async Task HandleAsync(CancellationToken ct)
     {
-        await SendAsync("You are authorized!", 200);
+        await Send.UnauthorizedAsync(ct);
     }
 }
 
