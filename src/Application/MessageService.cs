@@ -1,6 +1,6 @@
-using SharedKernel.Services;
 using System.Text;
 using System.Text.Json;
+using SharedKernel.Services;
 
 namespace Application;
 

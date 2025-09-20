@@ -1,6 +1,6 @@
-﻿using FastEndpoints;
+﻿using System.Net;
+using FastEndpoints;
 using FluentValidation;
-using System.Net;
 
 namespace Web.Server.Features.Public.ForgotPassword;
 

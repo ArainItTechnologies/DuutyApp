@@ -1,3 +1,4 @@
+using System.Net;
 using DataAccess.Identity;
 using Domain.Entities;
 using FastEndpoints;
@@ -5,7 +6,6 @@ using Infrastructure.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using SharedKernel.Services;
-using System.Net;
 
 namespace Web.Server.Features.User.BecomeEmployer;
 

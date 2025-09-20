@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity.UI.Services;
+﻿using System.Net.Http.Headers;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SharedKernel.Configs;
 using SharedKernel.Services;
-using System.Net.Http.Headers;
 
 namespace Application;
 

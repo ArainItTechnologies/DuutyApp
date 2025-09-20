@@ -1,8 +1,5 @@
-﻿using System.Net;
-using DataAccess.Identity;
-using Duuty.Server.Features.User.HireNow;
+﻿using DataAccess.Identity;
 using FastEndpoints;
-using Infrastructure.Services;
 using Infrastructure.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;

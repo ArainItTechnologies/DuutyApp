@@ -1,12 +1,11 @@
-﻿using DataAccess.Identity;
+﻿using System.Text;
+using DataAccess.Identity;
 using FastEndpoints;
 using Infrastructure.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.WebUtilities;
-using System.Net;
-using System.Text;
 
 namespace Web.Server.Features.Public.Resend
 {

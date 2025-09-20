@@ -10,12 +10,12 @@ namespace Duuty.Server.Features.User.ApplyJob;
 
 [HttpPost("/user/api/apply")]
 [Authorize]
-public class ApplyJobEndpoint(IJobListingService jobListingService, IJobApplicationService applicationService, ITimeProvider timeProvider): Endpoint<ApplyJobRequest, ApplyJobResponse>
+public class ApplyJobEndpoint(IJobListingService jobListingService, IJobApplicationService applicationService, ITimeProvider timeProvider) : Endpoint<ApplyJobRequest, ApplyJobResponse>
 {
     public override async Task HandleAsync(ApplyJobRequest req, CancellationToken ct)
     {
         var job = await jobListingService.Get(x => x.Id == req.JobListingId && x.IsActive).SingleOrDefaultAsync();
-        if(job is null)
+        if (job is null)
         {
             await Send.NotFoundAsync(ct);
             return;
@@ -23,7 +23,7 @@ public class ApplyJobEndpoint(IJobListingService jobListingService, IJobApplicat
 
         var isAlreadyApplied = await applicationService.Get(x => x.JobListingId == req.JobListingId && x.UserId == req.UserId).AnyAsync(ct);
 
-        if(isAlreadyApplied)
+        if (isAlreadyApplied)
         {
             await Send.ErrorsAsync((int)HttpStatusCode.Conflict, ct);
             return;

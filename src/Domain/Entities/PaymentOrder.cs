@@ -12,7 +12,7 @@ public class PaymentOrder : Entity
     public string Status { get; set; } = "created";
     public string UserId { get; set; }
     public string Description { get; set; }
-    
+
     // Navigation property
     public virtual ICollection<PaymentTransaction> Transactions { get; set; }
 }

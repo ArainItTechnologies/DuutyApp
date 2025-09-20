@@ -12,7 +12,7 @@ public class PaymentTransaction : Entity
     public string Status { get; set; }
     public string Method { get; set; }
     public string Description { get; set; }
-    
+
     // Foreign key
     public int PaymentOrderId { get; set; }
     public virtual PaymentOrder PaymentOrder { get; set; }

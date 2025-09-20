@@ -69,13 +69,13 @@ public static class InfrastructureServiceRegistration
 
         services.AddSingleton<JwtHandler>();
 
-         services.AddScoped(provider =>
-        {
-            var keyId = configuration["Razorpay:KeyId"];
-            var keySecret = configuration["Razorpay:KeySecret"];
+        services.AddScoped(provider =>
+       {
+           var keyId = configuration["Razorpay:KeyId"];
+           var keySecret = configuration["Razorpay:KeySecret"];
 
-            return new RazorpayClient(keyId, keySecret);
-        });
+           return new RazorpayClient(keyId, keySecret);
+       });
 
         services.AddScoped<IOrganisationService, OrganisationService>()
                 .AddScoped<IPaymentOrderService, PaymentOrderService>()

@@ -1,4 +1,5 @@
-﻿using Application;
+﻿using System.Text;
+using Application;
 using DataAccess.Identity;
 using Domain.Entities;
 using FastEndpoints;
@@ -8,7 +9,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.WebUtilities;
 using SharedKernel.Services;
-using System.Text;
 
 namespace Web.Server.Features.Public.Register;
 

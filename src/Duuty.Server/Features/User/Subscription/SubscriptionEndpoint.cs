@@ -1,5 +1,4 @@
-﻿using System.Net;
-using DataAccess.Identity;
+﻿using DataAccess.Identity;
 using Domain.Entities;
 using Domain.Enums;
 using FastEndpoints;
