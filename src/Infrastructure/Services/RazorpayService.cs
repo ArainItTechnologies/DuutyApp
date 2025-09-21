@@ -1,9 +1,11 @@
-﻿using System.Text;
+﻿using System.Security.Cryptography;
+using System.Text;
 using Domain.Entities;
 using Infrastructure.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Razorpay.Api;
+using SharedKernel.Services;
 
 namespace Infrastructure.Services;
 
@@ -13,18 +15,20 @@ public class RazorpayService : IRazorpayService
     private readonly IPaymentOrderService _paymentOrderService;
     private readonly IConfiguration _configuration;
     private readonly RazorpayClient _razorpayClient;
+    private readonly ITimeProvider _timeProvider;
 
-    public RazorpayService(IPaymentTransactionService paymentTransactionService, IPaymentOrderService paymentOrderService, IConfiguration configuration, RazorpayClient razorpayClient)
+    public RazorpayService(IPaymentTransactionService paymentTransactionService, IPaymentOrderService paymentOrderService, IConfiguration configuration, RazorpayClient razorpayClient, ITimeProvider timeProvider)
     {
         _paymentTransactionService = paymentTransactionService;
         _paymentOrderService = paymentOrderService;
         _configuration = configuration;
         _razorpayClient = razorpayClient;
+        _timeProvider = timeProvider;
     }
 
     public async Task<PaymentOrder> CreateOrderAsync(decimal amount, string currency, string description, string userId)
     {
-        var receipt = $"rcpt_{DateTime.UtcNow.Ticks}";
+        var receipt = $"rcpt_{_timeProvider.UtcNow!.Value.Ticks}";
 
         var orderRequest = new Dictionary<string, object>
         {
@@ -51,26 +55,26 @@ public class RazorpayService : IRazorpayService
         return paymentOrder;
     }
 
-    public Task<bool> VerifyPaymentSignature(string orderId, string paymentId, string signature)
+    public async Task<bool> VerifyPaymentSignature(string orderId, string paymentId, string signature)
     {
         var keySecret = _configuration["Razorpay:KeySecret"];
+        ArgumentException.ThrowIfNullOrEmpty(keySecret, nameof(keySecret));
+        ArgumentException.ThrowIfNullOrEmpty(orderId, nameof(orderId));
         var payload = $"{orderId}|{paymentId}";
 
-        var computedSignature = ComputeHmacSha256(payload, keySecret);
-        return Task.FromResult(computedSignature == signature);
+        var computedSignature = await ComputeHmacSha256Async(payload, keySecret);
+        return computedSignature.Equals(signature, StringComparison.OrdinalIgnoreCase);
     }
 
     public async Task<PaymentTransaction> ProcessPaymentAsync(string paymentId, string orderId, string signature)
     {
         var paymentOrder = await _paymentOrderService.Get(x => x.RazorpayOrderId == orderId).SingleOrDefaultAsync();
 
-        if (paymentOrder == null)
-            throw new InvalidOperationException("Order not found");
+        ArgumentNullException.ThrowIfNull(paymentOrder, nameof(paymentOrder));
 
         var isValid = await VerifyPaymentSignature(orderId, paymentId, signature);
 
         var payment = _razorpayClient.Payment.Fetch(paymentId);
-
 
         var transaction = new PaymentTransaction
         {
@@ -84,7 +88,9 @@ public class RazorpayService : IRazorpayService
             Method = payment["method"]
         };
 
+        paymentOrder.Transactions.Add(transaction);
         await _paymentTransactionService.CreateAsync(transaction);
+        await _paymentOrderService.UpdateAsync(paymentOrder);
 
         if (isValid)
         {
@@ -94,15 +100,14 @@ public class RazorpayService : IRazorpayService
         return transaction;
     }
 
-    private string ComputeHmacSha256(string data, string key)
+    internal async Task<string> ComputeHmacSha256Async(string data, string key)
     {
         var keyBytes = Encoding.UTF8.GetBytes(key);
         var dataBytes = Encoding.UTF8.GetBytes(data);
 
-        using (var hmac = new System.Security.Cryptography.HMACSHA256(keyBytes))
-        {
-            var hash = hmac.ComputeHash(dataBytes);
-            return Convert.ToHexString(hash).ToLower();
-        }
+        using var hmac = new HMACSHA256(keyBytes);
+        using var ms = new MemoryStream(dataBytes);
+        var hash = await hmac.ComputeHashAsync(ms);
+        return Convert.ToHexString(hash).ToLower();
     }
 }

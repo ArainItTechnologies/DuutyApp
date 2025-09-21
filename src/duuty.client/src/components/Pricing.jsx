@@ -5,7 +5,7 @@ import { useUser } from "../hooks/Hooks";
 import { useNotification } from "../context/NotificationContext";
 
 const Pricing = () => {
-  const { showSuccess, showError } = useNotification();
+  const { showSuccess, showError, showInfo } = useNotification();
 
   const navigate = useNavigate();
   const { user } = useUser();
@@ -15,50 +15,62 @@ const Pricing = () => {
       showError('Only Loggedin Users can make payment');
       return;
     }
-    const orderData = await createOrder({
-      amount: amount,
-      currency: 'INR',
-      description: description,
-      userId: user.userId
-    }, user.token);
+    try {
+      const orderData = await createOrder({
+        amount: amount,
+        currency: 'INR',
+        description: description,
+        userId: user.userId
+      }, user.token);
 
-    const options = {
-      key: "rzp_test_VYrociEO8aKhp6", // Replace with your Razorpay key
-      amount: amount * 100,
-      currency: "INR",
-      name: "Duuty.in",
-      description: description,
-      order_id: orderData.id,
-      handler: async function (response) {
-        try {
-          const verifyData = await verifyPayment({
-            paymentId: response.razorpay_payment_id,
-            orderId: response.razorpay_order_id,
-            signature: response.razorpay_signature
-          }, user.token);
+      const options = {
+        key: orderData.razorpayKeyId,
+        amount: amount * 100,
+        currency: "INR",
+        name: "Duuty.in",
+        description: description,
+        order_id: orderData.orderId,
+        handler: async function (response) {
+          try {
+            const verifyData = await verifyPayment({
+              paymentId: response.razorpay_payment_id,
+              orderId: response.razorpay_order_id,
+              signature: response.razorpay_signature
+            }, user.token);
 
-          if (verifyData.success) {
-            showSuccess("Payment Successful!, Thanks for subscribing to DUUTY.");
-            navigate("/");
-            await subscribeToPlan({userId: user.userId, plan}, user.token);
-          } else {
-            showError("Payment verification failed! Please contact support.");
+            if (verifyData.success) {
+              showSuccess("Payment Successful!, Thanks for subscribing to DUUTY.");
+              navigate("/");
+              await subscribeToPlan({ userId: user.userId, plan }, user.token);
+            } else {
+              showError("Payment verification failed! Please contact support.");
+            }
+          } catch (verificationError) {
+            showError(`Payment verification failed! ${verificationError.message}`);
           }
-        } catch (verificationError) {
-          showError(`Payment verification failed! ${verificationError.message}`);
+        },
+        modal: {
+          ondismiss: function () {
+            showInfo('Payment cancelled by user');
+          }
+        },
+        prefill: {
+          name: user.name || "",
+          email: user.email || "",
+          contact: user.phone || "",
+        },
+        theme: {
+          color: "#6366f1",
+        },
+        error: function (error) {
+          showError('Payment failed. Please try again.');
         }
-      },
-      prefill: {
-        name: "",
-        email: "",
-        contact: "",
-      },
-      theme: {
-        color: "#6366f1",
-      },
-    };
-    const rzp = new window.Razorpay(options);
-    rzp.open();
+      };
+      const rzp = new window.Razorpay(options);
+      rzp.open();
+    } catch (error) {
+      showError(`Payment initiation failed! ${error.message}`);
+    }
   };
 
   return (

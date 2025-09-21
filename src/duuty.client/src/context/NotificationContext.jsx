@@ -18,7 +18,8 @@ const NotificationModal = ({ isOpen, onClose, type = 'success', message = '', ti
   if (!isOpen) return null;
 
   const isSuccess = type === 'success';
-  
+  const isError = type === 'error';
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-lg shadow-2xl max-w-md w-full mx-4 transform transition-all duration-300 scale-100">
@@ -40,9 +41,13 @@ const NotificationModal = ({ isOpen, onClose, type = 'success', message = '', ti
               <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
                 <Check size={32} className="text-green-600" strokeWidth={3} />
               </div>
-            ) : (
+            ) : isError ? (
               <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center">
                 <X size={32} className="text-red-600" strokeWidth={3} />
+              </div>
+            ) : (
+              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center">
+                <Info size={32} className="text-blue-600" strokeWidth={3} />
               </div>
             )}
           </div>
@@ -50,7 +55,7 @@ const NotificationModal = ({ isOpen, onClose, type = 'success', message = '', ti
           {/* Title */}
           {title && (
             <h3 className={`text-xl font-semibold mb-2 ${
-              isSuccess ? 'text-green-800' : 'text-red-800'
+              isSuccess ? 'text-green-800' : isError ? 'text-red-800' : 'text-blue-800'
             }`}>
               {title}
             </h3>
@@ -69,7 +74,9 @@ const NotificationModal = ({ isOpen, onClose, type = 'success', message = '', ti
             className={`px-6 py-2 rounded-lg font-medium transition-colors duration-200 ${
               isSuccess 
                 ? 'bg-green-600 hover:bg-green-700 text-white' 
-                : 'bg-red-600 hover:bg-red-700 text-white'
+                : isError
+                  ? 'bg-red-600 hover:bg-red-700 text-white'
+                  : 'bg-blue-600 hover:bg-blue-700 text-white'
             }`}
           >
             Close
@@ -107,6 +114,15 @@ export const NotificationProvider = ({ children }) => {
     });
   };
 
+  const showInfo = (message, title = 'Info!') => {
+    setNotification({
+      isOpen: true,
+      type: 'info',
+      title,
+      message
+    });
+  };
+
   const close = () => {
     setNotification(prev => ({ ...prev, isOpen: false }));
   };
@@ -114,6 +130,7 @@ export const NotificationProvider = ({ children }) => {
   const value = {
     showSuccess,
     showError,
+    showInfo,
     close
   };
 

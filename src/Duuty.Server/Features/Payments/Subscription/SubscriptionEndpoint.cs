@@ -15,43 +15,54 @@ public class SubscriptionEndpoint(UserManager<ArainUser> userManager, IEmployerS
 {
     public override async Task HandleAsync(SubscriptionRequest request, CancellationToken ct)
     {
-        var user = await userManager.FindByIdAsync(request.UserId);
-        if (user is null)
+        try
         {
-            await Send.NotFoundAsync(ct);
+            var user = await userManager.FindByIdAsync(request.UserId);
+            if (user is null)
+            {
+                await Send.NotFoundAsync(ct);
+                return;
+            }
+
+            if (!Enum.IsDefined(typeof(SubscriptionPlan), request.Plan))
+            {
+                await Send.NotFoundAsync(ct);
+                return;
+            }
+
+
+            var now = timeProvider.UtcNow!.Value;
+            var planSettings = request.Plan switch
+            {
+                SubscriptionPlan.Monthly => new PlanSettings(now.AddMonths(1), 10),
+                SubscriptionPlan.Quarterly => new PlanSettings(now.AddMonths(3), 30),
+                SubscriptionPlan.Annually => new PlanSettings(now.AddYears(1), 50),
+                SubscriptionPlan.EndToEnd => new PlanSettings(now.AddYears(1), 200),
+                _ => new PlanSettings(now.AddMonths(1), 10)
+            };
+
+
+            var subscription = new EmployerSubscription
+            {
+                UserId = user.Id,
+                Plan = request.Plan,
+                StartDate = now,
+                ExpiryDate = planSettings.ExpiryDate,
+                RemainingToView = planSettings.RemainingToView,
+                Status = SubscriptionStatus.Active
+            };
+
+            await service.CreateAsync(subscription);
+
+            await Send.OkAsync(new SubscriptionResponse(true, subscription.Id, "Subscription created successfully."), ct);
+        }
+        catch (Exception ex)
+        {
+            AddError(ex.Message);
+            await Send.ErrorsAsync((int)System.Net.HttpStatusCode.InternalServerError, ct);
             return;
         }
 
-        if (!Enum.IsDefined(typeof(SubscriptionPlan), request.Plan))
-        {
-            await Send.NotFoundAsync(ct);
-            return;
-        }
-
-        var now = timeProvider.UtcNow!.Value;
-        var planSettings = request.Plan switch
-        {
-            SubscriptionPlan.Monthly => new PlanSettings(now.AddMonths(1), 10),
-            SubscriptionPlan.Quarterly => new PlanSettings(now.AddMonths(3), 30),
-            SubscriptionPlan.Annually => new PlanSettings(now.AddYears(1), 50),
-            SubscriptionPlan.EndToEnd => new PlanSettings(now.AddYears(1), 200),
-            _ => new PlanSettings(now.AddMonths(1), 10)
-        };
-
-
-        var subscription = new EmployerSubscription
-        {
-            UserId = user.Id,
-            Plan = request.Plan,
-            StartDate = now,
-            ExpiryDate = planSettings.ExpiryDate,
-            RemainingToView = planSettings.RemainingToView,
-            Status = SubscriptionStatus.Active
-        };
-
-        await service.CreateAsync(subscription);
-
-        await Send.OkAsync(new SubscriptionResponse(true, subscription.Id, "Subscription created successfully."), ct);
     }
 }
 

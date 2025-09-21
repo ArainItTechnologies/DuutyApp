@@ -7,10 +7,17 @@ namespace Duuty.Server.Features.Payments.CreateOrder;
 
 [HttpPost("/payments/api/create-order")]
 [Authorize]
-public class CreateOrderEndpoint(IRazorpayService razorpayService) : Endpoint<CreateOrderRequest, CreateOrderResponse>
+public class CreateOrderEndpoint(IRazorpayService razorpayService, IConfiguration configuration) : Endpoint<CreateOrderRequest, CreateOrderResponse>
 {
+    private readonly IConfiguration _configuration = configuration;
+
     public override async Task HandleAsync(CreateOrderRequest request, CancellationToken ct)
     {
+        var keySecret = _configuration["Razorpay:KeySecret"];
+        ArgumentNullException.ThrowIfNull(keySecret, nameof(keySecret));
+        ArgumentNullException.ThrowIfNull(request, nameof(request));
+        ArgumentNullException.ThrowIfNull(request.UserId, nameof(request.UserId));
+
         try
         {
             var order = await razorpayService.CreateOrderAsync(
@@ -20,7 +27,15 @@ public class CreateOrderEndpoint(IRazorpayService razorpayService) : Endpoint<Cr
                 request.UserId
             );
 
-            await Send.OkAsync(new CreateOrderResponse(true, order.RazorpayOrderId, order.Receipt, $"Successfully Created for the amount {(int)request.Amount * 100}"), ct);
+            await Send.OkAsync(new CreateOrderResponse
+            {
+                OrderId = order.RazorpayOrderId,
+                RazorpayKeyId = keySecret,
+                Amount = request.Amount,
+                Receipt = order.Receipt,
+                Success = true,
+                Message = $"Successfully Created for the amount {(int)request.Amount * 100}"
+            }, ct);
             return;
         }
         catch (Exception ex)
@@ -33,7 +48,15 @@ public class CreateOrderEndpoint(IRazorpayService razorpayService) : Endpoint<Cr
 
 }
 
-public record CreateOrderResponse(bool Success, string Id, string Receipt, string Message);
+public class CreateOrderResponse
+{
+    public string OrderId { get; set; } = string.Empty;
+    public string RazorpayKeyId { get; set; } = string.Empty;
+    public decimal Amount { get; set; }
+    public string Receipt { get; set; } = string.Empty;
+    public string Message { get; set; } = string.Empty;
+    public bool Success { get; set; }
+}
 
 public class CreateOrderRequest
 {
