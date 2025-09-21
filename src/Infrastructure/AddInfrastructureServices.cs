@@ -73,7 +73,7 @@ public static class InfrastructureServiceRegistration
         {
             var keyId = configuration["Razorpay:KeyId"];
             var keySecret = configuration["Razorpay:KeySecret"];
-        
+
             return new RazorpayClient(keyId, keySecret);
         });
 

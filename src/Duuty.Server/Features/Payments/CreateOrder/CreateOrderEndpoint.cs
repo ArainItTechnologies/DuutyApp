@@ -1,5 +1,4 @@
 ﻿using System.Net;
-using FastEndpoints;
 using Infrastructure.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 

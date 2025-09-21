@@ -1,6 +1,5 @@
 using Application;
 using DataAccess;
-using FastEndpoints;
 using FastEndpoints.Swagger;
 using Infrastructure;
 using Microsoft.AspNetCore.Identity;

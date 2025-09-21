@@ -1,8 +1,8 @@
-﻿using System.Text;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Text;
 using Application;
 using DataAccess.Identity;
 using Domain.Entities;
-using FastEndpoints;
 using Infrastructure.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -14,11 +14,12 @@ namespace Web.Server.Features.Public.Register;
 
 [HttpPost("/public/api/register")]
 [AllowAnonymous]
-public class RegisterEndpoint : Endpoint<RegisterModel, RegistrationResponse>
+public class RegisterEndpoint : Endpoint<RegistrationRequest, RegistrationResponse>
 {
     private readonly UserManager<ArainUser> _userManager;
     private readonly IEmployeeJobRoleService _employeeJobRoleService;
     private readonly IEmailSender _emailSender;
+    private readonly IMessageService _messageService;
     private readonly IConfiguration _configuration;
     private readonly ITimeProvider _timeProvider;
 
@@ -26,16 +27,18 @@ public class RegisterEndpoint : Endpoint<RegisterModel, RegistrationResponse>
         UserManager<ArainUser> userManager,
         IEmployeeJobRoleService employeeJobRoleService,
         IEmailSender emailSender,
+        IMessageService messageService,
         IConfiguration configuration,
         ITimeProvider timeProvider)
     {
         _userManager = userManager;
         _employeeJobRoleService = employeeJobRoleService;
         _emailSender = emailSender;
+        _messageService = messageService;
         _configuration = configuration;
         _timeProvider = timeProvider;
     }
-    public override async Task HandleAsync(RegisterModel model, CancellationToken ct)
+    public override async Task HandleAsync(RegistrationRequest model, CancellationToken ct)
     {
         var userName = !string.IsNullOrWhiteSpace(model.Email)
             ? model.Email
@@ -82,32 +85,14 @@ public class RegisterEndpoint : Endpoint<RegisterModel, RegistrationResponse>
 
         if (!string.IsNullOrEmpty(model.PhoneNumber))
         {
-            await _userManager.GenerateTwoFactorTokenAsync(user, TokenOptions.DefaultPhoneProvider)
-               .ContinueWith(async otp =>
-               {
-                   if (otp.IsCompletedSuccessfully)
-                   {
-                       await _emailSender.SendEmailAsync(
-                           model.PhoneNumber!,
-                           EmailType.Otp,
-                           otp.Result);
-                   }
-               }, ct);
+            var otp = await _userManager.GenerateTwoFactorTokenAsync(user, TokenOptions.DefaultPhoneProvider);
+            await _messageService.SendWhatsAppMessage(model.PhoneNumber!, otp);
         }
 
         if (!string.IsNullOrWhiteSpace(model.Email))
         {
-            await _userManager.GenerateTwoFactorTokenAsync(user, TokenOptions.DefaultEmailProvider)
-                .ContinueWith(async otp =>
-                {
-                    if (otp.IsCompletedSuccessfully)
-                    {
-                        await _emailSender.SendEmailAsync(
-                            model.Email!,
-                            EmailType.Otp,
-                            otp.Result);
-                    }
-                }, ct);
+            var otp = await _userManager.GenerateTwoFactorTokenAsync(user, TokenOptions.DefaultEmailProvider);
+            await _emailSender.SendEmailAsync(model.Email!, EmailType.Otp, otp);
         }
 
         await _userManager.AddToRoleAsync(user, "User");
@@ -129,4 +114,28 @@ public class RegisterEndpoint : Endpoint<RegisterModel, RegistrationResponse>
             Message = "User registered successfully",
         }, cancellation: ct);
     }
+}
+
+public class RegistrationRequest
+{
+    [Required]
+    [MinLength(6)]
+    public required string Password { get; set; }
+
+    [Required]
+    [Compare(nameof(Password), ErrorMessage = "Password and confirmation password do not match.")]
+    public required string ConfirmPassword { get; set; }
+    public string? Email { get; set; }
+    public string? PhoneNumber { get; set; }
+    public string? PreferredRole { get; set; }
+    public bool IsEmployer { get; set; } = false;
+}
+
+public class RegistrationResponse
+{
+    public bool IsSuccess { get; set; }
+    public string? Message { get; set; }
+    public string? Token { get; set; }
+    public string? UserId { get; set; }
+    public string? Error { get; set; }
 }

@@ -1,9 +1,8 @@
-﻿using FastEndpoints;
-using FluentValidation;
+﻿using FluentValidation;
 
 namespace Web.Server.Features.Public.Register;
 
-public class RegisterValidator : Validator<RegisterModel>
+public class RegisterValidator : Validator<RegistrationRequest>
 {
     public RegisterValidator()
     {

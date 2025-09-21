@@ -1,5 +1,4 @@
 ﻿using DataAccess.Identity;
-using FastEndpoints;
 using Infrastructure.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;

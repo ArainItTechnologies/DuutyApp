@@ -80,7 +80,7 @@ public class EntityService<T> : IEntityService<T> where T : Entity
             _unitOfWork.Commit();
         }
     }
-    
+
     public async Task UpdateAsync(T entity, bool save = true)
     {
         _repository.Edit(entity);

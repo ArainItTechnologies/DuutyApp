@@ -1,5 +1,4 @@
-﻿using FastEndpoints;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 
 namespace Web.Server.Features.Public;
 
