@@ -1,6 +1,5 @@
 ﻿using System.Net;
 using System.Text;
-using Application;
 using DataAccess.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;

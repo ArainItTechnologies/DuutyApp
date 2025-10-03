@@ -1,11 +1,11 @@
 ﻿using System.Net;
 using System.Text;
-using Application;
 using DataAccess.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.WebUtilities;
+using SharedKernel.Services;
 
 namespace Web.Server.Features.Public.ForgotPassword;
 
@@ -15,12 +15,14 @@ public class ForgotPasswordEndpoint : Endpoint<ForgotPasswordRequest, ForgotPass
 {
     private readonly UserManager<ArainUser> _userManager;
     private readonly IEmailSender _emailSender;
+    private readonly IMessageService _messageService;
     private readonly IConfiguration _configuration;
 
-    public ForgotPasswordEndpoint(UserManager<ArainUser> userManager, IEmailSender emailSender, IConfiguration configuration)
+    public ForgotPasswordEndpoint(UserManager<ArainUser> userManager, IEmailSender emailSender, IMessageService messageService, IConfiguration configuration)
     {
         _userManager = userManager;
         _emailSender = emailSender;
+        _messageService = messageService;
         _configuration = configuration;
     }
 
@@ -39,10 +41,15 @@ public class ForgotPasswordEndpoint : Endpoint<ForgotPasswordRequest, ForgotPass
 
         var resetLink = $"{_configuration["ClientAppBaseUrl"]}/resetPassword?userId={user!.Id}&token={encodedToken}";
 
-        await _emailSender.SendEmailAsync(
-            request.Email,
-            EmailType.Reset,
-            resetLink);
+        if (!string.IsNullOrEmpty(request.PhoneNumber))
+        {
+            await _messageService.SendWhatsAppMessage(request.PhoneNumber!, resetLink);
+        }
+
+        if (!string.IsNullOrWhiteSpace(request.Email))
+        {
+            await _emailSender.SendEmailAsync(request.Email!, EmailType.Reset, resetLink);
+        }
 
         await Send.OkAsync(ct);
         return;
@@ -57,5 +64,6 @@ public class ForgotPasswordResponse
 
 public class ForgotPasswordRequest
 {
-    public required string Email { get; set; }
+    public string Email { get; set; }
+    public string PhoneNumber { get; set; }
 }

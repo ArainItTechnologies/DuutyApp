@@ -1,1 +1,2 @@
-﻿global using FastEndpoints;
+﻿global using Application;
+global using FastEndpoints;

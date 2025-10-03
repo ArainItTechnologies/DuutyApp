@@ -1,13 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Text;
-using Application;
 using DataAccess.Identity;
 using Domain.Entities;
 using Infrastructure.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
-using Microsoft.AspNetCore.WebUtilities;
 using SharedKernel.Services;
 
 namespace Web.Server.Features.Public.Register;
@@ -20,7 +17,6 @@ public class RegisterEndpoint : Endpoint<RegistrationRequest, RegistrationRespon
     private readonly IEmployeeJobRoleService _employeeJobRoleService;
     private readonly IEmailSender _emailSender;
     private readonly IMessageService _messageService;
-    private readonly IConfiguration _configuration;
     private readonly ITimeProvider _timeProvider;
 
     public RegisterEndpoint(
@@ -28,14 +24,12 @@ public class RegisterEndpoint : Endpoint<RegistrationRequest, RegistrationRespon
         IEmployeeJobRoleService employeeJobRoleService,
         IEmailSender emailSender,
         IMessageService messageService,
-        IConfiguration configuration,
         ITimeProvider timeProvider)
     {
         _userManager = userManager;
         _employeeJobRoleService = employeeJobRoleService;
         _emailSender = emailSender;
         _messageService = messageService;
-        _configuration = configuration;
         _timeProvider = timeProvider;
     }
     public override async Task HandleAsync(RegistrationRequest model, CancellationToken ct)
@@ -52,15 +46,7 @@ public class RegisterEndpoint : Endpoint<RegistrationRequest, RegistrationRespon
             TwoFactorEnabled = true,
         };
 
-        IdentityResult result;
-        if (string.IsNullOrEmpty(model.Password))
-        {
-            result = await _userManager.CreateAsync(user);
-        }
-        else
-        {
-            result = await _userManager.CreateAsync(user, model.Password);
-        }
+        var result = await _userManager.CreateAsync(user, model.Password);
 
         if (!result.Succeeded)
         {
@@ -69,19 +55,7 @@ public class RegisterEndpoint : Endpoint<RegistrationRequest, RegistrationRespon
             return;
         }
 
-        if (string.IsNullOrEmpty(model.Password))
-        {
-            var token = await _userManager.GeneratePasswordResetTokenAsync(user!);
 
-            var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
-
-            var resetLink = $"{_configuration["ClientAppBaseUrl"]}/resetPassword?userId={user!.Id}&token={encodedToken}";
-
-            await _emailSender.SendEmailAsync(
-                model.Email!,
-                EmailType.Reset,
-                resetLink);
-        }
 
         if (!string.IsNullOrEmpty(model.PhoneNumber))
         {

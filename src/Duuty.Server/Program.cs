@@ -1,4 +1,3 @@
-using Application;
 using DataAccess;
 using FastEndpoints.Swagger;
 using Infrastructure;
@@ -39,6 +38,21 @@ app.UseAuthorization();
 
 app.MapFallbackToFile("/index.html");
 
-app.UseFastEndpoints()
+app.UseFastEndpoints(
+    c => c.Errors.UseProblemDetails(
+        x =>
+        {
+            x.AllowDuplicateErrors = true;
+            x.IndicateErrorCode = true;
+            x.IndicateErrorSeverity = true;
+            x.TypeValue = "https://www.rfc-editor.org/rfc/rfc7231#section-6.5.1";
+            x.TitleValue = "One or more validation errors occurred.";
+            x.TitleTransformer = pd => pd.Status switch
+            {
+                400 => "Validation Error",
+                404 => "Not Found",
+                _ => "One or more errors occurred!"
+            };
+        }))
     .UseSwaggerGen();
 app.Run();
