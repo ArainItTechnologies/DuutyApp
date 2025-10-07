@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.WebUtilities;
 
 namespace Web.Server.Features.Public.ConfirmEmail;
 
-[HttpPost("/public/api/confirm")]
+[HttpPost("/api/public/confirm")]
 [AllowAnonymous]
 public class ConfirmEndpoint(UserManager<ArainUser> userManager, IEmailSender emailSender) : EndpointWithoutRequest<ConfirmResponse>
 {

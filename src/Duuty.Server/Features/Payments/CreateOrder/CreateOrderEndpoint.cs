@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Duuty.Server.Features.Payments.CreateOrder;
 
-[HttpPost("/payments/api/create-order")]
+[HttpPost("/api/payments/create-order")]
 [Authorize]
 public class CreateOrderEndpoint(IRazorpayService razorpayService, IConfiguration configuration) : Endpoint<CreateOrderRequest, CreateOrderResponse>
 {

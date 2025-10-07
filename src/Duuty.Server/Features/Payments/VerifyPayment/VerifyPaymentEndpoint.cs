@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Duuty.Server.Features.Payments.VerifyPayment;
 
-[HttpPost("/payments/api/verify-payment")]
+[HttpPost("/api/payments/verify-payment")]
 [Authorize]
 public class VerifyPaymentEndpoint(IRazorpayService razorpayService) : Endpoint<VerifyPaymentRequest, VerifyPaymentResponse>
 {

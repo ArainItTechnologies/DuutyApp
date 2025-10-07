@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Web.Server.Features.Public.Login;
 
-[HttpPost("/public/api/login")]
+[HttpPost("/api/public/login")]
 [AllowAnonymous]
 public class LoginEndpoint(UserManager<ArainUser> userManager, JwtHandler jwtHandler) : Endpoint<LoginRequest, LoginResponse>
 {

@@ -8,7 +8,7 @@ using SharedKernel.Services;
 
 namespace Duuty.Server.Features.Payments.Subscription;
 
-[HttpPost("/payments/api/subscribe")]
+[HttpPost("/api/payments/subscribe")]
 [Authorize]
 public class SubscriptionEndpoint(UserManager<ArainUser> userManager, IEmployerSubscriptionService service, ITimeProvider timeProvider) : Endpoint<SubscriptionRequest, SubscriptionResponse>
 {

@@ -9,7 +9,7 @@ using SharedKernel.Services;
 
 namespace Web.Server.Features.Public.ForgotPassword;
 
-[HttpPost("/public/api/forgot-password")]
+[HttpPost("/api/public/forgot-password")]
 [AllowAnonymous]
 public class ForgotPasswordEndpoint : Endpoint<ForgotPasswordRequest, ForgotPasswordResponse>
 {

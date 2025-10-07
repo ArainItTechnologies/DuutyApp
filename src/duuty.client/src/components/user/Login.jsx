@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { loginUser, verifyOtp, resendOtp } from "../../services/auth";
+import publicAPI from "../../api/public";
 import { useAppState, useUser } from "../../hooks/Hooks";
 import { jwtDecode } from "jwt-decode";
 import { normalizeClaims } from "../../utils/ClaimsUtility";
@@ -59,7 +59,7 @@ const Login = () => {
 
   const handleResendOtp = async () => {
     try {
-      await resendOtp(email, phoneNumber);
+      await publicAPI.resendOtp(email, phoneNumber);
     } catch (error) {
       setError(error.message);
     }
@@ -71,7 +71,7 @@ const Login = () => {
     setSuccess("");
     setIsLoading(true);
     try {
-      const result = await loginUser({ phoneNumber, email, password });
+      const result = await publicAPI.loginUser({ phoneNumber, email, password });
 
       if (result.success) {
         var data = result.data;
@@ -199,7 +199,7 @@ const Login = () => {
           handleResend={handleResendOtp}
           onVerify={async (otpCode) => {
             try {
-              await verifyOtp({ otp: otpCode, phoneNumber, userEmail: email })
+              await publicAPI.verifyOtp({ otp: otpCode, phoneNumber, userEmail: email })
             } catch (err) {
               setError(err.message || "OTP verification failed");
               return;
