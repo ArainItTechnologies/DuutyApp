@@ -68,6 +68,7 @@ const EmployerRegister = () => {
 
     try {
       await registerUser({
+        fullName: formData.name,
         phoneNumber: formData.phone,
         email: formData.email,
         confirmPassword: formData.confirmPassword,

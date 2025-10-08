@@ -73,7 +73,6 @@ const Login = () => {
     try {
       const result = await publicAPI.loginUser({ phoneNumber, email, password });
 
-      console.log("Login result:", result);
       if (result.success) {
         var data = result.data;
         const userInfo = getUserDetailsFromToken(data.token);

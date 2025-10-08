@@ -41,6 +41,7 @@ public class RegisterEndpoint : Endpoint<RegistrationRequest, RegistrationRespon
         var user = new ArainUser
         {
             UserName = userName,
+            FullName = model.FullName,
             Email = model.Email,
             PhoneNumber = model.PhoneNumber,
             TwoFactorEnabled = true,
@@ -103,6 +104,7 @@ public class RegistrationRequest
     public string? PhoneNumber { get; set; }
     public string? PreferredRole { get; set; }
     public bool IsEmployer { get; set; } = false;
+    public required string FullName { get; set; }
 }
 
 public class RegistrationResponse

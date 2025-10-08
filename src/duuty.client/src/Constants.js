@@ -46,7 +46,7 @@ export const ROUTES = {
 export const SUPER_ADMIN_ROLES = ['SuperAdmin'];
 export const ADMIN_ROLES = [...SUPER_ADMIN_ROLES, 'Admin'];
 export const EMPLOYER_ROLES = [...ADMIN_ROLES, 'Employer'];
-export const EMPLOYEE_ROLES = [...EMPLOYER_ROLES, 'Employee'];
+export const EMPLOYEE_ROLES = [...EMPLOYER_ROLES, 'User'];
 
 export const roleChecks = (user) => {
   const roles = user?.role || [];

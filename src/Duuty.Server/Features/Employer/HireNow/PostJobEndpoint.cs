@@ -8,7 +8,7 @@ using SharedKernel.Services;
 
 namespace Duuty.Server.Features.Employer.HireNow;
 
-[HttpPost("/employer/api/post-job")]
+[HttpPost("/api/employer/post-job")]
 [Authorize]
 public class PostJobEndpoint(IJobListingService jobListingService, IEmployerService employerService, ITimeProvider timeProvider) : Endpoint<PostJobRequest, PostJobResponse>
 {

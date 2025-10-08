@@ -23,7 +23,7 @@ export const Home = () => {
     const [activeTab, setActiveTab] = useState("employeeForm");
     const [selectLanguage, setSelectLanguage] = useState(false);
     const selectedLanguage = localStorage.getItem("selectedLanguage");
-      const navigate = useNavigate();
+    const navigate = useNavigate();
 
     const { user, isSuperAdmin, isAdmin, isEmployer, isEmployee } = useUser();
 
