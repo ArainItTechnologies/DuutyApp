@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace Duuty.Server.Features.Public.Resend;
 
-[HttpPost("/public/api/resend/otp")]
+[HttpPost("/api/public/resend/otp")]
 [AllowAnonymous]
 public class ResendOtpEndpoint(UserManager<ArainUser> userManager, IEmailSender emailSender) : Endpoint<ResendOtpRequest, ResendOtpResponse>
 {

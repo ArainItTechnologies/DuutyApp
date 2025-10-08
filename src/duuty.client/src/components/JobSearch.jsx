@@ -14,6 +14,7 @@ import { useAppState, useUser } from "../hooks/Hooks";
 import { applyJob } from "../services/auth";
 import { useNavigate } from "react-router-dom";
 import { useNotification } from "../context/NotificationContext";
+import userAPI from "../api/user";
 
 const JobSearch = () => {
   const { user } = useUser();
@@ -78,7 +79,7 @@ const JobSearch = () => {
   useEffect(() => {
     const getJobs = async () => {
       setIsLoading(true);
-      const data = await fetchJobs(jobLocation, jobState, selectedRole, user);
+      const data = await userAPI.fetchJobs(jobLocation, jobState, selectedRole, user);
       setJobs(data.jobs);
       setIsLoading(false);
     };
@@ -103,7 +104,7 @@ const JobSearch = () => {
 
     setIsLoading(true);
     try {
-      const data = await applyJob({ jobListingId: jobId, userId: user.userId }, user?.token);
+      const data = await userAPI.applyJob({ jobListingId: jobId, userId: user.userId }, user?.token);
 
       if (!data.success) {
         showFailure(data.message || "Failed to apply for the job");

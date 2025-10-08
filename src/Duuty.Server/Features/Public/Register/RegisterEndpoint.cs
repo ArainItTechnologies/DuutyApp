@@ -9,7 +9,7 @@ using SharedKernel.Services;
 
 namespace Web.Server.Features.Public.Register;
 
-[HttpPost("/public/api/register")]
+[HttpPost("/api/public/register")]
 [AllowAnonymous]
 public class RegisterEndpoint : Endpoint<RegistrationRequest, RegistrationResponse>
 {

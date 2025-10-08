@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.WebUtilities;
 
 namespace Web.Server.Features.Public.Resend
 {
-    [HttpPost("/public/api/resend/confirm")]
+    [HttpPost("/api/public/resend/confirm")]
     [AllowAnonymous]
     public class ResendConfirmEndpoint : Endpoint<ResendRequest, AuthResponse>
     {

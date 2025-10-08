@@ -9,7 +9,7 @@ const publicAPI = {
     const data = {
       params: { userId, token },
     };
-    return postAsync("/api/public/confirm", null, token, data);
+    return postAsync("/api/public/resend/confirm", null, token, data);
   },
 
   resetPassword: async (email) => {

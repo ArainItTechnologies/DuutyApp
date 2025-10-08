@@ -2,10 +2,10 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { FormInput, FormPasswordInput, FormSelect, PrimaryButton } from "../custom/FormElements";
 import SelectRole from "../user/SelectRole";
-import { registerUser, verifyOtp } from "../../services/auth";
 import { CHEF_OPTIONS, ROUTES } from "../../Constants";
 import { useAppState } from "../../hooks/Hooks";
 import { validateMobileNumber, validateEmail } from "../../utils/ValidationUtils";
+import publicAPI from "../../api/public";
 import VerifyOtp from "./VerifyOtp";
 
 const EmployeeRegister = () => {
@@ -87,7 +87,7 @@ const EmployeeRegister = () => {
     setIsLoading(true);
 
     try {
-      await registerUser({
+      await publicAPI.registerUser({
         phoneNumber: formData.mobile,
         email: formData.email,
         preferredRole: selectedRole == "Chef" ? selectedSubRole : selectedRole,
@@ -259,7 +259,7 @@ const EmployeeRegister = () => {
           onClose={() => setIsVerifyOpen(false)}
           onVerify={async (otpCode) => {
             try {
-              await verifyOtp({ otp: otpCode, phoneNumber: formData.mobile, userEmail: formData.email })
+              await publicAPI.verifyOtp({ otp: otpCode, phoneNumber: formData.mobile, userEmail: formData.email })
             } catch (err) {
               setError(err.message || "OTP verification failed");
               return;

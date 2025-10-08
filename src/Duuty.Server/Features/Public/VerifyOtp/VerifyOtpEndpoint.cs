@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Duuty.Server.Features.Public.VerifyOtp;
 
-[HttpPost("/public/api/verify-otp")]
+[HttpPost("/api/public/verify-otp")]
 [AllowAnonymous]
 public class VerifyOtpEndpoint(UserManager<ArainUser> userManager) : Endpoint<VerifyOtpRequest, VerifyOtpResponse>
 {

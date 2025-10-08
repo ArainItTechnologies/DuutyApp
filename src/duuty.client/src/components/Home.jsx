@@ -17,6 +17,7 @@ import Benefits from "./Benefits";
 import Faq from "./Faq";
 import { useUser } from "../hooks/Hooks";
 import { ROUTES } from "../Constants";
+import JobSearch from "./JobSearch";
 
 export const Home = () => {
     const [activeTab, setActiveTab] = useState("employeeForm");
@@ -54,7 +55,7 @@ export const Home = () => {
     return (
         <section className="main-wrapper bg-linear-[180deg,#F4F3FF,#FFFFFF]">
             <div id="overview" className="banner-section px-3 sm:px-6 py-6 pb-[50px] sm:pb-[70px] md:pb-[100px] mx-auto bg-linear-[180deg,#F4F3FF,#FFFFFF]">
-                <div className="container-wrapper items-center lg:items-start flex flex-col lg:flex-row justify-center sm:gap-[50px] xl:gap-[100px] ">
+                {!user ? <div className="container-wrapper items-center lg:items-start flex flex-col lg:flex-row justify-center sm:gap-[50px] xl:gap-[100px] ">
                     <div className="block sm:hidden text-center relative w-full">
                         <img className="w-full h-auto" src={BannerImageMob} alt="Duuty banner image" />
                         <h1 className="text-[30px] lg:text-[40px] xl:text-[47px] font-[AvenirNextBold] pt-0 pb-6 font-bold">Connecting Great Kitchens With Great Talent</h1>
@@ -83,7 +84,7 @@ export const Home = () => {
                     <div className="w-full lg:w-1/2 xl:w-2/5 flex justify-center lg:justify-end max-w-[500px] lg:max-w-[100%]">
                         <RegistrationTabs activeTab={activeTab} setActiveTab={setActiveTab} />
                     </div>
-                </div>
+                </div> : <JobSearch />}
 
             </div>
 

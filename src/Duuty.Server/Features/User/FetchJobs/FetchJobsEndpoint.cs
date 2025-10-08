@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Duuty.Server.Features.User.FetchJobs;
 
-[HttpGet("/user/api/jobs")]
+[HttpGet("/api/user/jobs")]
 [AllowAnonymous]
 public class FetchJobsEndpoint(IJobListingService jobListingService, IJobApplicationService applicationService) : Endpoint<FetchJobsRequest, FetchJobsResponse>
 {

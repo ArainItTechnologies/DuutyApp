@@ -73,6 +73,7 @@ const Login = () => {
     try {
       const result = await publicAPI.loginUser({ phoneNumber, email, password });
 
+      console.log("Login result:", result);
       if (result.success) {
         var data = result.data;
         const userInfo = getUserDetailsFromToken(data.token);
@@ -106,6 +107,9 @@ const Login = () => {
       }
 
     } catch (error) {
+      if(error.status === 403){
+        setIsVerifyOpen(true);
+      }
       setIsLoading(false);
       setError(error.errorMessage);
     }
