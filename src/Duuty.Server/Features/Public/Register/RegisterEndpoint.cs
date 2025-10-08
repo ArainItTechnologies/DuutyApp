@@ -1,41 +1,38 @@
-﻿using Application;
+﻿using System.ComponentModel.DataAnnotations;
 using DataAccess.Identity;
 using Domain.Entities;
-using FastEndpoints;
 using Infrastructure.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
-using Microsoft.AspNetCore.WebUtilities;
 using SharedKernel.Services;
-using System.Text;
 
 namespace Web.Server.Features.Public.Register;
 
-[HttpPost("/api/register")]
+[HttpPost("/api/public/register")]
 [AllowAnonymous]
-public class RegisterEndpoint : Endpoint<RegisterModel, RegistrationResponse>
+public class RegisterEndpoint : Endpoint<RegistrationRequest, RegistrationResponse>
 {
     private readonly UserManager<ArainUser> _userManager;
     private readonly IEmployeeJobRoleService _employeeJobRoleService;
     private readonly IEmailSender _emailSender;
-    private readonly IConfiguration _configuration;
+    private readonly IMessageService _messageService;
     private readonly ITimeProvider _timeProvider;
 
     public RegisterEndpoint(
         UserManager<ArainUser> userManager,
         IEmployeeJobRoleService employeeJobRoleService,
         IEmailSender emailSender,
-        IConfiguration configuration,
+        IMessageService messageService,
         ITimeProvider timeProvider)
     {
         _userManager = userManager;
         _employeeJobRoleService = employeeJobRoleService;
         _emailSender = emailSender;
-        _configuration = configuration;
+        _messageService = messageService;
         _timeProvider = timeProvider;
     }
-    public override async Task HandleAsync(RegisterModel model, CancellationToken ct)
+    public override async Task HandleAsync(RegistrationRequest model, CancellationToken ct)
     {
         var userName = !string.IsNullOrWhiteSpace(model.Email)
             ? model.Email
@@ -44,58 +41,33 @@ public class RegisterEndpoint : Endpoint<RegisterModel, RegistrationResponse>
         var user = new ArainUser
         {
             UserName = userName,
+            FullName = model.FullName,
             Email = model.Email,
             PhoneNumber = model.PhoneNumber,
             TwoFactorEnabled = true,
         };
 
         var result = await _userManager.CreateAsync(user, model.Password);
+
         if (!result.Succeeded)
         {
             AddError("registration", string.Join(", ", result.Errors.Select(e => e.Description)));
-            await SendErrorsAsync(cancellation: ct);
+            await Send.ErrorsAsync(cancellation: ct);
             return;
         }
 
+
+
         if (!string.IsNullOrEmpty(model.PhoneNumber))
         {
-            await _userManager.GenerateTwoFactorTokenAsync(user, TokenOptions.DefaultPhoneProvider)
-               .ContinueWith(async otp =>
-               {
-                   if (otp.IsCompletedSuccessfully)
-                   {
-                       await _emailSender.SendEmailAsync(
-                           model.PhoneNumber!,
-                           EmailType.Otp,
-                           otp.Result);
-                   }
-               }, ct);
+            var otp = await _userManager.GenerateTwoFactorTokenAsync(user, TokenOptions.DefaultPhoneProvider);
+            await _messageService.SendWhatsAppMessage(model.PhoneNumber!, otp);
         }
 
         if (!string.IsNullOrWhiteSpace(model.Email))
         {
-            //var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-
-            //var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
-
-            //var confirmationLink = $"{_configuration["ClientAppBaseUrl"]}/confirm?userId={user.Id}&token={encodedToken}";
-
-            //await _emailSender.SendEmailAsync(
-            //    model.Email,
-            //    EmailType.Confirm,
-            //    confirmationLink);
-
-            await _userManager.GenerateTwoFactorTokenAsync(user, TokenOptions.DefaultEmailProvider)
-                .ContinueWith(async otp =>
-                {
-                    if (otp.IsCompletedSuccessfully)
-                    {
-                        await _emailSender.SendEmailAsync(
-                            model.Email!,
-                            EmailType.Otp,
-                            otp.Result);
-                    }
-                }, ct);
+            var otp = await _userManager.GenerateTwoFactorTokenAsync(user, TokenOptions.DefaultEmailProvider);
+            await _emailSender.SendEmailAsync(model.Email!, EmailType.Otp, otp);
         }
 
         await _userManager.AddToRoleAsync(user, "User");
@@ -110,11 +82,36 @@ public class RegisterEndpoint : Endpoint<RegisterModel, RegistrationResponse>
             });
         }
 
-        await SendAsync(new RegistrationResponse
+        await Send.OkAsync(new RegistrationResponse
         {
             IsSuccess = true,
             UserId = user.Id,
             Message = "User registered successfully",
         }, cancellation: ct);
     }
+}
+
+public class RegistrationRequest
+{
+    [Required]
+    [MinLength(6)]
+    public required string Password { get; set; }
+
+    [Required]
+    [Compare(nameof(Password), ErrorMessage = "Password and confirmation password do not match.")]
+    public required string ConfirmPassword { get; set; }
+    public string? Email { get; set; }
+    public string? PhoneNumber { get; set; }
+    public string? PreferredRole { get; set; }
+    public bool IsEmployer { get; set; } = false;
+    public required string FullName { get; set; }
+}
+
+public class RegistrationResponse
+{
+    public bool IsSuccess { get; set; }
+    public string? Message { get; set; }
+    public string? Token { get; set; }
+    public string? UserId { get; set; }
+    public string? Error { get; set; }
 }

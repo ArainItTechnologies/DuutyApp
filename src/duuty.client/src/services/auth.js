@@ -1,9 +1,8 @@
 import axios from "axios";
-import { data } from "react-router-dom";
 
 export const registerUser = async (registerData) => {
   try {
-    const response = await axios.post("api/register", registerData);
+    const response = await axios.post("/public/api/register", registerData);
     return response.data;
   } catch (error) {
     throw error.response?.data || { message: "Registration failed" };
@@ -11,14 +10,14 @@ export const registerUser = async (registerData) => {
 };
 
 export const confirmEmail = (userId, token) => {
-  return axios.post("/api/confirm", null, {
+  return axios.post("/public/api/confirm", null, {
     params: { userId, token },
   });
 };
 
 export const resetPassword = async (email) => {
   try {
-    return await axios.post("/api/forgot-password", { email });
+    return await axios.post("/public/api/forgot-password", { email });
   } catch (error) {
     throw error.response?.data || { message: "Reset password failed" };
   }
@@ -26,7 +25,7 @@ export const resetPassword = async (email) => {
 
 export const resendOtp = async (email, phoneNumber) => {
   try {
-    return await axios.post("/api/resend/otp", {email, phoneNumber});
+    return await axios.post("/public/api/resend/otp", {email, phoneNumber});
   } catch (error) {
     throw error.response?.data || { message: "Reset password failed" };
   }
@@ -34,13 +33,13 @@ export const resendOtp = async (email, phoneNumber) => {
 
 export const loginUser = async (loginData) => {
   try {
-    const response = await axios.post("/api/login", loginData);
+    const response = await axios.post("/public/api/login", loginData);
     return { success: true, data: response.data };
   } catch (error) {
     const status = error.response?.status;
 
     if (status === 403 && error.response.data.message === "Email is not confirmed.") {
-      await axios.post("/api/resend/otp", {
+      await axios.post("/public/api/resend/otp", {
         email: loginData.email,
         phoneNumber: loginData.phoneNumber,
       });
@@ -57,7 +56,7 @@ export const loginUser = async (loginData) => {
 
 export const changePassword = async (data, token) => {
   try {
-    const response = await axios.post("/api/change-password", data, {
+    const response = await axios.post("/user/api/change-password", data, {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
@@ -72,7 +71,7 @@ export const changePassword = async (data, token) => {
 
 export const fetchJobs = async (jobLocation, jobState, preferredJob, user) => {
   try {
-    const response = await axios.get("/api/jobs", {
+    const response = await axios.get("/user/api/jobs", {
       params: {
         jobLocation,
         jobState,
@@ -93,7 +92,7 @@ export const fetchJobs = async (jobLocation, jobState, preferredJob, user) => {
 export const becomeEmployer = async (data, token) => {
   console.log(data)
   try {
-    const response = await axios.post("/api/user/become-employer", data, {
+    const response = await axios.post("/user/api/become-employer", data, {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
@@ -108,7 +107,7 @@ export const becomeEmployer = async (data, token) => {
 
 export const postJob = async (jobData, token) => {
   try {
-    const response = await axios.post("/api/user/post-job", jobData, {
+    const response = await axios.post("/employer/api/post-job", jobData, {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
@@ -122,7 +121,7 @@ export const postJob = async (jobData, token) => {
 
 export const applyJob = async (applicationData, token) => {
   try {
-    const response = await axios.post("/api/apply", applicationData, {
+    const response = await axios.post("/user/api/apply", applicationData, {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
@@ -136,7 +135,7 @@ export const applyJob = async (applicationData, token) => {
 
 export const createOrder = async (orderData, token) => {
   try {
-    const response = await axios.post("/api/create-order", orderData, {
+    const response = await axios.post("/payments/api/create-order", orderData, {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
@@ -150,7 +149,7 @@ export const createOrder = async (orderData, token) => {
 
 export const verifyPayment = async (paymentData, token) => {
   try {
-    const response = await axios.post("/api/verify-payment", paymentData, {
+    const response = await axios.post("/payments/api/verify-payment", paymentData, {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
@@ -162,9 +161,23 @@ export const verifyPayment = async (paymentData, token) => {
   }
 }
 
+export const subscribeToPlan = async (subscriptionData, token) => {
+  try {
+    const response = await axios.post("/payments/api/subscribe", subscriptionData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || { message: "Subscription failed" };
+  }
+}
+
 export const verifyOtp = async (otpData) => {
   try {
-    const response = await axios.post("/api/verify-otp", otpData);
+    const response = await axios.post("/public/api/verify-otp", otpData);
     return response.data;
   } catch (error) {
     throw error.response?.data || { message: "OTP verification failed" };

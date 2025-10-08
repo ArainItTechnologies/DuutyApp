@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { loginUser, verifyOtp, resendOtp } from "../../services/auth";
+import publicAPI from "../../api/public";
 import { useAppState, useUser } from "../../hooks/Hooks";
 import { jwtDecode } from "jwt-decode";
 import { normalizeClaims } from "../../utils/ClaimsUtility";
@@ -8,6 +8,8 @@ import { FormInput, FormPasswordInput, PrimaryButton } from "../custom/FormEleme
 import { ROUTES } from "../../Constants";
 import { validateMobileNumber, validateEmail } from "../../utils/ValidationUtils";
 import VerifyOtp from "./VerifyOtp";
+import { roleChecks } from "../../Constants";
+
 const Login = () => {
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -50,17 +52,14 @@ const Login = () => {
 
   const getUserDetailsFromToken = (token) => {
     const decoded = jwtDecode(token);
-    var normalized = normalizeClaims(decoded);
-
-    var role = Array.isArray(normalized.role)
-      ? normalized.role
-      : [normalized.role];
-    return { name: normalized.name, email: normalized.email, role };
+    const normalized = normalizeClaims(decoded);
+    return { ...normalized };
   };
+
 
   const handleResendOtp = async () => {
     try {
-      await resendOtp(email, phoneNumber);
+      await publicAPI.resendOtp(email, phoneNumber);
     } catch (error) {
       setError(error.message);
     }
@@ -72,11 +71,12 @@ const Login = () => {
     setSuccess("");
     setIsLoading(true);
     try {
-      const result = await loginUser({ phoneNumber, email, password });
+      const result = await publicAPI.loginUser({ phoneNumber, email, password });
 
       if (result.success) {
         var data = result.data;
         const userInfo = getUserDetailsFromToken(data.token);
+        var roleCheck = roleChecks(userInfo);
 
         userInfo.token = data.token;
         userInfo.userId = data.userId;
@@ -88,7 +88,17 @@ const Login = () => {
         if (from === ROUTES.HIRE_NOW) {
           navigate(ROUTES.JOB_LISTING, { replace: true });
         } else {
-          navigate(from, { replace: true });
+          if (roleCheck.isSuperAdmin) {
+            navigate(ROUTES.SUPER_ADMIN_DASHBOARD, { replace: true });
+          } else if (roleCheck.isAdmin) {
+            navigate(ROUTES.ADMIN_DASHBOARD, { replace: true });
+          } else if (roleCheck.isEmployer) {
+            navigate(ROUTES.EMPLOYER_DASHBOARD, { replace: true });
+          } else if (roleCheck.isEmployee) {
+            navigate(ROUTES.JOB_RESULTS, { replace: true });
+          } else {
+            navigate(from, { replace: true });
+          }
         }
       } else {
         setIsLoading(false);
@@ -96,6 +106,9 @@ const Login = () => {
       }
 
     } catch (error) {
+      if(error.status === 403){
+        setIsVerifyOpen(true);
+      }
       setIsLoading(false);
       setError(error.errorMessage);
     }
@@ -189,7 +202,7 @@ const Login = () => {
           handleResend={handleResendOtp}
           onVerify={async (otpCode) => {
             try {
-              await verifyOtp({ otp: otpCode, phoneNumber, userEmail: email })
+              await publicAPI.verifyOtp({ otp: otpCode, phoneNumber, userEmail: email })
             } catch (err) {
               setError(err.message || "OTP verification failed");
               return;

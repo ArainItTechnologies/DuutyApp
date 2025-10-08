@@ -1,16 +1,14 @@
-﻿using DataAccess.Identity;
-using FastEndpoints;
+﻿using System.Text;
+using DataAccess.Identity;
 using Infrastructure.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.WebUtilities;
-using System.Net;
-using System.Text;
 
 namespace Web.Server.Features.Public.Resend
 {
-    [HttpPost("/api/resend/confirm")]
+    [HttpPost("/api/public/resend/confirm")]
     [AllowAnonymous]
     public class ResendConfirmEndpoint : Endpoint<ResendRequest, AuthResponse>
     {
@@ -32,7 +30,7 @@ namespace Web.Server.Features.Public.Resend
             var user = await _userManager.FindByEmailAsync(request.Email);
             if (user is null)
             {
-                await SendAsync(new AuthResponse { IsAuthSuccessful = false, ErrorMessage = "User not found with EmailId provided" }, (int)HttpStatusCode.NotFound, ct);
+                await Send.NotFoundAsync(ct);
                 return;
             }
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
@@ -40,7 +38,7 @@ namespace Web.Server.Features.Public.Resend
 
             var confirmationLink = $"{_configuration["ClientAppBaseUrl"]}/confirm?userId={user.Id}&token={encodedToken}";
             await _emailSender.SendEmailAsync(request.Email, "Confirm your email", confirmationLink);
-            await SendAsync(new AuthResponse { IsAuthSuccessful = true, Token = token }, (int)HttpStatusCode.OK, ct);
+            await Send.OkAsync(new AuthResponse { IsAuthSuccessful = true, Token = token }, ct);
         }
     }
 }

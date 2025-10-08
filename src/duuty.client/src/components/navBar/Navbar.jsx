@@ -16,7 +16,8 @@ import MobileSideNav from "./MobileSideNav";
 export default function Navbar() {
   const { t, reset } = useTranslation();
 
-  const { user, setUser } = useUser();
+  const { user, setUser, isEmployer, isEmployee } = useUser();
+
   const [open, setOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
@@ -46,7 +47,7 @@ export default function Navbar() {
 
   return (
     <div className="bg-[#F4F3FF] sticky top-0 z-5">
-      <MobileSideNav open={open} onClose={setOpen} user={user} handleLogout={handleLogout}/>
+      <MobileSideNav open={open} onClose={setOpen} user={user} handleLogout={handleLogout} />
       <header className="relative bg-white">
         <nav aria-label="Top" className="mx-auto px-0 bg-[#F4F3FF]">
           <div className="container-wrapper">
@@ -65,18 +66,32 @@ export default function Navbar() {
 
               {/* Mobile nav buttons */}
               <div className="flex items-center space-x-2 lg:hidden">
-                <Link
+                {isEmployee ? <Link
+                  to={ROUTES.JOB_RESULTS}
+                  className="text-[12px] text-white font-medium inline-block rounded-[11px] bg-linear-(--gradient-bg) py-2 px-4 mr-[12px]"
+                >
+                  {t("findajob")}
+                </Link> : <></>}
+                {isEmployer && <Link
+                  to={ROUTES.JOB_LISTING}
+                  className="text-[12px] text-[#3B31FF] font-medium inline-block rounded-[11px] py-2 px-4 border-1 border-[#3B31FF]"
+                >
+                  Hire Now
+                </Link>}
+
+                {user == null && <span> <Link
                   to={ROUTES.JOB_RESULTS}
                   className="text-[12px] text-white font-medium inline-block rounded-[11px] bg-linear-(--gradient-bg) py-2 px-4 mr-[12px]"
                 >
                   {t("findajob")}
                 </Link>
-                <Link
-                  to={ROUTES.JOB_LISTING}
-                  className="text-[12px] text-[#3B31FF] font-medium inline-block rounded-[11px] py-2 px-4 border-1 border-[#3B31FF]"
-                >
-                  Hire Now
-                </Link>
+                  <Link
+                    to={ROUTES.JOB_LISTING}
+                    className="text-[12px] text-[#3B31FF] font-medium inline-block rounded-[11px] py-2 px-4 border-1 border-[#3B31FF]"
+                  >
+                    Hire Now
+                  </Link></span>}
+
                 <button
                   type="button"
                   onClick={() => setOpen(true)}
@@ -101,18 +116,37 @@ export default function Navbar() {
                   </div>
                 </div>
 
-                <Link
+                {isEmployer && <Link
+                  to={ROUTES.EMPLOYER_DASHBOARD}
+                  className="text-[15px] text-white font-medium inline-block rounded-[11px] bg-linear-(--gradient-bg) px-[25px] py-[10px] mr-[12px]"
+                >
+                  Dashboard
+                </Link>}
+                {isEmployee && !isEmployer && <Link
+                  to={ROUTES.JOB_RESULTS}
+                  className="text-[15px] text-white font-medium inline-block rounded-[11px] bg-linear-(--gradient-bg) px-[25px] py-[10px] mr-[12px]"
+                >
+                  {t("findajob")}
+                </Link>}
+                {isEmployer && <Link
+                  to={ROUTES.JOB_LISTING}
+                  className="hover:bg-[#ECEFFF] text-[15px] text-[#3B31FF] font-medium inline-block rounded-[11px] px-[25px] py-[10px] border-1 border-[#ECEFFF"
+                >
+                  Hire Now
+                </Link>}
+
+                {user === null && (<span><Link
                   to={ROUTES.JOB_RESULTS}
                   className="text-[15px] text-white font-medium inline-block rounded-[11px] bg-linear-(--gradient-bg) px-[25px] py-[10px] mr-[12px]"
                 >
                   {t("findajob")}
                 </Link>
-                <Link
-                  to={ROUTES.JOB_LISTING}
-                  className="hover:bg-[#ECEFFF] text-[15px] text-[#3B31FF] font-medium inline-block rounded-[11px] px-[25px] py-[10px] border-1 border-[#ECEFFF"
-                >
-                  Hire Now
-                </Link>
+                  <Link
+                    to={ROUTES.JOB_LISTING}
+                    className="hover:bg-[#ECEFFF] text-[15px] text-[#3B31FF] font-medium inline-block rounded-[11px] px-[25px] py-[10px] border-1 border-[#ECEFFF"
+                  >
+                    Hire Now
+                  </Link></span>)}
                 {/* Conditionally show based on user */}
                 {user == null ? (
                   <Link
@@ -163,6 +197,6 @@ export default function Navbar() {
           </div>
         </nav>
       </header>
-    </div>
+    </div >
   );
 }

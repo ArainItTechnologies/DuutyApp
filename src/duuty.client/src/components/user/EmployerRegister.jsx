@@ -68,6 +68,7 @@ const EmployerRegister = () => {
 
     try {
       await registerUser({
+        fullName: formData.name,
         phoneNumber: formData.phone,
         email: formData.email,
         confirmPassword: formData.confirmPassword,
@@ -86,7 +87,6 @@ const EmployerRegister = () => {
   };
 
   const handleSaveRestaurant = async (restaurantData) => {
-    console.log("Restaurant Data:", restaurantData);
     try {
       await becomeEmployer(restaurantData);
       setIsModalOpen(false);

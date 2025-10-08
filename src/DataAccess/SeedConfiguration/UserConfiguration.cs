@@ -14,6 +14,7 @@ public class UserConfiguration : IEntityTypeConfiguration<ArainUser>
         var adminUser = new ArainUser
         {
             Id = DuutySeedConstants.AdminUserId,
+            FullName = "Admin",
             UserName = "admin@duuty.in",
             NormalizedUserName = "ADMIN@DUUTY.IN",
             Email = "admin@duuty.in",
@@ -26,6 +27,7 @@ public class UserConfiguration : IEntityTypeConfiguration<ArainUser>
         var employerUser = new ArainUser
         {
             Id = DuutySeedConstants.EmployerUserId,
+            FullName = "Employer",
             UserName = "employer@duuty.in",
             NormalizedUserName = "EMPLOYER@DUUTY.IN",
             Email = "employer@duuty.in",
@@ -38,6 +40,7 @@ public class UserConfiguration : IEntityTypeConfiguration<ArainUser>
         var superAdminUser = new ArainUser
         {
             Id = DuutySeedConstants.SuperAdminUserId,
+            FullName = "Super Admin",
             UserName = "superadmin@duuty.in",
             NormalizedUserName = "SUPERADMIN@DUUTY.IN",
             Email = "superadmin@duuty.in",

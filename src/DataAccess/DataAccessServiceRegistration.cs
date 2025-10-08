@@ -12,12 +12,12 @@ public static class DataAccessServiceRegistration
     {
         services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"),
-             sqlServerOptions => 
+             sqlServerOptions =>
         {
             sqlServerOptions.EnableRetryOnFailure(
-                maxRetryCount: 5,               
-                maxRetryDelay: TimeSpan.FromSeconds(10), 
-                errorNumbersToAdd: null         
+                maxRetryCount: 5,
+                maxRetryDelay: TimeSpan.FromSeconds(10),
+                errorNumbersToAdd: null
             );
         }));
 

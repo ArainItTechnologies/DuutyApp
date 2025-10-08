@@ -11,6 +11,7 @@ public interface IEntityService<T> where T : IEntity
     void Delete(T entity, bool save = true);
     IQueryable<T> Get(Expression<Func<T, bool>>? predicate = null, string[]? includes = null);
     void Update(T entity, bool save = true);
+    Task UpdateAsync(T entity, bool save = true);
     void UpdateNoTracking(T entity, bool save = true);
     int Count();
     Task<int> CountAsync();

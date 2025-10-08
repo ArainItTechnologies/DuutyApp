@@ -2,14 +2,17 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { FormInput, FormPasswordInput, FormSelect, PrimaryButton } from "../custom/FormElements";
 import SelectRole from "../user/SelectRole";
-import { registerUser, verifyOtp } from "../../services/auth";
 import { CHEF_OPTIONS, ROUTES } from "../../Constants";
 import { useAppState } from "../../hooks/Hooks";
 import { validateMobileNumber, validateEmail } from "../../utils/ValidationUtils";
+import publicAPI from "../../api/public";
 import VerifyOtp from "./VerifyOtp";
+import { useNotification } from "../../context/NotificationContext";
 
 const EmployeeRegister = () => {
   const { setIsLoading } = useAppState();
+
+    const { showSuccess, showError } = useNotification();
 
   const [showSelectRole, setShowSelectRole] = useState(false);
   const [selectedRole, setSelectedRole] = useState(null);
@@ -87,7 +90,8 @@ const EmployeeRegister = () => {
     setIsLoading(true);
 
     try {
-      await registerUser({
+      await publicAPI.registerUser({
+        fullName: formData.name,
         phoneNumber: formData.mobile,
         email: formData.email,
         preferredRole: selectedRole == "Chef" ? selectedSubRole : selectedRole,
@@ -96,7 +100,7 @@ const EmployeeRegister = () => {
       });
 
       setIsLoading(false);
-      setSuccess(
+      showSuccess(
         "Registration successful! Please check your email for confirmation."
       );
       setIsVerifyOpen(true);
@@ -104,6 +108,7 @@ const EmployeeRegister = () => {
     } catch (err) {
       setIsLoading(false);
       setError(err.message || "Something went wrong");
+      showError(error);
     }
   };
 
@@ -259,9 +264,18 @@ const EmployeeRegister = () => {
           onClose={() => setIsVerifyOpen(false)}
           onVerify={async (otpCode) => {
             try {
-              await verifyOtp({ otp: otpCode, phoneNumber: formData.mobile, userEmail: formData.email })
+              var response = await publicAPI.verifyOtp({ otp: otpCode, phoneNumber: formData.mobile, userEmail: formData.email });
+
+              var isVerified = response?.isVerified;
+              if (isVerified) {
+                showSuccess("OTP verified successfully!");
+              } else {
+                showError("OTP verification failed. Please try again.");
+                return;
+              }
             } catch (err) {
               setError(err.message || "OTP verification failed");
+              showError("OTP verification failed. Please try again.");
               return;
             }
 

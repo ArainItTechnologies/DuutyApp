@@ -1,27 +1,28 @@
-﻿using Application;
+﻿using System.Net;
+using System.Text;
 using DataAccess.Identity;
-using FastEndpoints;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.WebUtilities;
-using System.Net;
-using System.Text;
+using SharedKernel.Services;
 
 namespace Web.Server.Features.Public.ForgotPassword;
 
-[HttpPost("/api/forgot-password")]
+[HttpPost("/api/public/forgot-password")]
 [AllowAnonymous]
 public class ForgotPasswordEndpoint : Endpoint<ForgotPasswordRequest, ForgotPasswordResponse>
 {
     private readonly UserManager<ArainUser> _userManager;
     private readonly IEmailSender _emailSender;
+    private readonly IMessageService _messageService;
     private readonly IConfiguration _configuration;
 
-    public ForgotPasswordEndpoint(UserManager<ArainUser> userManager, IEmailSender emailSender, IConfiguration configuration)
+    public ForgotPasswordEndpoint(UserManager<ArainUser> userManager, IEmailSender emailSender, IMessageService messageService, IConfiguration configuration)
     {
         _userManager = userManager;
         _emailSender = emailSender;
+        _messageService = messageService;
         _configuration = configuration;
     }
 
@@ -30,11 +31,7 @@ public class ForgotPasswordEndpoint : Endpoint<ForgotPasswordRequest, ForgotPass
         var user = await _userManager.FindByEmailAsync(request.Email);
         if (user is null)
         {
-            await SendAsync(new ForgotPasswordResponse
-            {
-                IsSuccess = false,
-                Message = "Un-recognised User"
-            }, (int)HttpStatusCode.BadRequest, cancellation: ct);
+            await Send.ErrorsAsync((int)HttpStatusCode.BadRequest, ct);
             return;
         }
 
@@ -44,15 +41,17 @@ public class ForgotPasswordEndpoint : Endpoint<ForgotPasswordRequest, ForgotPass
 
         var resetLink = $"{_configuration["ClientAppBaseUrl"]}/resetPassword?userId={user!.Id}&token={encodedToken}";
 
-        await _emailSender.SendEmailAsync(
-            request.Email,
-            EmailType.Reset,
-            resetLink);
-
-        await SendAsync(new ForgotPasswordResponse
+        if (!string.IsNullOrEmpty(request.PhoneNumber))
         {
-            IsSuccess = true
-        }, (int)HttpStatusCode.OK, cancellation: ct);
+            await _messageService.SendWhatsAppMessage(request.PhoneNumber!, resetLink);
+        }
+
+        if (!string.IsNullOrWhiteSpace(request.Email))
+        {
+            await _emailSender.SendEmailAsync(request.Email!, EmailType.Reset, resetLink);
+        }
+
+        await Send.OkAsync(ct);
         return;
     }
 }
@@ -65,5 +64,6 @@ public class ForgotPasswordResponse
 
 public class ForgotPasswordRequest
 {
-    public required string Email { get; set; }
+    public string Email { get; set; }
+    public string PhoneNumber { get; set; }
 }

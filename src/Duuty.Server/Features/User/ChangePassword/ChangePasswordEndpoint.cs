@@ -1,11 +1,10 @@
 using DataAccess.Identity;
-using FastEndpoints;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 
-namespace Web.Server.Features.Public.ChangePassword;
+namespace Duuty.Server.Features.User.ChangePassword;
 
-[HttpPost("/api/change-password")]
+[HttpPost("/user/api/change-password")]
 [Authorize]
 public class ChangePasswordEndpoint : Endpoint<ChangePasswordRequest, ChangePasswordResponse>
 {
@@ -19,18 +18,18 @@ public class ChangePasswordEndpoint : Endpoint<ChangePasswordRequest, ChangePass
         var user = await _userManager.FindByEmailAsync(HttpContext!.User!.Identity!.Name!);
         if (user is null)
         {
-            await SendNotFoundAsync(ct);
+            await Send.NotFoundAsync(ct);
             return;
         }
 
         var result = await _userManager.ChangePasswordAsync(user, request.CurrentPassword, request.NewPassword);
         if (result.Succeeded)
         {
-            await SendOkAsync(new ChangePasswordResponse(true, "Password changed successfully!"), ct);
+            await Send.OkAsync(new ChangePasswordResponse(true, "Password changed successfully!"), ct);
             return;
         }
         AddError("change_password", string.Join(", ", result.Errors.Select(e => e.Description)));
-        await SendErrorsAsync(cancellation: ct);
+        await Send.ErrorsAsync(cancellation: ct);
     }
 }
 

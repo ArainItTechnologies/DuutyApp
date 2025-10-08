@@ -27,6 +27,7 @@ export const ROUTES = {
   JOB_RESULTS: '/job-results',
   JOB_LISTING: '/job-listing',
   REGISTER: '/register',
+  MANAGE_JOBS: '/manage-jobs',
   BECOME_EMPLOYER: '/become-employer',
   FORGOT_PASSWORD: '/forgot',
   PROFILE: '/profile',
@@ -36,11 +37,27 @@ export const ROUTES = {
   PRICING: '/pricing',
   ABOUT_US: '/about-us',
   PRIVACY_POLICY: '/privacy',
+
+  EMPLOYER_DASHBOARD: '/employer-dashboard',
+  ADMIN_DASHBOARD: '/admin-dashboard',
+  SUPER_ADMIN_DASHBOARD: '/super-admin-dashboard',
 };
 
-export const SUPER_ADMIN_ROLES = ['SuperAdmin', 'Admin', 'Employer', 'User'];
-export const ADMIN_ROLES = ['Admin', 'Employer'];
-export const EMPLOYER_ROLES = ['Employer'];
+export const SUPER_ADMIN_ROLES = ['SuperAdmin'];
+export const ADMIN_ROLES = [...SUPER_ADMIN_ROLES, 'Admin'];
+export const EMPLOYER_ROLES = [...ADMIN_ROLES, 'Employer'];
+export const EMPLOYEE_ROLES = [...EMPLOYER_ROLES, 'User'];
+
+export const roleChecks = (user) => {
+  const roles = user?.role || [];
+
+  return {
+    isSuperAdmin: roles.some(r => SUPER_ADMIN_ROLES.includes(r)),
+    isAdmin: roles.some(r => ADMIN_ROLES.includes(r)),
+    isEmployer: roles.some(r => EMPLOYER_ROLES.includes(r)),
+    isEmployee: roles.some(r => EMPLOYEE_ROLES.includes(r))
+  };
+};
 
 export const CHEF_OPTIONS = [
   { id: "Pastry Chef", name: "Pastry Chef", image: chef },

@@ -1,12 +1,11 @@
 ﻿using System.Net;
 using DataAccess.Identity;
-using FastEndpoints;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 
 namespace Duuty.Server.Features.Public.VerifyOtp;
 
-[HttpPost("/api/verify-otp")]
+[HttpPost("/api/public/verify-otp")]
 [AllowAnonymous]
 public class VerifyOtpEndpoint(UserManager<ArainUser> userManager) : Endpoint<VerifyOtpRequest, VerifyOtpResponse>
 {
@@ -21,26 +20,27 @@ public class VerifyOtpEndpoint(UserManager<ArainUser> userManager) : Endpoint<Ve
 
             if (user is null)
             {
-                await SendNotFoundAsync(ct);
+                await Send.NotFoundAsync(ct);
                 return;
             }
 
             var result = await userManager.VerifyTwoFactorTokenAsync(user, tokenProvider, request.Otp);
             if (!result)
             {
-                await SendUnauthorizedAsync(ct);
+                await Send.UnauthorizedAsync(ct);
                 return;
             }
 
             var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
             await userManager.ConfirmEmailAsync(user, token);
 
-            await SendAsync(new VerifyOtpResponse { IsVerified = true }, (int)HttpStatusCode.OK, ct);
+            await Send.OkAsync(new VerifyOtpResponse { IsVerified = true }, ct);
             return;
         }
         catch (Exception ex)
         {
-            await SendAsync(new VerifyOtpResponse { IsVerified = false, Message = ex.Message }, (int)HttpStatusCode.InternalServerError, ct);
+            AddError(ex.Message);
+            ThrowIfAnyErrors((int)HttpStatusCode.InternalServerError);
             return;
         }
     }

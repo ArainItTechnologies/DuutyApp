@@ -81,6 +81,15 @@ public class EntityService<T> : IEntityService<T> where T : Entity
         }
     }
 
+    public async Task UpdateAsync(T entity, bool save = true)
+    {
+        _repository.Edit(entity);
+        if (save)
+        {
+            await _unitOfWork.CommitAsync();
+        }
+    }
+
     public void SaveNoTracking()
     {
         _unitOfWork.SetTrackChanges(trackChanges: false);

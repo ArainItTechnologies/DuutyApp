@@ -199,13 +199,13 @@ const BecomeEmployer = () => {
                 onChange={(e) => {
                   let files = Array.from(e.target.files);
                   if (uploadedFiles.length + files.length > 3) {
-                    alert("You can upload a maximum of 3 files.");
+                    showError("You can upload a maximum of 3 files.");
                     e.target.value = "";
                     return;
                   }
                   for (const file of files) {
-                    if (file.size > 15 * 1024 * 1024) {
-                      alert(`File ${file.name} exceeds 15MB.`);
+                    if (file.size > 5 * 1024 * 1024) {
+                      showError(`File ${file.name} exceeds 5MB.`);
                       e.target.value = "";
                       return;
                     }

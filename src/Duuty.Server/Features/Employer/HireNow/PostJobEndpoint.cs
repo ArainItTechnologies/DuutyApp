@@ -1,15 +1,14 @@
 ﻿using System.Net;
 using Domain.Entities;
 using Domain.Enums;
-using FastEndpoints;
 using Infrastructure.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Services;
 
-namespace Duuty.Server.Features.User.HireNow;
+namespace Duuty.Server.Features.Employer.HireNow;
 
-[HttpPost("/api/user/post-job")]
+[HttpPost("/api/employer/post-job")]
 [Authorize]
 public class PostJobEndpoint(IJobListingService jobListingService, IEmployerService employerService, ITimeProvider timeProvider) : Endpoint<PostJobRequest, PostJobResponse>
 {
@@ -17,16 +16,16 @@ public class PostJobEndpoint(IJobListingService jobListingService, IEmployerServ
     {
         try
         {
-            if (string.IsNullOrEmpty(request.UserId)) 
+            if (string.IsNullOrEmpty(request.UserId))
             {
-                await SendAsync(new PostJobResponse(false, "User ID is required."), (int)HttpStatusCode.BadRequest, ct);
+                await Send.ErrorsAsync((int)HttpStatusCode.BadRequest, ct);
                 return;
             }
-            var employer =await employerService.Get(employer => employer.UserId == request.UserId).SingleOrDefaultAsync();
+            var employer = await employerService.Get(employer => employer.UserId == request.UserId).SingleOrDefaultAsync();
 
-            if(employer is null)
+            if (employer is null)
             {
-                await SendAsync(new PostJobResponse(false, "Employer not found for the given user ID."), (int)HttpStatusCode.NotFound, ct);
+                await Send.NotFoundAsync(ct);
                 return;
             }
 
@@ -48,18 +47,19 @@ public class PostJobEndpoint(IJobListingService jobListingService, IEmployerServ
 
             await jobListingService.CreateAsync(jobListingEntity);
 
-            if(jobListingEntity.Id <= 0)
+            if (jobListingEntity.Id <= 0)
             {
-                await SendAsync(new PostJobResponse(false, "Failed to create job listing."), (int)HttpStatusCode.InternalServerError, ct);
+                await Send.ErrorsAsync((int)HttpStatusCode.InternalServerError, ct);
                 return;
             }
-          
-            await SendAsync(new PostJobResponse(true), (int)HttpStatusCode.OK, ct);
+
+            await Send.OkAsync(new PostJobResponse(true), ct);
             return;
         }
         catch (Exception ex)
         {
-            await SendAsync(new PostJobResponse(false, ex.Message), (int)HttpStatusCode.InternalServerError, ct);
+            AddError(ex.Message);
+            ThrowIfAnyErrors((int)HttpStatusCode.InternalServerError);
             return;
         }
     }

@@ -1,65 +1,76 @@
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import { useNavigate } from "react-router-dom";
-import { createOrder, verifyPayment } from "../services/auth";
+import { createOrder, subscribeToPlan, verifyPayment } from "../services/auth";
 import { useUser } from "../hooks/Hooks";
+import { useNotification } from "../context/NotificationContext";
 
 const Pricing = () => {
+  const { showSuccess, showError, showInfo } = useNotification();
+
   const navigate = useNavigate();
   const { user } = useUser();
-  const handleRazorpayPayment = async (amount, description) => {
 
+  const handleRazorpayPayment = async (amount, description, plan) => {
     if (!user) {
-      console.log('Only Loggedin Users can make payment');
+      showError('Only Loggedin Users can make payment');
       return;
     }
-    const orderData = await createOrder({
-      amount: amount,
-      currency: 'INR',
-      description: description,
-      userId: user.userId
-    }, user.token);
+    try {
+      const orderData = await createOrder({
+        amount: amount,
+        currency: 'INR',
+        description: description,
+        userId: user.userId
+      }, user.token);
 
-    // Ideally, fetch order_id from your backend here
-    const options = {
-      key: "rzp_test_VYrociEO8aKhp6", // Replace with your Razorpay key
-      amount: amount * 100, // Amount in paise
-      currency: "INR",
-      name: "Duuty.in",
-      description: description,
-      order_id: orderData.Id, // Get this from your backend
-      handler: async function (response) {
-        try {
-          console.log('Payment completed, verifying...');
+      const options = {
+        key: orderData.razorpayKeyId,
+        amount: amount * 100,
+        currency: "INR",
+        name: "Duuty.in",
+        description: description,
+        order_id: orderData.orderId,
+        handler: async function (response) {
+          try {
+            const verifyData = await verifyPayment({
+              paymentId: response.razorpay_payment_id,
+              orderId: response.razorpay_order_id,
+              signature: response.razorpay_signature
+            }, user.token);
 
-          const verifyData = await verifyPayment({
-            paymentId: response.razorpay_payment_id,
-            orderId: response.razorpay_order_id,
-            signature: response.razorpay_signature
-          }, token);
-
-          if (verifyData.success) {
-            alert("Payment successful!");
-            console.log('Payment verified successfully:', verifyData);
-          } else {
-            alert("Payment verification failed! Please contact support.");
-            console.error('Payment verification failed:', verifyData);
+            if (verifyData.success) {
+              showSuccess("Payment Successful!, Thanks for subscribing to DUUTY.");
+              navigate("/");
+              await subscribeToPlan({ userId: user.userId, plan }, user.token);
+            } else {
+              showError("Payment verification failed! Please contact support.");
+            }
+          } catch (verificationError) {
+            showError(`Payment verification failed! ${verificationError.message}`);
           }
-        } catch (verificationError) {
-          console.error('Payment verification error:', verificationError);
-          alert(`Payment verification failed! ${verificationError.message}`);
+        },
+        modal: {
+          ondismiss: function () {
+            showInfo('Payment cancelled by user');
+          }
+        },
+        prefill: {
+          name: user.name || "",
+          email: user.email || "",
+          contact: user.phone || "",
+        },
+        theme: {
+          color: "#6366f1",
+        },
+        error: function (error) {
+          showError('Payment failed. Please try again.');
         }
-      },
-      prefill: {
-        name: "",
-        email: "",
-        contact: "",
-      },
-      theme: {
-        color: "#6366f1",
-      },
-    };
-    const rzp = new window.Razorpay(options);
-    rzp.open();
+      };
+      const rzp = new window.Razorpay(options);
+      rzp.open();
+    } catch (error) {
+      showError(`Payment initiation failed! ${error.message}`);
+    }
   };
 
   return (
@@ -93,7 +104,7 @@ const Pricing = () => {
             </p>
             <p className="text-gray-500 mb-6">Monthly Payment</p>
             <button className="bg-linear-(--gradient-bg) text-white py-2 w-full rounded-lg mb-2 cursor-pointer"
-              onClick={() => handleRazorpayPayment(999, "1 - Month Plan")}
+              onClick={() => handleRazorpayPayment(999, "Monthly", 0)}
             >
               Pay Now
             </button>
@@ -227,7 +238,7 @@ const Pricing = () => {
             </p>
             <p className="text-gray-500 mb-6">Quarterly Payment</p>
             <button className="bg-linear-(--gradient-bg) text-white py-2 w-full rounded-lg mb-2 cursor-pointer"
-              onClick={() => handleRazorpayPayment(999, "3 - Months Plan")}
+              onClick={() => handleRazorpayPayment(1999, "Quarterly", 1)}
             >
               Pay Now
             </button>
@@ -361,7 +372,7 @@ const Pricing = () => {
             </p>
             <p className="text-gray-500 mb-6">Yearly Payment</p>
             <button className="bg-linear-(--gradient-bg) text-white py-2 w-full rounded-lg mb-2 cursor-pointer"
-              onClick={() => handleRazorpayPayment(999, "1 - Month Plan")}
+              onClick={() => handleRazorpayPayment(6999, "Annually", 2)}
             >
               Pay Now
             </button>

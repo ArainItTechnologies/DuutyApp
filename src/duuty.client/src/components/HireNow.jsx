@@ -3,9 +3,9 @@ import { Dialog, DialogBackdrop, DialogPanel } from "@headlessui/react";
 import { ArrowLeftIcon, CheckCircleIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useUser } from "../hooks/Hooks";
-import { ADMIN_ROLES, ROUTES, CITIES, STATES } from "../Constants";
+import { ROUTES, CITIES, STATES } from "../Constants";
 import { FormInput, FormSelect, FormTextArea, PrimaryButton } from "./custom/FormElements";
-import { postJob } from "../services/auth";
+import employerAPI from "../api/employer";
 
 const HireNow = () => {
   const [locationOptions] = useState([{ id: "", name: "Select City" }, ...CITIES]);
@@ -15,7 +15,7 @@ const HireNow = () => {
   const [state, setState] = useState("");
 
   const navigate = useNavigate();
-  const { user } = useUser();
+  const { user, isAdmin, isEmployer, isEmployee } = useUser();
 
   const [formData, setFormData] = useState({
     title: "",
@@ -39,7 +39,7 @@ const HireNow = () => {
   useEffect(() => {
     if (!user) {
       navigate("/login", { state: { from: location.pathname } });
-    } else if (!user.role.some(role => ADMIN_ROLES.includes(role))) {
+    } else if (!isAdmin && !isEmployer && isEmployee) {
       navigate(ROUTES.BECOME_EMPLOYER, { state: { from: location.pathname } });
     }
   }, [navigate, user, location]);
@@ -86,7 +86,7 @@ const HireNow = () => {
       const jobData = {
         userId: user?.userId,
         jobTitle: jobRole,
-        jobDescription: formData.description, 
+        jobDescription: formData.description,
         jobLocation: jobLocation,
         jobState: state,
         experience: formData.experience,
@@ -95,7 +95,7 @@ const HireNow = () => {
         benefits: formData.benefits,
       };
 
-      await postJob(jobData, user.token);
+      await employerAPI.postJob(jobData, user.token);
 
       // Show success dialog
       setShowSuccessDialog(true);
