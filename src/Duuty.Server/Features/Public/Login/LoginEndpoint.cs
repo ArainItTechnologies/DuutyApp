@@ -13,57 +13,75 @@ public class LoginEndpoint(UserManager<ArainUser> userManager, JwtHandler jwtHan
 {
     public override async Task HandleAsync(LoginRequest request, CancellationToken ct)
     {
-        var user = await userManager.FindByEmailAsync(request.Email!);
+        // Determine whether the caller provided a phone number or an email.
+        var isPhone = !string.IsNullOrWhiteSpace(request.PhoneNumber);
+        ArainUser? user = isPhone
+            ? await userManager.FindByNameAsync(request.PhoneNumber!)
+            : await userManager.FindByEmailAsync(request.Email!);
+
         if (user is null || !await userManager.CheckPasswordAsync(user, request.Password))
         {
             await Send.UnauthorizedAsync(ct);
             return;
         }
 
-        if (!user.EmailConfirmed)
+        // If logging in with phone number, require phone confirmation only.
+        if (isPhone)
         {
-            var otp = await userManager.GenerateTwoFactorTokenAsync(user, TokenOptions.DefaultEmailProvider);
-            if (string.IsNullOrWhiteSpace(otp))
+            if (!user.PhoneNumberConfirmed)
             {
-                AddError("otp", "Failed to generate OTP for email confirmation.");
-                await Send.ErrorsAsync(cancellation: ct);
+                var otp = await userManager.GenerateTwoFactorTokenAsync(user, TokenOptions.DefaultPhoneProvider);
+                if (string.IsNullOrWhiteSpace(otp))
+                {
+                    AddError("otp", "Failed to generate OTP for phone number confirmation.");
+                    await Send.ErrorsAsync(cancellation: ct);
+                    return;
+                }
+
+                var sent = await messageService.SendWhatsAppMessage(user.PhoneNumber!, otp);
+                if (!sent)
+                {
+                    AddError("otp", "Failed to send phone OTP.");
+                    await Send.ErrorsAsync(cancellation: ct);
+                    return;
+                }
+
+                await Send.OkAsync(new LoginResponse
+                {
+                    Success = false,
+                    UserId = user.Id,
+                    RequiresOtp = true,
+                    Message = "Phone Number not confirmed. OTP has been sent to your WhatsApp."
+                }, ct);
+
                 return;
             }
-
-            await emailSender.SendEmailAsync(user.Email!, EmailType.Otp, otp);
-
-            await Send.OkAsync(new LoginResponse
-            {
-                Success = false,
-                UserId = user.Id,
-                RequiresOtp = true,
-                Message = "Email not confirmed. OTP has been sent to your email address."
-            }, ct);
-
-            return;
         }
-
-        if (!user.PhoneNumberConfirmed)
+        else
         {
-            var otp = await userManager.GenerateTwoFactorTokenAsync(user, TokenOptions.DefaultPhoneProvider);
-            if (string.IsNullOrWhiteSpace(otp))
+            // Logging in with email — require email confirmation only.
+            if (!user.EmailConfirmed)
             {
-                AddError("otp", "Failed to generate OTP for phone number confirmation.");
-                await Send.ErrorsAsync(cancellation: ct);
+                var otp = await userManager.GenerateTwoFactorTokenAsync(user, TokenOptions.DefaultEmailProvider);
+                if (string.IsNullOrWhiteSpace(otp))
+                {
+                    AddError("otp", "Failed to generate OTP for email confirmation.");
+                    await Send.ErrorsAsync(cancellation: ct);
+                    return;
+                }
+
+                await emailSender.SendEmailAsync(user.Email!, EmailType.Otp, otp);
+
+                await Send.OkAsync(new LoginResponse
+                {
+                    Success = false,
+                    UserId = user.Id,
+                    RequiresOtp = true,
+                    Message = "Email not confirmed. OTP has been sent to your email address."
+                }, ct);
+
                 return;
             }
-
-            await messageService.SendWhatsAppMessage(user.PhoneNumber!, otp);
-
-            await Send.OkAsync(new LoginResponse
-            {
-                Success = false,
-                UserId = user.Id,
-                RequiresOtp = true,
-                Message = "Phone Number not confirmed. OTP has been sent to your WhatsApp."
-            }, ct);
-
-            return;
         }
 
         var roles = await userManager.GetRolesAsync(user);
