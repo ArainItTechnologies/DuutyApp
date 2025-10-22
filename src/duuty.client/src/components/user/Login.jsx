@@ -4,11 +4,19 @@ import publicAPI from "../../api/public";
 import { useAppState, useUser } from "../../hooks/Hooks";
 import { jwtDecode } from "jwt-decode";
 import { normalizeClaims } from "../../utils/ClaimsUtility";
-import { FormInput, FormPasswordInput, PrimaryButton } from "../custom/FormElements";
+import {
+  FormInput,
+  FormPasswordInput,
+  PrimaryButton,
+} from "../custom/FormElements";
 import { ROUTES } from "../../Constants";
-import { validateMobileNumber, validateEmail } from "../../utils/ValidationUtils";
+import {
+  validateMobileNumber,
+  validateEmail,
+} from "../../utils/ValidationUtils";
 import VerifyOtp from "./VerifyOtp";
 import { roleChecks } from "../../Constants";
+import { useNotification } from "../../context/NotificationContext";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -19,9 +27,6 @@ const Login = () => {
 
   const [isVerifyOpen, setIsVerifyOpen] = useState(false);
 
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
-
   const location = useLocation();
   const navigate = useNavigate();
   const { setIsLoading } = useAppState();
@@ -29,6 +34,8 @@ const Login = () => {
   const from = location.state?.from || "/";
 
   const { setUser } = useUser();
+
+  const { showSuccess, showError } = useNotification();
 
   const handlePhoneNumberChange = (e) => {
     const value = e.target.value;
@@ -56,25 +63,26 @@ const Login = () => {
     return { ...normalized };
   };
 
-
   const handleResendOtp = async () => {
     try {
       await publicAPI.resendOtp(email, phoneNumber);
     } catch (error) {
-      setError(error.message);
+      showError(error.message);
     }
   };
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setError("");
-    setSuccess("");
     setIsLoading(true);
     try {
-      const result = await publicAPI.loginUser({ phoneNumber, email, password });
+      const result = await publicAPI.loginUser({
+        phoneNumber,
+        email,
+        password,
+      });
 
-      if (result.success) {
-        var data = result.data;
+      var data = result.data;
+      if (data.success) {
         const userInfo = getUserDetailsFromToken(data.token);
         var roleCheck = roleChecks(userInfo);
 
@@ -83,7 +91,7 @@ const Login = () => {
 
         setUser(userInfo);
         setIsLoading(false);
-        setSuccess("Login successful!");
+        showSuccess("Login successful!");
 
         if (from === ROUTES.HIRE_NOW) {
           navigate(ROUTES.JOB_LISTING, { replace: true });
@@ -102,15 +110,11 @@ const Login = () => {
         }
       } else {
         setIsLoading(false);
-        setIsVerifyOpen(result.requiresVerification);
+        setIsVerifyOpen(data.requiresOtp);
       }
-
     } catch (error) {
-      if(error.status === 403){
-        setIsVerifyOpen(true);
-      }
       setIsLoading(false);
-      setError(error.errorMessage);
+      showError(error.errorMessage);
     }
   };
 
@@ -125,45 +129,49 @@ const Login = () => {
 
         <div className="mt-5 sm:mx-auto sm:w-full sm:max-w-sm">
           <form onSubmit={handleLogin} className="sm:space-y-6 space-y-4">
-            {!email && <div>
-              <FormInput
-                label="Mobile Number"
-                name="phoneNumber"
-                type="text"
-                value={phoneNumber}
-                onChange={handlePhoneNumberChange}
-                required
-              />
-              {phoneError && (
-                <p className="mt-1 text-sm text-red-600" role="alert">
-                  {phoneError}
-                </p>
-              )}
-            </div>
-            }
+            {!email && (
+              <div>
+                <FormInput
+                  label="Mobile Number"
+                  name="phoneNumber"
+                  type="text"
+                  value={phoneNumber}
+                  onChange={handlePhoneNumberChange}
+                  required
+                />
+                {phoneError && (
+                  <p className="mt-1 text-sm text-red-600" role="alert">
+                    {phoneError}
+                  </p>
+                )}
+              </div>
+            )}
 
-            {!phoneNumber && !email && <div className="flex items-center my-4">
-              <hr className="flex-grow border-t border-gray-300" />
-              <span className="mx-4 text-gray-600">OR</span>
-              <hr className="flex-grow border-t border-gray-300" />
-            </div>}
+            {!phoneNumber && !email && (
+              <div className="flex items-center my-4">
+                <hr className="flex-grow border-t border-gray-300" />
+                <span className="mx-4 text-gray-600">OR</span>
+                <hr className="flex-grow border-t border-gray-300" />
+              </div>
+            )}
 
-            {!phoneNumber &&
-
-              <div><FormInput
-                label="Email address"
-                name="email"
-                type="email"
-                value={email}
-                onChange={handleEmailChange}
-                required
-              />
+            {!phoneNumber && (
+              <div>
+                <FormInput
+                  label="Email address"
+                  name="email"
+                  type="email"
+                  value={email}
+                  onChange={handleEmailChange}
+                  required
+                />
                 {emailError && (
                   <p className="mt-1 text-sm text-red-600" role="alert">
                     {emailError}
                   </p>
                 )}
-              </div>}
+              </div>
+            )}
 
             <FormPasswordInput
               label="Password"
@@ -173,13 +181,13 @@ const Login = () => {
               onChange={(e) => setPassword(e.target.value)}
               required
               forgotPassword
-              autoComplete="current-password" />
+              autoComplete="current-password"
+            />
 
-            {error && <p className="text-sm text-red-600">{error}</p>}
-            {success && <p className="text-sm text-green-600">{success}</p>}
-
-
-            <PrimaryButton type="submit" disabled={phoneError || emailError || !password}>
+            <PrimaryButton
+              type="submit"
+              disabled={phoneError || emailError || !password}
+            >
               Sign in
             </PrimaryButton>
           </form>
@@ -202,9 +210,14 @@ const Login = () => {
           handleResend={handleResendOtp}
           onVerify={async (otpCode) => {
             try {
-              await publicAPI.verifyOtp({ otp: otpCode, phoneNumber, userEmail: email })
+              await publicAPI.verifyOtp({
+                otp: otpCode,
+                phoneNumber,
+                userEmail: email,
+              });
+              showSuccess("OTP verified successfully!, Login now.");
             } catch (err) {
-              setError(err.message || "OTP verification failed");
+              showError(err.message || "OTP verification failed");
               return;
             }
 

@@ -1,11 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations;
-using DataAccess.Identity;
+﻿using DataAccess.Identity;
 using Domain.Entities;
 using Infrastructure.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.EntityFrameworkCore;
 using SharedKernel.Services;
+using System.ComponentModel.DataAnnotations;
 
 namespace Web.Server.Features.Public.Register;
 
@@ -34,9 +35,55 @@ public class RegisterEndpoint : Endpoint<RegistrationRequest, RegistrationRespon
     }
     public override async Task HandleAsync(RegistrationRequest model, CancellationToken ct)
     {
-        var userName = !string.IsNullOrWhiteSpace(model.Email)
-            ? model.Email
-            : model.PhoneNumber;
+        if (!string.IsNullOrWhiteSpace(model.PhoneNumber) && !string.IsNullOrWhiteSpace(model.Email))
+        {
+            AddError("username", "Provide either phone number or email, not both.");
+            await Send.ErrorsAsync(cancellation: ct);
+            return;
+        }
+
+        var userName = !string.IsNullOrWhiteSpace(model.PhoneNumber)
+            ? model.PhoneNumber
+            : model.Email;
+
+        if (string.IsNullOrWhiteSpace(userName))
+        {
+            AddError("username", "Phone number or email is required.");
+            await Send.ErrorsAsync(cancellation: ct);
+            return;
+        }
+
+        // Check if a user with same username (phone when provided, otherwise email) already exists
+        if (await _userManager.FindByNameAsync(userName) is not null)
+        {
+            AddError("registration", "A user with the provided phone number or email already exists.");
+            await Send.ErrorsAsync(cancellation: ct);
+            return;
+        }
+
+        // Check email uniqueness explicitly (prevents same email across different usernames)
+        if (!string.IsNullOrWhiteSpace(model.Email))
+        {
+            var existingByEmail = await _userManager.FindByEmailAsync(model.Email);
+            if (existingByEmail is not null)
+            {
+                AddError("email", "Email is already in use.");
+                await Send.ErrorsAsync(cancellation: ct);
+                return;
+            }
+        }
+
+        // Check phone uniqueness explicitly (in case username selection / lookup differs elsewhere)
+        if (!string.IsNullOrWhiteSpace(model.PhoneNumber))
+        {
+            var phoneExists = await _userManager.Users.AnyAsync(u => u.PhoneNumber == model.PhoneNumber);
+            if (phoneExists)
+            {
+                AddError("phone", "Phone number is already in use.");
+                await Send.ErrorsAsync(cancellation: ct);
+                return;
+            }
+        }
 
         var user = new ArainUser
         {
@@ -56,17 +103,35 @@ public class RegisterEndpoint : Endpoint<RegistrationRequest, RegistrationRespon
             return;
         }
 
-
-
         if (!string.IsNullOrEmpty(model.PhoneNumber))
         {
             var otp = await _userManager.GenerateTwoFactorTokenAsync(user, TokenOptions.DefaultPhoneProvider);
-            await _messageService.SendWhatsAppMessage(model.PhoneNumber!, otp);
+            if (string.IsNullOrEmpty(otp))
+            {
+                AddError("otp", "Failed to generate phone OTP.");
+                await Send.ErrorsAsync(cancellation: ct);
+                return;
+            }
+
+            var sent = await _messageService.SendWhatsAppMessage(model.PhoneNumber!, otp);
+            if (!sent)
+            {
+                AddError("otp", "Failed to send phone OTP.");
+                await Send.ErrorsAsync(cancellation: ct);
+                return;
+            }
         }
 
         if (!string.IsNullOrWhiteSpace(model.Email))
         {
             var otp = await _userManager.GenerateTwoFactorTokenAsync(user, TokenOptions.DefaultEmailProvider);
+            if (string.IsNullOrEmpty(otp))
+            {
+                AddError("otp", "Failed to generate email OTP.");
+                await Send.ErrorsAsync(cancellation: ct);
+                return;
+            }
+
             await _emailSender.SendEmailAsync(model.Email!, EmailType.Otp, otp);
         }
 
