@@ -12,7 +12,7 @@ import { useNotification } from "../../context/NotificationContext";
 const EmployeeRegister = () => {
   const { setIsLoading } = useAppState();
 
-    const { showSuccess, showError } = useNotification();
+  const { showSuccess, showError } = useNotification();
 
   const [showSelectRole, setShowSelectRole] = useState(false);
   const [selectedRole, setSelectedRole] = useState(null);
@@ -43,8 +43,6 @@ const EmployeeRegister = () => {
     password: "",
     confirmPassword: "",
   });
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
 
   // Handle form input changes
   const handleChange = (e) => {
@@ -90,7 +88,7 @@ const EmployeeRegister = () => {
     setIsLoading(true);
 
     try {
-      await publicAPI.registerUser({
+      var response = await publicAPI.registerUser({
         fullName: formData.name,
         phoneNumber: formData.mobile,
         email: formData.email,
@@ -99,16 +97,26 @@ const EmployeeRegister = () => {
         password: formData.password,
       });
 
+      console.log("Registration Response:", response);  
+
       setIsLoading(false);
-      showSuccess(
-        "Registration successful! Please check your email for confirmation."
-      );
-      setIsVerifyOpen(true);
-      setError("");
+      var data = response.data;
+      if (data.success) {
+        showSuccess(
+          "Registration successful! Please check your email for confirmation."
+        );
+        setIsVerifyOpen(true);
+      } else {
+        showError(data.message);
+      }
     } catch (err) {
       setIsLoading(false);
-      setError(err.message || "Something went wrong");
-      showError(error);
+      // Handle different error response formats
+      const errorMessage = err?.response?.data?.message || 
+                          err?.message || 
+                          err?.title || 
+                          "Something went wrong";
+      showError(errorMessage);
     }
   };
 
@@ -231,9 +239,6 @@ const EmployeeRegister = () => {
           )}
         </div>
 
-        {error && <p className="text-sm text-red-600">{error}</p>}
-        {success && <p className="text-sm text-green-600">{success}</p>}
-
         <PrimaryButton type="submit" disabled={emailError || phoneError || passwordError || confirmPasswordError || !formData.name || !selectedRole}>
           Sign Up
         </PrimaryButton>
@@ -274,8 +279,12 @@ const EmployeeRegister = () => {
                 return;
               }
             } catch (err) {
-              setError(err.message || "OTP verification failed");
-              showError("OTP verification failed. Please try again.");
+              // Handle different error response formats
+              const errorMessage = err?.response?.data?.message || 
+                                  err?.message || 
+                                  err?.title || 
+                                  "OTP verification failed";
+              showError(errorMessage);
               return;
             }
 
