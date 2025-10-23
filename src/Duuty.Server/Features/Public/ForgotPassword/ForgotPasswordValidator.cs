@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using Duuty.Server.Features.Public.ForgotPassword;
 using FluentValidation;
 
 namespace Web.Server.Features.Public.ForgotPassword;

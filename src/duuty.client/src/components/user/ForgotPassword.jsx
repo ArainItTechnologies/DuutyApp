@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import { resetPassword } from "../../services/auth";
+import { Link, useNavigate } from "react-router-dom";
+import publicAPI from "../../api/public";
 import Toast from "../custom/Toast";
 import { FormInput, PrimaryButton } from "../custom/FormElements";
+import { ROUTES } from "../../Constants";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
@@ -10,12 +11,15 @@ const ForgotPassword = () => {
   const [toastMessage, setToastMessage] = useState("");
   const [success, setSuccess] = useState(true);
 
+    const navigate = useNavigate();
+
   const handleReset = async (e) => {
     e.preventDefault();
     try {
-      await resetPassword(email);
+      await publicAPI.forgotPassword(email);
       setToastMessage("Reset link sent to your email!");
       setSuccess(true);
+      navigate(ROUTES.LOGIN);
     } catch {
       setToastMessage("Failed to send reset link.");
       setSuccess(false);

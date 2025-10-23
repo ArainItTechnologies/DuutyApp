@@ -1,7 +1,6 @@
 ﻿using System.Text;
 using DataAccess;
 using DataAccess.Identity;
-using Infrastructure.JwtFeatures;
 using Infrastructure.Services;
 using Infrastructure.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;

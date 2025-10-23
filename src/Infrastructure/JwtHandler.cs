@@ -5,7 +5,7 @@ using DataAccess.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Infrastructure.JwtFeatures;
+namespace Infrastructure;
 
 public class JwtHandler
 {
@@ -34,12 +34,12 @@ public class JwtHandler
         return new SigningCredentials(secret, SecurityAlgorithms.HmacSha256);
     }
 
-    private IEnumerable<Claim> GetClaims(ArainUser user, IList<string> roles)
+    private static List<Claim> GetClaims(ArainUser user, IList<string> roles)
     {
         var claims = new List<Claim>
         {
-            new Claim(ClaimTypes.Name, user.FullName),
-            new Claim(ClaimTypes.Email, user.Email!),
+            new(ClaimTypes.Name, user.FullName!),
+            new(ClaimTypes.Email, user.Email!),
         };
 
         foreach (var role in roles)

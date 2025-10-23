@@ -12,6 +12,7 @@ import FindAJob from "./components/FindAJobs";
 import Footer from "./components/Footer";
 import EmailConfirmation from "./components/EmailConfirmation";
 import ForgotPassword from "./components/user/ForgotPassword";
+import ResetPassword from "./components/user/ResetPassword";
 import Profile from "./components/Profile";
 import Pricing from "./components/Pricing";
 import ChangePassword from "./components/user/ChangePassword";
@@ -45,6 +46,7 @@ function App() {
         <Route path={ROUTES.REGISTER} element={<Register />} />
         <Route path={ROUTES.BECOME_EMPLOYER} element={<BecomeEmployer />} />
         <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgotPassword />} />
+        <Route path={ROUTES.RESET_PASSWORD} element={<ResetPassword />} />
         <Route path={ROUTES.PROFILE} element={<Profile />} />
         <Route path={ROUTES.PROFILE_EDIT} element={<Edit />} />
         <Route path={ROUTES.EMAIL_CONFIRM} element={<EmailConfirmation />} />

@@ -15,7 +15,6 @@ import {
   validateEmail,
 } from "../../utils/ValidationUtils";
 import VerifyOtp from "./VerifyOtp";
-import { roleChecks } from "../../Constants";
 import { useNotification } from "../../context/NotificationContext";
 
 const Login = () => {
@@ -31,7 +30,7 @@ const Login = () => {
   const navigate = useNavigate();
   const { setIsLoading } = useAppState();
 
-  const from = location.state?.from || "/";
+  const from = location.state?.from || ROUTES.HOME;
 
   const { setUser } = useUser();
 
@@ -84,30 +83,12 @@ const Login = () => {
       var data = result.data;
       if (data.success) {
         const userInfo = getUserDetailsFromToken(data.token);
-        var roleCheck = roleChecks(userInfo);
-
         userInfo.token = data.token;
         userInfo.userId = data.userId;
 
         setUser(userInfo);
         setIsLoading(false);
-        showSuccess("Login successful!");
-
-        if (from === ROUTES.HIRE_NOW) {
-          navigate(ROUTES.JOB_LISTING, { replace: true });
-        } else {
-          if (roleCheck.isSuperAdmin) {
-            navigate(ROUTES.SUPER_ADMIN_DASHBOARD, { replace: true });
-          } else if (roleCheck.isAdmin) {
-            navigate(ROUTES.ADMIN_DASHBOARD, { replace: true });
-          } else if (roleCheck.isEmployer) {
-            navigate(ROUTES.EMPLOYER_DASHBOARD, { replace: true });
-          } else if (roleCheck.isEmployee) {
-            navigate(ROUTES.JOB_RESULTS, { replace: true });
-          } else {
-            navigate(from, { replace: true });
-          }
-        }
+        navigate(ROUTES.HOME, { replace: true });
       } else {
         setIsLoading(false);
         setIsVerifyOpen(data.requiresOtp);

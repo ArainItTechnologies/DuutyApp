@@ -1,5 +1,5 @@
 ﻿using DataAccess.Identity;
-using Infrastructure.JwtFeatures;
+using Infrastructure;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;

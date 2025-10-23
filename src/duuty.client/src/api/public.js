@@ -12,8 +12,12 @@ const publicAPI = {
     return postAsync("/api/public/resend/confirm", null, token, data);
   },
 
-  resetPassword: async (email) => {
+  forgotPassword: async (email) => {
     return await postAsync("/api/public/forgot-password", { email });
+  },
+
+  resetPassword: async (resetPasswordData) => {
+    return await postAsync("/api/public/reset-password", resetPasswordData);
   },
 
   resendOtp: async (email, phoneNumber) => {
