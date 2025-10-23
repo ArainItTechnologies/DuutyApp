@@ -97,22 +97,19 @@ const EmployeeRegister = () => {
         password: formData.password,
       });
 
-      console.log("Registration Response:", response);  
-
       setIsLoading(false);
-      var data = response.data;
-      if (data.success) {
+      if (response.isSuccess) {
         showSuccess(
           "Registration successful! Please check your email for confirmation."
         );
         setIsVerifyOpen(true);
       } else {
-        showError(data.message);
+        showError(response.message);
       }
     } catch (err) {
       setIsLoading(false);
       // Handle different error response formats
-      const errorMessage = err?.response?.data?.message || 
+      const errorMessage = err?.response?.message || 
                           err?.message || 
                           err?.title || 
                           "Something went wrong";

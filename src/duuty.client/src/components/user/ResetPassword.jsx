@@ -66,11 +66,12 @@ const ResetPassword = () => {
             };
 
             const response = await publicAPI.resetPassword(resetPasswordData);
-            if (response.data.isSuccess) {
+            
+            if (response.isSuccess) {
                 showSuccess('Password reset successfully! You can now login with your new password.');
                 navigate(ROUTES.LOGIN);
             } else {
-                showError(response.data.message || 'Failed to reset password. Please try again.');
+                showError(response.message || 'Failed to reset password. Please try again.');
             }
         } catch (error) {
             showError(error.message || 'Failed to reset password. Please try again.');

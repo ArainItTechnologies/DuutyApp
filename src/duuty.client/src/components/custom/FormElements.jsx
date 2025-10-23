@@ -1,4 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
+import { ROUTES } from "../../Constants";
 
 
 export const FormInput = ({
@@ -119,7 +120,7 @@ export const FormPasswordInput = ({
 
         {forgotPassword && <div className="text-sm">
           <Link
-            to="/forgot"
+            to={ROUTES.FORGOT_PASSWORD}
             className="font-semibold text-indigo-600 hover:text-indigo-500"
           >
             Forgot password?
@@ -236,7 +237,7 @@ export const ScrollLink = ({ to, label, onClick }) => {
   const location = useLocation();
 
   const handleClick = (e) => {
-    if (location.pathname === "/" && to.includes("#faq-section")) {
+    if (location.pathname === ROUTES.HOME && to.includes("#faq-section")) {
       e.preventDefault();
       document.getElementById("faq-section")?.scrollIntoView({ behavior: "smooth" });
       onClick?.();
