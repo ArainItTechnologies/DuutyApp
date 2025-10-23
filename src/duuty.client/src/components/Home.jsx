@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import FindEmp from "../assets/dream-kitchen.jpg";
 import Emp1 from "../assets/emp-1.png";
 import Emp2 from "../assets/emp-2.png";
@@ -12,11 +12,20 @@ import TestimonialSection from "../components/Testimonial";
 import LanguageSelectionModal from "./LanguageSelectionModal";
 import Benefits from "./Benefits";
 import Faq from "./Faq";
+import { ROUTES } from "../Constants";
 import HomeBanner from "./HomeBanner";
 
 export const Home = () => {
     const [selectLanguage, setSelectLanguage] = useState(false);
+    const selectedLanguage = localStorage.getItem("selectedLanguage");
+    
     const location = useLocation();
+    useEffect(() => {
+       
+       if (location.pathname === ROUTES.HOME && selectedLanguage === null) {
+            setSelectLanguage(true);
+        }
+    }, [location.pathname, setSelectLanguage]);
 
     useEffect(() => {
         if (location.hash) {
