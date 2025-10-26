@@ -1,4 +1,5 @@
-﻿using DataAccess.Identity;
+﻿using System.Text.Json;
+using DataAccess.Identity;
 using DataAccess.SeedConfiguration;
 using Domain.Enums;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -23,6 +24,10 @@ public class ApplicationDbContext : IdentityDbContext<ArainUser, ArainRole, stri
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<EmployeeJobRole>()
+            .Property(e => e.PreferredRoles)
+            .HasColumnType("nvarchar(max)"); 
 
         modelBuilder.Entity<EmployerSubscription>(entity =>
         {
