@@ -1,4 +1,4 @@
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { FormInput, FormPasswordInput, FormSelect, PrimaryButton } from "../custom/FormElements";
 import SelectRole from "../user/SelectRole";
@@ -31,9 +31,7 @@ const EmployeeRegister = () => {
     ...CHEF_OPTIONS
   ];
 
-  const location = useLocation();
   const navigate = useNavigate();
-  const [from] = useState(location.state?.from || "/");
 
   const [formData, setFormData] = useState({
     name: "",
@@ -285,7 +283,7 @@ const EmployeeRegister = () => {
               return;
             }
 
-            navigate(ROUTES.LOGIN, { replace: true });
+            navigate(ROUTES.PROFILE, { replace: true });
           }}
         />
       )}

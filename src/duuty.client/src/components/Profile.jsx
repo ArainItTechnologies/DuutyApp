@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Edit3, User, Phone, Mail, MapPin, Calendar, Clock, Award, CheckCircle } from "lucide-react";
 import { FormInput, FormSelect, PrimaryButton, RoleMultiSelect } from "./custom/FormElements";
 import SelectRole from "./user/SelectRole";
@@ -8,9 +8,9 @@ import { useAppState, useUser } from "../hooks/Hooks";
 import userAPI from "../api/user";
 
 // Profile View Component
-const ProfileView = ({ profile, selectedRole, selectedSubRole, onEdit }) => {
+const ProfileView = ({ profile, onEdit }) => {
   const getSelectedRoleObjects = () => {
-    return ROLE_OPTIONS.filter((role) => profile.roles.includes(role.id));
+    return ROLE_OPTIONS.filter((role) => profile.preferredRoles.includes(role.id));
   };
 
   const getExperienceLabel = (experience) => {
@@ -69,7 +69,7 @@ const ProfileView = ({ profile, selectedRole, selectedSubRole, onEdit }) => {
                     <User className="w-5 h-5 text-gray-500" />
                     <div>
                       <p className="text-sm text-gray-500">Full Name</p>
-                      <p className="font-medium text-gray-900">{profile.name || "Not provided"}</p>
+                      <p className="font-medium text-gray-900">{profile.fullName || "Not provided"}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg">
@@ -125,22 +125,9 @@ const ProfileView = ({ profile, selectedRole, selectedSubRole, onEdit }) => {
               </div>
 
               {/* Preferred Role */}
-              <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Preferred Role</h3>
-                <div className="p-4 bg-indigo-50 rounded-lg border border-indigo-200">
-                  <div className="flex items-center gap-2">
-                    <CheckCircle className="w-5 h-5 text-indigo-600" />
-                    <span className="font-medium text-indigo-900">
-                      {selectedRole === "Chef" ? `${selectedRole} - ${selectedSubRole}` : selectedRole || "Not selected"}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Additional Skills */}
-              {profile.roles && profile.roles.length > 0 && (
+              {profile.preferredRoles && profile.preferredRoles.length > 0 && (
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Additional Skills</h3>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Preferred Role(s)</h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {getSelectedRoleObjects().map((role) => (
                       <div
@@ -178,9 +165,6 @@ const Profile = () => {
   const { setIsLoading } = useAppState();
 
   const [isEditMode, setIsEditMode] = useState(false);
-  const [showSelectRole, setShowSelectRole] = useState(false);
-  const [selectedRole, setSelectedRole] = useState(user?.preferredRole || null);
-  const [selectedSubRole, setSelectedSubRole] = useState(user?.subRole || null);
   const [roleOptions, setRoleOptions] = useState([{ id: "", name: "Select Role" }]);
 
   // Error states matching EmployeeRegister pattern
@@ -188,21 +172,29 @@ const Profile = () => {
   const [emailError, setEmailError] = useState("");
 
   const [profile, setProfile] = useState({
-    name: user?.name || "",
+    fullName: user?.fullName || "",
     phone: user?.phone || "",
     email: user?.email || "",
     experience: user?.experience || "",
-    roles: user?.roles || [],
+    preferredRoles: user?.preferredRoles || [],
     location: user?.location || "",
     availability: user?.availability || "",
   });
 
   // Initialize role options with user's current role
   useEffect(() => {
+    const getProfile = async () => {
+      setIsLoading(true);
+      const data = await userAPI.fetchProfile(user?.userId, user?.token);
+      setProfile(data);
+      setIsLoading(false);
+    };
+
+    getProfile();
     if (user?.preferredRole && !roleOptions.some(option => option.id === user.preferredRole)) {
       setRoleOptions(prev => [...prev, { id: user.preferredRole, name: user.preferredRole }]);
     }
-  }, [user]);
+  }, [user, roleOptions, setIsLoading]);
 
   const experienceOptions = [
     { id: "", name: "Select Experience Level" },
@@ -219,11 +211,6 @@ const Profile = () => {
     { id: "evenings", name: "Evenings Only" },
   ];
 
-  const chefOptionsWithPlaceholder = [
-    { id: "", name: "Select Sub Role" },
-    ...CHEF_OPTIONS
-  ];
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setProfile((prev) => ({
@@ -237,14 +224,7 @@ const Profile = () => {
   };
 
   const handleRolesChange = (newRoles) => {
-    setProfile((prev) => ({ ...prev, roles: newRoles }));
-  };
-
-  const handleRoleSelect = (role) => {
-    setSelectedRole(role);
-    if (!roleOptions.some((option) => option.id === role)) {
-      setRoleOptions([...roleOptions, { id: role, name: role }]);
-    }
+    setProfile((prev) => ({ ...prev, preferredRoles: newRoles }));
   };
 
   const validateForm = () => {
@@ -282,14 +262,13 @@ const Profile = () => {
 
     try {
       const response = await userAPI.updateProfile({
-        name: profile.name,
+        fullName: profile.fullName,
         phone: profile.phone,
         email: profile.email,
         experience: profile.experience,
-        preferredRole: selectedRole === "Chef" ? selectedSubRole : selectedRole,
         location: profile.location,
         availability: profile.availability,
-        roles: profile.roles,
+        preferredRoles: profile.preferredRoles,
       });
 
       setIsLoading(false);
@@ -312,16 +291,14 @@ const Profile = () => {
   const handleCancelEdit = () => {
     // Reset form to original user data
     setProfile({
-      name: user?.name || "",
+      fullName: user?.fullName || "",
       phone: user?.phone || "",
       email: user?.email || "",
       experience: user?.experience || "",
-      roles: user?.roles || [],
+      preferredRoles: user?.preferredRoles || [],
       location: user?.location || "",
       availability: user?.availability || "",
     });
-    setSelectedRole(user?.preferredRole || null);
-    setSelectedSubRole(user?.subRole || null);
     setPhoneError("");
     setEmailError("");
     setIsEditMode(false);
@@ -332,8 +309,6 @@ const Profile = () => {
     return (
       <ProfileView
         profile={profile}
-        selectedRole={selectedRole}
-        selectedSubRole={selectedSubRole}
         onEdit={() => setIsEditMode(true)}
       />
     );
@@ -359,10 +334,10 @@ const Profile = () => {
             <form onSubmit={handleSubmit} className="space-y-6">
               <FormInput
                 label="Full Name"
-                name="name"
+                name="fullName"
                 type="text"
-                id="name"
-                value={profile.name}
+                id="fullName"
+                value={profile.fullName}
                 onChange={handleChange}
                 required
               />
@@ -410,27 +385,6 @@ const Profile = () => {
               />
 
               <FormSelect
-                label="Preferred Role"
-                name="role"
-                required
-                value={selectedRole}
-                setValue={setSelectedRole}
-                onMouseDown={() => setShowSelectRole(true)}
-                options={roleOptions}
-              />
-
-              {selectedRole === "Chef" && (
-                <FormSelect
-                  label="Sub Role"
-                  name="subRole"
-                  required
-                  value={selectedSubRole}
-                  setValue={setSelectedSubRole}
-                  options={chefOptionsWithPlaceholder}
-                />
-              )}
-
-              <FormSelect
                 label="Availability"
                 name="availability"
                 required
@@ -441,16 +395,16 @@ const Profile = () => {
 
               <RoleMultiSelect
                 label="Additional Skills (Optional)"
-                selectedRoles={profile.roles}
+                selectedRoles={profile.preferredRoles}
                 onChange={handleRolesChange}
                 placeholder="Select additional skills..."
               />
 
               {/* Action Buttons */}
               <div className="flex gap-4 pt-4">
-                <PrimaryButton 
-                  type="submit" 
-                  disabled={!profile.name || !profile.phone || !profile.email || !selectedRole}
+                <PrimaryButton
+                  type="submit"
+                  disabled={!profile.fullName || !profile.phone || !profile.email}
                   className="flex-1"
                 >
                   Update Profile
@@ -467,14 +421,6 @@ const Profile = () => {
           </div>
         </div>
       </div>
-
-      {showSelectRole && (
-        <SelectRole
-          onClose={() => setShowSelectRole(false)}
-          onRoleSelect={handleRoleSelect}
-          selectedRole={selectedRole}
-        />
-      )}
     </div>
   );
 };

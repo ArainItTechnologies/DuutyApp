@@ -7,7 +7,7 @@ namespace Duuty.Server.Features.User.Profile;
 
 [HttpGet("/api/user/profile")]
 [AllowAnonymous]
-public class ProfileEndpoint(IEmployeeJobRoleService employeeJobRoleService, UserManager<ArainUser> userManager) : Endpoint<ProfileRequest, ProfileResponse>
+public class ProfileEndpoint(IUserProfileService userProfileService, UserManager<ArainUser> userManager) : Endpoint<ProfileRequest, ProfileResponse>
 {
     public override async Task HandleAsync(ProfileRequest req, CancellationToken ct)
     {
@@ -17,11 +17,17 @@ public class ProfileEndpoint(IEmployeeJobRoleService employeeJobRoleService, Use
             await Send.NotFoundAsync(ct);
             return;
         }
-        var profile = employeeJobRoleService.Get(x => x.UserId == req.UserId).FirstOrDefault();
+        var profile = userProfileService.Get(x => x.UserId == req.UserId).FirstOrDefault();
 
         if (profile is null)
         {
-            await Send.NotFoundAsync(ct);
+            await Send.OkAsync(new ProfileResponse
+            {
+                UserId = user.Id,
+                FullName = user.FullName,
+                Phone = user.PhoneNumber,
+                Email = user.Email
+            }, ct);
             return;
         }
 

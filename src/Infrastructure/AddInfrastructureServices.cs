@@ -85,6 +85,7 @@ public static class InfrastructureServiceRegistration
                 .AddScoped<IEmployerSubscriptionService, EmployerSubscriptionService>()
                 .AddScoped<IEmployeeJobRoleService, EmployeeJobRoleService>()
                 .AddScoped<IJobApplicationService, JobApplicationService>()
+                .AddScoped<IUserProfileService, UserProfileService>()
                 .AddScoped<IEmployerService, EmployerService>();
 
         return services;

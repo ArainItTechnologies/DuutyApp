@@ -13,6 +13,17 @@ const userAPI = {
     return await postAsync("/api/user/apply", applicationData, token);
   },
 
+  fetchProfile: async (userId, token) => {
+    if (!userId) {
+      return {
+        isSuccess: false,
+        message: "User ID is required",
+        data: null,
+      };
+    }
+    return await getAsync(`/api/user/profile?userId=${userId}`, token);
+  },
+
   fetchJobs: async (jobLocation, jobState, preferredJob, user) => {
     return await getAsync("/api/user/jobs", user?.token, {
       params: {
@@ -20,7 +31,7 @@ const userAPI = {
         jobState,
         preferredJob,
         userId: user?.userId,
-      }
+      },
     });
   },
 };

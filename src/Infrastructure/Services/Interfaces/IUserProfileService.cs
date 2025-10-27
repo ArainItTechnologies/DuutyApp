@@ -3,4 +3,4 @@ using SharedKernel.Service;
 
 namespace Infrastructure.Services.Interfaces;
 
-public interface IEmployeeJobRoleService : IEntityService<EmployeeJobRole>;
+public interface IUserProfileService : IEntityService<UserProfile>;

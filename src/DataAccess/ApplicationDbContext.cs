@@ -20,14 +20,19 @@ public class ApplicationDbContext : IdentityDbContext<ArainUser, ArainRole, stri
     public DbSet<Employer> Employers { get; set; }
     public DbSet<EmployeeJobRole> EmployeeJobRoles { get; set; }
     public DbSet<JobApplication> JobApplications { get; set; }
+    public DbSet<UserProfile> UserProfiles { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<EmployeeJobRole>()
-            .Property(e => e.PreferredRoles)
-            .HasColumnType("nvarchar(max)"); 
+        modelBuilder.Entity<UserProfile>(entity =>
+        {
+            entity.Property(e => e.PreferredRolesJson)
+                  .HasColumnType("nvarchar(max)")
+                  .HasDefaultValue("[]")
+                  .IsRequired();
+        });
 
         modelBuilder.Entity<EmployerSubscription>(entity =>
         {

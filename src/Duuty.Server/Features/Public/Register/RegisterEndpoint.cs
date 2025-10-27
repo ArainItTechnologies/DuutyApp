@@ -141,10 +141,7 @@ public class RegisterEndpoint : Endpoint<RegistrationRequest, RegistrationRespon
             await _employeeJobRoleService.CreateAsync(new EmployeeJobRole
             {
                 UserId = user.Id,
-                PreferredRoles = new List<string>
-                {
-                    model.PreferredRole! 
-                },
+                PreferredRole = model.PreferredRole!,
                 DateCreated = _timeProvider.UtcNow,
                 LastUpdated = _timeProvider.UtcNow,
             });
