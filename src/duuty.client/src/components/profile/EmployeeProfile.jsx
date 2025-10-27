@@ -1,161 +1,444 @@
-import React, { useState } from "react";
-import { useUser } from "../hooks/Hooks";
-import { useTranslation } from "../translations/TranslationHook";
+import React, { useState, useEffect } from "react";
+import { Edit3, User, Phone, Mail, MapPin, Calendar, Clock, Award, CheckCircle } from "lucide-react";
+import { FormInput, FormSelect, PrimaryButton, RoleMultiSelect } from "../custom/FormElements";
+import { ALL_ROLE_OPTIONS } from "../../Constants";
+import { useNotification } from "../../context/NotificationContext";
+import { useAppState, useUser } from "../../hooks/Hooks";
+import userAPI from "../../api/user";
+import { LocationMultiSelect } from "../custom/LocationMultiSelect";
 
-const EmployeeProfile = () => {
-
-  const { t, reset } = useTranslation();
-  const { user } = useUser();
-  const [isEditing, setIsEditing] = useState(false);
-  const [profile, setProfile] = useState({
-    name: user.name,
-    phone: user.phone,
-    experience: user.experience,
-    specialties: [user.specialties],
-    location: user.location,
-    availability: [user.availability],
-    photo: null
-  });
-
-
-  const specialtyOptions = ['french', 'italian', 'asian', 'pastry', 'grill', 'seafood', 'vegetarian', 'baking'];
-  const availabilityOptions = ['fullTime', 'partTime', 'weekends', 'evenings'];
-
-  const handleChange = e => {
-    const { name, value } = e.target;
-    setProfile(prev => ({ ...prev, [name]: value }));
+// Profile View Component
+const EmployeeProfileView = ({ profile, onEdit }) => {
+  const getSelectedRoleObjects = () => {
+    return ALL_ROLE_OPTIONS.filter((role) => profile.preferredRoles.includes(role.id));
   };
 
-  const handleSave = () => {
-    // TODO: Add API call to save profile data
-    console.log("Saving:", profile);
-    setIsEditing(false);
+  const getExperienceLabel = (experience) => {
+    const experienceMap = {
+      "beginner": "Beginner (0-2 years)",
+      "intermediate": "Intermediate (2-5 years)",
+      "advanced": "Advanced (5+ years)"
+    };
+    return experienceMap[experience] || experience;
+  };
+
+  const getAvailabilityLabel = (availability) => {
+    const availabilityMap = {
+      "fullTime": "Full Time",
+      "partTime": "Part Time",
+      "weekends": "Weekends Only",
+      "evenings": "Evenings Only"
+    };
+    return availabilityMap[availability] || availability;
   };
 
   return (
-    <div className="container p-4 pb-20">
-
-      {/* Profile Photo */}
-      {/* <div className="bg-white rounded-xl p-6 shadow-md mb-6">
-        <h2 className="text-lg font-semibold mb-4 text-gray-800">{t('photo')}</h2>
-        <div className="flex flex-col items-center">
-          <div className="w-32 h-32 bg-gray-200 rounded-full mb-4 flex items-center justify-center overflow-hidden">
-            {profile.photo ? (
-              <img src={profile.photo} alt="Profile" className="w-full h-full object-cover" />
-            ) : (
-              <Camera className="w-12 h-12 text-gray-400" />
-            )}
-          </div>
-          <label className="bg-orange-500 text-white px-6 py-2 rounded-lg cursor-pointer hover:bg-orange-600 transition-colors">
-            {profile.photo ? t('changePhoto') : t('addPhoto')}
-            <input type="file" accept="image/*" onChange={handlePhotoUpload} className="hidden" />
-          </label>
-        </div>
-      </div> */}
-
-      {/* Personal Information */}
-      <div className="bg-white rounded-xl p-6 shadow-md mb-6">
-        <h2 className="text-lg font-semibold mb-4 text-gray-800">{t('personalInfo')}</h2>
-        <div className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">{t('name')}</label>
-            <input
-              type="text"
-              value={profile.name}
-              onChange={(e) => setProfile(prev => ({ ...prev, name: e.target.value }))}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2"
-              placeholder={t('name')}
-            />
+    <div className="min-h-screen bg-gray-50 py-12">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-2xl mx-auto">
+          {/* Header */}
+          <div className="flex justify-between items-center mb-8">
+            <div>
+              <h2 className="text-3xl font-bold tracking-tight text-gray-900">
+                My Profile
+              </h2>
+              <p className="mt-2 text-gray-600">
+                View and manage your profile information
+              </p>
+            </div>
+            <button
+              onClick={onEdit}
+              className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+            >
+              <Edit3 className="w-4 h-4" />
+              Edit Profile
+            </button>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">{t('phone')}</label>
-            <input
-              type="tel"
-              value={profile.phone}
-              onChange={(e) => setProfile(prev => ({ ...prev, phone: e.target.value }))}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2"
-              placeholder="+33 1 23 45 67 89"
-            />
-          </div>
+          {/* Profile Card */}
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 sm:p-8">
+            <div className="space-y-6">
+              {/* Basic Information */}
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                  <User className="w-5 h-5" />
+                  Basic Information
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg">
+                    <User className="w-5 h-5 text-gray-500" />
+                    <div>
+                      <p className="text-sm text-gray-500">Full Name</p>
+                      <p className="font-medium text-gray-900">{profile.fullName || "Not provided"}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg">
+                    <Phone className="w-5 h-5 text-gray-500" />
+                    <div>
+                      <p className="text-sm text-gray-500">Phone</p>
+                      <p className="font-medium text-gray-900">{profile.phone || "Not provided"}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg">
+                    <Mail className="w-5 h-5 text-gray-500" />
+                    <div>
+                      <p className="text-sm text-gray-500">Email</p>
+                      <p className="font-medium text-gray-900">{profile.email || "Not provided"}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg">
+                    <MapPin className="w-5 h-5 text-gray-500" />
+                    <div>
+                      <p className="text-sm text-gray-500">Location{profile.locations && Array.isArray(profile.locations) && profile.locations.length > 1 ? 's' : ''}</p>
+                      <p className="font-medium text-gray-900">
+                        {profile.locations && Array.isArray(profile.locations)
+                          ? profile.locations.length > 0
+                            ? profile.locations.join(", ")
+                            : "Not provided"
+                          : profile.locations || "Not provided"
+                        }
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">{t('location')}</label>
-            <input
-              type="text"
-              value={profile.location}
-              onChange={(e) => setProfile(prev => ({ ...prev, location: e.target.value }))}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2"
-              placeholder="Paris, Lyon, Marseille..."
-            />
+              {/* Professional Information */}
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                  <Award className="w-5 h-5" />
+                  Professional Information
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg">
+                    <Calendar className="w-5 h-5 text-gray-500" />
+                    <div>
+                      <p className="text-sm text-gray-500">Experience Level</p>
+                      <p className="font-medium text-gray-900">
+                        {getExperienceLabel(profile.experience) || "Not provided"}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg">
+                    <Clock className="w-5 h-5 text-gray-500" />
+                    <div>
+                      <p className="text-sm text-gray-500">Availability</p>
+                      <p className="font-medium text-gray-900">
+                        {getAvailabilityLabel(profile.availability) || "Not provided"}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Preferred Roles */}
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Preferred Roles</h3>
+                {profile.preferredRoles && profile.preferredRoles.length > 0 ? (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {getSelectedRoleObjects().map((role) => (
+                      <div
+                        key={role.id}
+                        className="bg-gray-50 rounded-lg p-3 flex items-center gap-3 border border-gray-200"
+                      >
+                        <img
+                          src={role.image}
+                          alt={role.name}
+                          className="w-12 h-12 rounded-lg object-cover flex-shrink-0"
+                        />
+                        <div className="flex-1 min-w-0">
+                          <h4 className="font-medium text-gray-800 text-sm truncate">
+                            {role.name}
+                          </h4>
+                        </div>
+                        <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="p-4 bg-indigo-50 rounded-lg border border-indigo-200">
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="w-5 h-5 text-indigo-600" />
+                      <span className="font-medium text-indigo-900">
+                        No preferred roles selected
+                      </span>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       </div>
+    </div>
+  );
+};
 
-      {/* Experience Level */}
-      <div className="bg-white rounded-xl p-6 shadow-md mb-6">
-        <h2 className="text-lg font-semibold mb-4 text-gray-800">{t('experience')}</h2>
-        <div className="space-y-2">
-          {['beginner', 'intermediate', 'advanced'].map((level) => (
-            <label key={level} className="flex items-center p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
-              <input
-                type="radio"
+// Profile Component
+const EmployeeProfile = () => {
+  const { user } = useUser();
+  const { showSuccess, showError } = useNotification();
+  const { setIsLoading } = useAppState();
+
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [roleOptions, setRoleOptions] = useState([{ id: "", name: "Select Role" }]);
+
+  // Error states matching EmployeeRegister pattern
+  const [phoneError, setPhoneError] = useState("");
+  const [emailError, setEmailError] = useState("");
+
+  const [profile, setProfile] = useState({
+    fullName: user?.fullName || "",
+    phone: user?.phone || "",
+    email: user?.email || "",
+    experience: user?.experience || "",
+    preferredRoles: user?.preferredRoles || [],
+    locations: user?.locations || [],
+    availability: user?.availability || "",
+  });
+
+  // Initialize role options with user's current role
+  useEffect(() => {
+    const getProfile = async () => {
+      setIsLoading(true);
+      const data = await userAPI.fetchProfile(user?.userId, user?.token);
+      setProfile(data);
+      setIsLoading(false);
+    };
+
+    getProfile();
+    if (user?.preferredRole && !roleOptions.some(option => option.id === user.preferredRole)) {
+      setRoleOptions(prev => [...prev, { id: user.preferredRole, name: user.preferredRole }]);
+    }
+  }, [user, roleOptions, setIsLoading]);
+
+  const experienceOptions = [
+    { id: "", name: "Select Experience Level" },
+    { id: "beginner", name: "Beginner (0-2 years)" },
+    { id: "intermediate", name: "Intermediate (2-5 years)" },
+    { id: "advanced", name: "Advanced (5+ years)" },
+  ];
+
+  const availabilityOptions = [
+    { id: "", name: "Select Availability" },
+    { id: "fullTime", name: "Full Time" },
+    { id: "partTime", name: "Part Time" },
+    { id: "weekends", name: "Weekends Only" },
+    { id: "evenings", name: "Evenings Only" },
+  ];
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setProfile((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+
+    // Clear errors when user types - matching EmployeeRegister pattern
+    if (name === "phone") setPhoneError("");
+    if (name === "email") setEmailError("");
+  };
+
+  const handleRolesChange = (newRoles) => {
+    setProfile((prev) => ({ ...prev, preferredRoles: newRoles }));
+  };
+
+  const validateForm = () => {
+    let isValid = true;
+
+    // Phone validation - matching EmployeeRegister pattern
+    if (!profile.phone) {
+      setPhoneError("Phone number is required");
+      isValid = false;
+    } else if (profile.phone.length < 10) {
+      setPhoneError("Phone number must be at least 10 digits");
+      isValid = false;
+    }
+
+    // Email validation - matching EmployeeRegister pattern
+    if (!profile.email) {
+      setEmailError("Email is required");
+      isValid = false;
+    } else if (!/\S+@\S+\.\S+/.test(profile.email)) {
+      setEmailError("Email format is invalid");
+      isValid = false;
+    }
+
+    return isValid;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!validateForm()) {
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const response = await userAPI.updateProfile({
+        userId: user?.userId,
+        fullName: profile.fullName,
+        phoneNumber: profile.phone,
+        email: profile.email,
+        experience: profile.experience,
+        locations: profile.locations,
+        availability: profile.availability,
+        preferredRoles: profile.preferredRoles,
+      }, user?.token);
+
+      setIsLoading(false);
+      if (response.isSuccess) {
+        showSuccess("Profile updated successfully!");
+        setIsEditMode(false);
+      } else {
+        showError(response.message);
+      }
+    } catch (err) {
+      setIsLoading(false);
+      const errorMessage = err?.response?.message ||
+        err?.message ||
+        err?.title ||
+        "Something went wrong";
+      showError(errorMessage);
+    }
+  };
+  
+
+  const handleLocationsChange = (newLocations) => {
+    setProfile((prev) => ({ ...prev, locations: newLocations }));
+  };
+
+  const handleCancelEdit = () => {
+    // Reset form to original user data
+    setProfile({
+      fullName: user?.fullName || "",
+      phone: user?.phone || "",
+      email: user?.email || "",
+      experience: user?.experience || "",
+      preferredRoles: user?.preferredRoles || [],
+      locations: user?.locations || [],
+      availability: user?.availability || "",
+    });
+    setPhoneError("");
+    setEmailError("");
+    setIsEditMode(false);
+  };
+
+  // If not in edit mode, show profile view
+  if (!isEditMode) {
+    return (
+      <EmployeeProfileView
+        profile={profile}
+        onEdit={() => setIsEditMode(true)}
+      />
+    );
+  }
+
+  // Edit mode - show form
+  return (
+    <div className="min-h-screen bg-gray-50 py-12">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-2xl mx-auto">
+          {/* Header */}
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-bold tracking-tight text-gray-900">
+              Update Your Profile
+            </h2>
+            <p className="mt-2 text-gray-600">
+              Keep your information up to date
+            </p>
+          </div>
+
+          {/* Form Container */}
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 sm:p-8">
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <FormInput
+                label="Full Name"
+                name="fullName"
+                type="text"
+                id="fullName"
+                value={profile.fullName}
+                onChange={handleChange}
+                required
+              />
+
+              <FormInput
+                label="Mobile Number"
+                name="phone"
+                type="tel"
+                id="phone"
+                value={profile.phone}
+                onChange={handleChange}
+                error={phoneError}
+                required
+              />
+
+              <FormInput
+                label="Email Address"
+                name="email"
+                type="email"
+                id="email"
+                value={profile.email}
+                onChange={handleChange}
+                error={emailError}
+                required
+              />
+
+              <LocationMultiSelect
+                label="Preferred Locations"
+                selectedLocations={profile.locations}
+                onChange={handleLocationsChange}
+                placeholder="Select cities you can work in..."
+              />
+
+              <FormSelect
+                label="Experience Level"
                 name="experience"
-                value={level}
-                checked={profile.experience === level}
-                onChange={(e) => setProfile(prev => ({ ...prev, experience: e.target.value }))}
-                className="mr-3"
+                required
+                value={profile.experience}
+                setValue={(value) => handleChange({ target: { name: 'experience', value } })}
+                options={experienceOptions}
               />
-              <span className="text-gray-700">{t(level)}</span>
-            </label>
-          ))}
-        </div>
-      </div>
 
-      {/* Specialties */}
-      <div className="bg-white rounded-xl p-6 shadow-md mb-6">
-        <h2 className="text-lg font-semibold mb-4 text-gray-800">{t('specialties')}</h2>
-        <div className="grid grid-cols-2 gap-2">
-          {specialtyOptions.map((specialty) => (
-            <label key={specialty} className="flex items-center p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
-              <input
-                type="checkbox"
-                checked={profile.specialties.includes(specialty)}
-                onChange={() => handleSpecialtyToggle(specialty)}
-                className="mr-3"
-              />
-              <span className="text-sm text-gray-700">{t(specialty)}</span>
-            </label>
-          ))}
-        </div>
-      </div>
-
-      {/* Availability */}
-      <div className="bg-white rounded-xl p-6 shadow-md mb-6">
-        <h2 className="text-lg font-semibold mb-4 text-gray-800">{t('availability')}</h2>
-        <div className="space-y-2">
-          {availabilityOptions.map((availability) => (
-            <label key={availability} className="flex items-center p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
-              <input
-                type="radio"
+              <FormSelect
+                label="Availability"
                 name="availability"
-                value={availability}
-                checked={profile.availability === availability}
-                onChange={(e) => setProfile(prev => ({ ...prev, availability: e.target.value }))}
-                className="mr-3"
+                required
+                value={profile.availability}
+                setValue={(value) => handleChange({ target: { name: 'availability', value } })}
+                options={availabilityOptions}
               />
-              <span className="text-gray-700">{t(availability)}</span>
-            </label>
-          ))}
+
+              <RoleMultiSelect
+                label="Additional Skills (Optional)"
+                selectedRoles={profile.preferredRoles}
+                onChange={handleRolesChange}
+                placeholder="Select additional skills..."
+              />
+
+              {/* Action Buttons */}
+              <div className="flex gap-4 pt-4">
+                <PrimaryButton
+                  type="submit"
+                  disabled={!profile.fullName || !profile.phone || !profile.email}
+                  className="flex-1"
+                >
+                  Update Profile
+                </PrimaryButton>
+                <button
+                  type="button"
+                  onClick={handleCancelEdit}
+                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
-
-      <button
-        onClick={() => alert(t('profileSaved'))}
-        className="w-full bg-orange-500 text-white py-3 px-6 rounded-xl font-semibold hover:bg-orange-600 transition-colors"
-      >
-        {t('save')} {t('profile')}
-      </button>
     </div>
   );
 };

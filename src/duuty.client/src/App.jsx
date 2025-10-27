@@ -13,7 +13,6 @@ import Footer from "./components/Footer";
 import EmailConfirmation from "./components/EmailConfirmation";
 import ForgotPassword from "./components/user/ForgotPassword";
 import ResetPassword from "./components/user/ResetPassword";
-import Profile from "./components/Profile";
 import Pricing from "./components/Pricing";
 import ChangePassword from "./components/user/ChangePassword";
 import JobListing from "./components/JobListings";
@@ -28,6 +27,7 @@ import ManageJobs from "./components/employer/ManageJobs";
 
 import EmployerDashboard from "./components/employer/EmployerDashboard";
 import AdminDashboard from "./components/admin/AdminDashboard";
+import EmployeeProfile from "./components/profile/EmployeeProfile";
 
 function App() {
   return (
@@ -47,7 +47,7 @@ function App() {
         <Route path={ROUTES.BECOME_EMPLOYER} element={<BecomeEmployer />} />
         <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgotPassword />} />
         <Route path={ROUTES.RESET_PASSWORD} element={<ResetPassword />} />
-        <Route path={ROUTES.PROFILE} element={<Profile />} />
+        <Route path={ROUTES.PROFILE} element={<EmployeeProfile />} />
         <Route path={ROUTES.PROFILE_EDIT} element={<Edit />} />
         <Route path={ROUTES.EMAIL_CONFIRM} element={<EmailConfirmation />} />
         <Route path={ROUTES.CHANGE_PASSWORD} element={<ChangePassword />} />

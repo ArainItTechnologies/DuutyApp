@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Identity;
 namespace Duuty.Server.Features.User.Profile;
 
 [HttpGet("/api/user/profile")]
-[AllowAnonymous]
-public class ProfileEndpoint(IUserProfileService userProfileService, UserManager<ArainUser> userManager) : Endpoint<ProfileRequest, ProfileResponse>
+[Authorize]
+public class GetEndpoint(IUserProfileService userProfileService, UserManager<ArainUser> userManager) : Endpoint<ProfileRequest, ProfileResponse>
 {
     public override async Task HandleAsync(ProfileRequest req, CancellationToken ct)
     {
@@ -38,7 +38,7 @@ public class ProfileEndpoint(IUserProfileService userProfileService, UserManager
             Phone = user.PhoneNumber,
             Email = user.Email,
             Experience = profile.Experience,
-            Location = profile.Location,
+            Locations = profile.Locations,
             Availability = profile.Availability,
             PreferredRoles = profile.PreferredRoles,
             DateCreated = profile.DateCreated
@@ -57,9 +57,9 @@ public class ProfileRequest
 public class ProfileResponse
 {
     public DateTimeOffset? DateCreated { get; set; }
-    public List<string> PreferredRoles { get; set; } = new();
+    public List<string> PreferredRoles { get; set; } = [];
     public string? Availability { get; set; }
-    public string? Location { get; set; }
+    public List<string> Locations { get; set; } = [];
     public string? Experience { get; set; }
     public required string UserId { get; set; }
     public string? FullName { get; set; }

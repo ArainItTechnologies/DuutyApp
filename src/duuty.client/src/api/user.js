@@ -24,6 +24,10 @@ const userAPI = {
     return await getAsync(`/api/user/profile?userId=${userId}`, token);
   },
 
+  updateProfile: async (profileData, token) => {
+    return await postAsync("/api/user/profile", profileData, token);
+  },
+
   fetchJobs: async (jobLocation, jobState, preferredJob, user) => {
     return await getAsync("/api/user/jobs", user?.token, {
       params: {

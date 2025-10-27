@@ -32,6 +32,10 @@ public class ApplicationDbContext : IdentityDbContext<ArainUser, ArainRole, stri
                   .HasColumnType("nvarchar(max)")
                   .HasDefaultValue("[]")
                   .IsRequired();
+            entity.Property(e => e.LocattionsJson)
+                    .HasColumnType("nvarchar(max)")
+                    .HasDefaultValue("[]")
+                    .IsRequired();
         });
 
         modelBuilder.Entity<EmployerSubscription>(entity =>
