@@ -116,19 +116,13 @@ export const LocationMultiSelect = ({ selectedLocations = [], onChange, label, p
                       
                       <div
                         onClick={() => toggleLocation(city.name)}
-                        className={`flex items-center justify-between p-3 hover:bg-gray-50 cursor-pointer transition-colors border-b border-gray-100 last:border-b-0 ${
-                          cityIsSelected ? 'bg-indigo-25 hover:bg-indigo-50' : ''
-                        }`}
+                        className="flex items-center justify-between p-3 hover:bg-gray-50 cursor-pointer transition-colors border-b border-gray-100 last:border-b-0"
                       >
                         <div className="flex-1">
-                          <span className={`font-medium text-sm ${
-                            cityIsSelected ? 'text-indigo-800' : 'text-gray-800'
-                          }`}>
+                          <span className="text-gray-800 font-medium text-sm">
                             {city.name}
                           </span>
-                          <span className={`text-xs ml-2 ${
-                            cityIsSelected ? 'text-indigo-600' : 'text-gray-500'
-                          }`}>
+                          <span className="text-gray-500 text-xs ml-2">
                             {city.state}
                           </span>
                         </div>
@@ -158,29 +152,24 @@ export const LocationMultiSelect = ({ selectedLocations = [], onChange, label, p
         </p>
       )}
 
-      {/* Selected Locations Display */}
+      {/* Selected Locations Display - Same style as preferred roles */}
       {selectedLocations.length > 0 && (
-        <div className="mt-4">
+        <div className="mt-3">
           <div className="flex flex-wrap gap-2">
             {getSelectedLocationObjects().map((city) => (
-              <div
+              <span
                 key={city.name}
-                className="bg-indigo-50 border border-indigo-200 rounded-lg px-3 py-2 flex items-center gap-2"
+                 className="bg-gray-50 rounded-lg p-3 flex items-center gap-3 border border-gray-200"
               >
-                <span className="text-indigo-800 text-sm font-medium">
-                  {city.name}
-                </span>
-                <span className="text-indigo-600 text-xs">
-                  {city.state}
-                </span>
+                {city.name}, {city.state}
                 <button
                   type="button"
                   onClick={() => removeLocation(city.name)}
-                  className="p-0.5 hover:bg-indigo-200 rounded-full transition-colors flex-shrink-0"
+                   className="p-1 hover:bg-red-50 rounded-full transition-colors flex-shrink-0"
                 >
-                  <X className="w-3 h-3 text-indigo-600" />
+                 <X className="w-4 h-4 text-red-500" />
                 </button>
-              </div>
+              </span>
             ))}
           </div>
         </div>

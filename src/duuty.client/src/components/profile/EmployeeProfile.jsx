@@ -289,7 +289,7 @@ const EmployeeProfile = () => {
       }, user?.token);
 
       setIsLoading(false);
-      if (response.isSuccess) {
+      if (response.success) {
         showSuccess("Profile updated successfully!");
         setIsEditMode(false);
       } else {
