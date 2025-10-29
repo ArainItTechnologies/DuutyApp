@@ -261,7 +261,7 @@ const EmployeeRegister = () => {
               var response = await publicAPI.verifyOtp({ otp: otpCode, phoneNumber: formData.mobile, userEmail: formData.email });
 
               if (response?.isVerified && response?.userId) {
-                const profileUrl = ROUTES.PROFILE.replace(':userId', response.userId);
+                const profileUrl = ROUTES.USER_PROFILE.replace(':userId', response.userId);
                 navigate(profileUrl, { state: { isEditMode: true } });
               } else {
                 showError("OTP verification failed. Please try again.");

@@ -46,7 +46,7 @@ export default function Navbar() {
   };
 
   const getProfileUrl = () => {
-    return user?.userId ? ROUTES.PROFILE.replace(':userId', user.userId) : ROUTES.LOGIN;
+    return user?.userId ? ROUTES.USER_PROFILE.replace(':userId', user.userId) : ROUTES.LOGIN;
   };
 
   return (

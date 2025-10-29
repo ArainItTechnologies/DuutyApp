@@ -87,7 +87,7 @@ const EmployerRegister = () => {
 
       console.log("Registration Response:", response);
 
-      navigate(ROUTES.PROFILE);
+      navigate(ROUTES.USER_PROFILE);
       setError("");
     } catch (err) {
       setIsLoading(false);

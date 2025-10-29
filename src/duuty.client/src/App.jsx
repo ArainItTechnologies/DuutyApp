@@ -28,6 +28,7 @@ import ManageJobs from "./components/employer/ManageJobs";
 import EmployerDashboard from "./components/employer/EmployerDashboard";
 import AdminDashboard from "./components/admin/AdminDashboard";
 import EmployeeProfile from "./components/profile/EmployeeProfile";
+import EmployerProfile from "./components/profile/Employerprofile";
 
 function App() {
   return (
@@ -42,13 +43,13 @@ function App() {
         <Route path={ROUTES.FIND_JOB} element={<FindAJob />} />
         <Route path={ROUTES.HIRE_NOW} element={<HireNow />} />
         <Route path={ROUTES.JOB_LISTING} element={<JobListing />} />
-        <Route path={ROUTES.JOB_RESULTS} element={<JobSearch />} />
+        <Route path={ROUTES.JOB_RESULTS} element={<JobSearch />} /> 
         <Route path={ROUTES.REGISTER} element={<Register />} />
         <Route path={ROUTES.BECOME_EMPLOYER} element={<BecomeEmployer />} />
         <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgotPassword />} />
         <Route path={ROUTES.RESET_PASSWORD} element={<ResetPassword />} />
-        <Route path={ROUTES.PROFILE} element={<EmployeeProfile />} />
-        <Route path={ROUTES.PROFILE_EDIT} element={<Edit />} />
+        <Route path={ROUTES.USER_PROFILE} element={<EmployeeProfile />} />
+        <Route path={ROUTES.EMPLOYER_PROFILE} element={<EmployerProfile />} />
         <Route path={ROUTES.EMAIL_CONFIRM} element={<EmailConfirmation />} />
         <Route path={ROUTES.CHANGE_PASSWORD} element={<ChangePassword />} />
         <Route path={ROUTES.PRICING} element={<Pricing />} />
