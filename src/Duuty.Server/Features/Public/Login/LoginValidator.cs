@@ -13,10 +13,9 @@ public class LoginValidator : Validator<LoginRequest>
         RuleFor(x => x.PhoneNumber).NotEmpty()
                                    .When(x => string.IsNullOrEmpty(x.Email))
                                    .WithMessage("Either Email or PhoneNumber is required.");
-
         RuleFor(x => x.PhoneNumber)
-            .Matches(@"^[6-9]\d{9}$")
-            .When(x => !string.IsNullOrEmpty(x.PhoneNumber))
-            .WithMessage("PhoneNumber must be a valid mobile number.");
+                    .Matches(@"^(?:\+91[\-\s]?|91[\-\s]?|0)?[6-9]\d{9}$")
+                    .When(x => !string.IsNullOrEmpty(x.PhoneNumber))
+                    .WithMessage("PhoneNumber must be a valid Indian mobile number.");
     }
 }

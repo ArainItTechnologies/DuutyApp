@@ -16,7 +16,7 @@ public class LoginEndpoint(UserManager<ArainUser> userManager, JwtHandler jwtHan
         // Determine whether the caller provided a phone number or an email.
         var isPhone = !string.IsNullOrWhiteSpace(request.PhoneNumber);
         ArainUser? user = isPhone
-            ? await userManager.FindByNameAsync(request.PhoneNumber!)
+            ? userManager.Users.FirstOrDefault(x => x.PhoneNumber == request.PhoneNumber!)
             : await userManager.FindByEmailAsync(request.Email!);
 
         if (user is null || !await userManager.CheckPasswordAsync(user, request.Password))

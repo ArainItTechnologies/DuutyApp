@@ -3,6 +3,4 @@ using SharedKernel.Service;
 
 namespace Infrastructure.Services.Interfaces;
 
-public interface IPaymentOrderService : IEntityService<PaymentOrder>
-{
-}
+public interface IPaymentOrderService : IEntityService<PaymentOrder>;

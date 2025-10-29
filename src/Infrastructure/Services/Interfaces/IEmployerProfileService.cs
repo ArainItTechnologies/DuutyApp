@@ -3,4 +3,4 @@ using SharedKernel.Service;
 
 namespace Infrastructure.Services.Interfaces;
 
-public interface IJobApplicationService : IEntityService<JobApplication>;
+public interface IEmployerProfileService : IEntityService<EmployerProfile>;

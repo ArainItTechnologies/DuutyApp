@@ -15,20 +15,20 @@ namespace Web.Server.Features.Public.Register;
 public class RegisterEndpoint : Endpoint<RegistrationRequest, RegistrationResponse>
 {
     private readonly UserManager<ArainUser> _userManager;
-    private readonly IEmployeeJobRoleService _employeeJobRoleService;
+    private readonly IUserProfileService _userProfileService;
     private readonly IEmailSender _emailSender;
     private readonly IMessageService _messageService;
     private readonly ITimeProvider _timeProvider;
 
     public RegisterEndpoint(
         UserManager<ArainUser> userManager,
-        IEmployeeJobRoleService employeeJobRoleService,
+        IUserProfileService userProfileService,
         IEmailSender emailSender,
         IMessageService messageService,
         ITimeProvider timeProvider)
     {
         _userManager = userManager;
-        _employeeJobRoleService = employeeJobRoleService;
+        _userProfileService = userProfileService;
         _emailSender = emailSender;
         _messageService = messageService;
         _timeProvider = timeProvider;
@@ -76,7 +76,7 @@ public class RegisterEndpoint : Endpoint<RegistrationRequest, RegistrationRespon
         // Check phone uniqueness explicitly (in case username selection / lookup differs elsewhere)
         if (!string.IsNullOrWhiteSpace(model.PhoneNumber))
         {
-            var phoneExists = await _userManager.Users.AnyAsync(u => u.PhoneNumber == model.PhoneNumber);
+            var phoneExists = await _userManager.Users.AnyAsync(u => u.PhoneNumber == model.PhoneNumber, ct);
             if (phoneExists)
             {
                 AddError("phone", "Phone number is already in use.");
@@ -138,10 +138,10 @@ public class RegisterEndpoint : Endpoint<RegistrationRequest, RegistrationRespon
         await _userManager.AddToRoleAsync(user, "User");
         if (!model.IsEmployer)
         {
-            await _employeeJobRoleService.CreateAsync(new EmployeeJobRole
+            await _userProfileService.CreateAsync(new UserProfile
             {
                 UserId = user.Id,
-                PreferredRole = model.PreferredRole!,
+                PreferredRoles = [model.PreferredRole!],
                 DateCreated = _timeProvider.UtcNow,
                 LastUpdated = _timeProvider.UtcNow,
             });

@@ -3,28 +3,18 @@ using Domain.Entities;
 using Infrastructure.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using SharedKernel.Services;
 
-namespace Duuty.Server.Features.User.Profile;
+namespace Duuty.Server.Features.Employer.Profile;
 
-[HttpPost("/api/user/profile")]
+[HttpPost("/api/employer/profile")]
 [AllowAnonymous]
 public class UpdateEndpoint(IUserProfileService userProfileService,
                             UserManager<ArainUser> userManager,
-                            ITimeProvider timeProvider) : Endpoint<UpdateProfileRequest, UpdateProfileResponse>
+                            ITimeProvider timeProvider): Endpoint<UpdateProfileRequest, UpdateProfileResponse>
 {
     public override async Task HandleAsync(UpdateProfileRequest req, CancellationToken ct)
     {
-
-        var phoneExists = await userManager.Users.AnyAsync(u => u.PhoneNumber == req.PhoneNumber, ct);
-        if (phoneExists)
-        {
-            AddError("phone", "Phone number is already in use.");
-            await Send.ErrorsAsync(cancellation: ct);
-            return;
-        }
-
         var user = await userManager.FindByIdAsync(req.UserId);
 
         if (user is null)
@@ -35,7 +25,6 @@ public class UpdateEndpoint(IUserProfileService userProfileService,
         user.FullName = req.FullName;
         user.PhoneNumber = req.PhoneNumber;
         user.Email = req.Email;
-        user.PhoneNumberConfirmed = true;
         await userManager.UpdateAsync(user);
 
         var now = timeProvider.UtcNow;

@@ -3,6 +3,4 @@ using SharedKernel.Service;
 
 namespace Infrastructure.Services.Interfaces;
 
-public interface IAddressService : IEntityService<Address>
-{
-}
+public interface IAddressService : IEntityService<Address>;

@@ -7,9 +7,9 @@ namespace Duuty.Server.Features.User.Profile;
 
 [HttpGet("/api/user/profile")]
 [AllowAnonymous]
-public class GetEndpoint(IUserProfileService userProfileService, UserManager<ArainUser> userManager) : Endpoint<ProfileRequest, ProfileResponse>
+public class GetEndpoint(IUserProfileService userProfileService, UserManager<ArainUser> userManager) : Endpoint<UserProfileRequest, UserProfileResponse>
 {
-    public override async Task HandleAsync(ProfileRequest req, CancellationToken ct)
+    public override async Task HandleAsync(UserProfileRequest req, CancellationToken ct)
     {
         var user = await userManager.FindByIdAsync(req.UserId);
         if (user is null)
@@ -21,7 +21,7 @@ public class GetEndpoint(IUserProfileService userProfileService, UserManager<Ara
 
         if (profile is null)
         {
-            await Send.OkAsync(new ProfileResponse
+            await Send.OkAsync(new UserProfileResponse
             {
                 UserId = user.Id,
                 FullName = user.FullName,
@@ -31,7 +31,7 @@ public class GetEndpoint(IUserProfileService userProfileService, UserManager<Ara
             return;
         }
 
-        var response = new ProfileResponse
+        var response = new UserProfileResponse
         {
             UserId = user.Id,
             FullName = user.FullName,
@@ -49,12 +49,12 @@ public class GetEndpoint(IUserProfileService userProfileService, UserManager<Ara
     }
 }
 
-public class ProfileRequest
+public class UserProfileRequest
 {
     public required string UserId { get; set; }
 }
 
-public class ProfileResponse
+public class UserProfileResponse
 {
     public DateTimeOffset? DateCreated { get; set; }
     public List<string> PreferredRoles { get; set; } = [];

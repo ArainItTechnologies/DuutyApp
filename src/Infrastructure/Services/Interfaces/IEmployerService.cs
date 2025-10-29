@@ -3,6 +3,4 @@ using SharedKernel.Service;
 
 namespace Infrastructure.Services.Interfaces;
 
-public interface IEmployerService : IEntityService<Employer>
-{
-}
+public interface IEmployerService : IEntityService<Employer>;
