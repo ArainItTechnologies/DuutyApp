@@ -1,9 +1,13 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import AddRestaurantModal from "../AddRestaurantModal";
-import { registerUser, becomeEmployer } from "../../services/auth";
+import { becomeEmployer } from "../../services/auth";
 import { FormInput, FormPasswordInput, PrimaryButton } from "../custom/FormElements";
-import { validateMobileNumber, validateEmail } from "../../utils/ValidationUtils";
+import { validateMobileNumber, validateEmail, parseApiError } from "../../utils/ValidationUtils";
+import publicAPI from "../../api/public";
+import { ROUTES } from "../../Constants";
+import { useAppState } from "../../hooks/Hooks";
+import { useNotification } from "../../context/NotificationContext";
 
 const EmployerRegister = () => {
 
@@ -15,6 +19,10 @@ const EmployerRegister = () => {
   const [success, setSuccess] = useState("");
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const navigate = useNavigate();
+  const { setIsLoading } = useAppState();
+  const { showError } = useNotification();
 
   const [formData, setFormData] = useState({
     name: "",
@@ -65,9 +73,10 @@ const EmployerRegister = () => {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
 
     try {
-      await registerUser({
+      var response = await publicAPI.registerUser({
         fullName: formData.name,
         phoneNumber: formData.phone,
         email: formData.email,
@@ -76,13 +85,15 @@ const EmployerRegister = () => {
         isEmployer: true,
       });
 
-      setSuccess(
-        "Registration successful! Please check your email for confirmation."
-      );
+      console.log("Registration Response:", response);
+
+      navigate(ROUTES.PROFILE);
       setError("");
-      setIsModalOpen(true);
     } catch (err) {
-      setError(err.message || "Something went wrong");
+      setIsLoading(false);
+      const errorMessage = parseApiError(err);
+      showError(errorMessage);
+      return;
     }
   };
 
@@ -92,7 +103,10 @@ const EmployerRegister = () => {
       setIsModalOpen(false);
       setSuccess("Restaurant added successfully!");
     } catch (err) {
-      setError(err.message || "Something went wrong");
+      setIsLoading(false);
+      const errorMessage = parseApiError(err);
+      showError(errorMessage);
+      return;
     }
   };
 

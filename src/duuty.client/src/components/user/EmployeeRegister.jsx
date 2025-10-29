@@ -4,7 +4,7 @@ import { FormInput, FormPasswordInput, FormSelect, PrimaryButton } from "../cust
 import SelectRole from "../user/SelectRole";
 import { CHEF_OPTIONS, ROUTES } from "../../Constants";
 import { useAppState } from "../../hooks/Hooks";
-import { validateMobileNumber, validateEmail } from "../../utils/ValidationUtils";
+import { validateMobileNumber, validateEmail, parseApiError } from "../../utils/ValidationUtils";
 import publicAPI from "../../api/public";
 import VerifyOtp from "./VerifyOtp";
 import { useNotification } from "../../context/NotificationContext";
@@ -12,7 +12,7 @@ import { useNotification } from "../../context/NotificationContext";
 const EmployeeRegister = () => {
   const { setIsLoading } = useAppState();
 
-  const { showSuccess, showError } = useNotification();
+  const { showError } = useNotification();
 
   const [showSelectRole, setShowSelectRole] = useState(false);
   const [selectedRole, setSelectedRole] = useState(null);
@@ -97,21 +97,15 @@ const EmployeeRegister = () => {
 
       setIsLoading(false);
       if (response.isSuccess) {
-        showSuccess(
-          "Registration successful! Please check your email for confirmation."
-        );
         setIsVerifyOpen(true);
       } else {
         showError(response.message);
       }
     } catch (err) {
       setIsLoading(false);
-      // Handle different error response formats
-      const errorMessage = err?.response?.message || 
-                          err?.message || 
-                          err?.title || 
-                          "Something went wrong";
+      const errorMessage = parseApiError(err);
       showError(errorMessage);
+      return;
     }
   };
 
@@ -266,24 +260,20 @@ const EmployeeRegister = () => {
             try {
               var response = await publicAPI.verifyOtp({ otp: otpCode, phoneNumber: formData.mobile, userEmail: formData.email });
 
-              var isVerified = response?.isVerified;
-              if (isVerified) {
-                showSuccess("OTP verified successfully!");
+              if (response?.isVerified && response?.userId) {
+                const profileUrl = ROUTES.PROFILE.replace(':userId', response.userId);
+                navigate(profileUrl, { state: { isEditMode: true } });
               } else {
                 showError("OTP verification failed. Please try again.");
                 return;
               }
             } catch (err) {
               // Handle different error response formats
-              const errorMessage = err?.response?.data?.message || 
-                                  err?.message || 
-                                  err?.title || 
-                                  "OTP verification failed";
+              setIsLoading(false);
+              const errorMessage = parseApiError(err);
               showError(errorMessage);
               return;
             }
-
-            navigate(ROUTES.PROFILE, { replace: true });
           }}
         />
       )}

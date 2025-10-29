@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { ROUTES, ROLE_OPTIONS } from "../../Constants";
+import { ROUTES, ALL_ROLE_OPTIONS } from "../../Constants";
 import { useState, useRef, useEffect } from "react";
 import { X, ChevronDown, Check } from "lucide-react";
 
@@ -282,7 +282,7 @@ export const RoleMultiSelect = ({ selectedRoles, onChange, label, placeholder })
   const isSelected = (roleId) => selectedRoles.includes(roleId);
 
   const getSelectedRoleObjects = () => {
-    return ROLE_OPTIONS.filter((role) => selectedRoles.includes(role.id));
+    return ALL_ROLE_OPTIONS.filter((role) => selectedRoles.includes(role.id));
   };
 
   return (
@@ -311,7 +311,7 @@ export const RoleMultiSelect = ({ selectedRoles, onChange, label, placeholder })
 
         {isOpen && (
           <div className="absolute z-10 w-full mt-2 bg-white border border-gray-200 rounded-lg shadow-xl max-h-80 overflow-y-auto">
-            {ROLE_OPTIONS.map((role) => (
+            {ALL_ROLE_OPTIONS.map((role) => (
               <div
                 key={role.id}
                 onClick={() => toggleRole(role.id)}

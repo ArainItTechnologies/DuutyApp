@@ -45,6 +45,10 @@ export default function Navbar() {
     navigate(ROUTES.LOGIN); // or use navigate if inside react-router
   };
 
+  const getProfileUrl = () => {
+    return user?.userId ? ROUTES.PROFILE.replace(':userId', user.userId) : ROUTES.LOGIN;
+  };
+
   return (
     <div className="bg-[#F4F3FF] sticky top-0 z-5">
       <MobileSideNav open={open} onClose={setOpen} user={user} handleLogout={handleLogout} />
@@ -167,7 +171,7 @@ export default function Navbar() {
                     {dropdownOpen && (
                       <div className="absolute right-0 mt-2 w-56 bg-white rounded shadow-lg z-50">
                         <Link
-                          to={ROUTES.PROFILE}
+                          to={getProfileUrl()}
                           className="flex items-center gap-2 px-4 py-2 text-[#3B31FF] hover:bg-gray-100"
                         >
                           <IdentificationIcon className="h-5 w-5" />

@@ -13,6 +13,7 @@ import { ROUTES } from "../../Constants";
 import {
   validateMobileNumber,
   validateEmail,
+  parseApiError,
 } from "../../utils/ValidationUtils";
 import VerifyOtp from "./VerifyOtp";
 import { useNotification } from "../../context/NotificationContext";
@@ -66,7 +67,10 @@ const Login = () => {
     try {
       await publicAPI.resendOtp(email, phoneNumber);
     } catch (error) {
-      showError(error.message);
+      setIsLoading(false);
+      const errorMessage = parseApiError(error);
+      showError(errorMessage);
+      return;
     }
   };
 
@@ -95,7 +99,9 @@ const Login = () => {
       }
     } catch (error) {
       setIsLoading(false);
-      showError(error.errorMessage);
+      const errorMessage = parseApiError(error);
+      showError(errorMessage);
+      return;
     }
   };
 
@@ -197,8 +203,10 @@ const Login = () => {
                 userEmail: email,
               });
               showSuccess("OTP verified successfully!, Login now.");
-            } catch (err) {
-              showError(err.message || "OTP verification failed");
+            } catch (error) {
+              setIsLoading(false);
+              const errorMessage = parseApiError(error);
+              showError(errorMessage);
               return;
             }
 

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Identity;
 namespace Duuty.Server.Features.User.Profile;
 
 [HttpGet("/api/user/profile")]
-[Authorize]
+[AllowAnonymous]
 public class GetEndpoint(IUserProfileService userProfileService, UserManager<ArainUser> userManager) : Endpoint<ProfileRequest, ProfileResponse>
 {
     public override async Task HandleAsync(ProfileRequest req, CancellationToken ct)

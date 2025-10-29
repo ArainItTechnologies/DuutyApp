@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Edit3, User, Phone, Mail, MapPin, Calendar, Clock, Award, CheckCircle } from "lucide-react";
 import { FormInput, FormSelect, PrimaryButton, RoleMultiSelect } from "../custom/FormElements";
-import { ALL_ROLE_OPTIONS } from "../../Constants";
+import { ALL_ROLE_OPTIONS, ROUTES } from "../../Constants";
 import { useNotification } from "../../context/NotificationContext";
 import { useAppState, useUser } from "../../hooks/Hooks";
 import userAPI from "../../api/user";
 import { LocationMultiSelect } from "../custom/LocationMultiSelect";
+import { useNavigate, useParams } from "react-router-dom";
+import { parseApiError } from "../../utils/ValidationUtils";
 
 // Profile View Component
 const EmployeeProfileView = ({ profile, onEdit }) => {
@@ -177,10 +179,17 @@ const EmployeeProfileView = ({ profile, onEdit }) => {
 // Profile Component
 const EmployeeProfile = () => {
   const { user } = useUser();
+  const { userId } = useParams();
   const { showSuccess, showError } = useNotification();
   const { setIsLoading } = useAppState();
+  const navigate = useNavigate();
 
-  const [isEditMode, setIsEditMode] = useState(false);
+  const profileUserId = useMemo(() => {
+    return userId || user?.userId;
+  }, [userId, user?.userId]);
+
+
+  const [isEditMode, setIsEditMode] = useState(location.state?.isEditMode || false);
   const [roleOptions, setRoleOptions] = useState([{ id: "", name: "Select Role" }]);
 
   // Error states matching EmployeeRegister pattern
@@ -201,7 +210,7 @@ const EmployeeProfile = () => {
   useEffect(() => {
     const getProfile = async () => {
       setIsLoading(true);
-      const data = await userAPI.fetchProfile(user?.userId, user?.token);
+      const data = await userAPI.fetchProfile(profileUserId, user?.token);
       setProfile(data);
       setIsLoading(false);
     };
@@ -278,7 +287,7 @@ const EmployeeProfile = () => {
 
     try {
       const response = await userAPI.updateProfile({
-        userId: user?.userId,
+        userId: profileUserId,
         fullName: profile.fullName,
         phoneNumber: profile.phone,
         email: profile.email,
@@ -290,21 +299,24 @@ const EmployeeProfile = () => {
 
       setIsLoading(false);
       if (response.success) {
-        showSuccess("Profile updated successfully!");
+        showSuccess("Registration successful!, Login to search for jobs.");
+
+        if (user === null || user === undefined) {
+          navigate(ROUTES.LOGIN);
+          return;
+        };
         setIsEditMode(false);
       } else {
         showError(response.message);
       }
     } catch (err) {
       setIsLoading(false);
-      const errorMessage = err?.response?.message ||
-        err?.message ||
-        err?.title ||
-        "Something went wrong";
+      const errorMessage = parseApiError(err);
       showError(errorMessage);
+      return;
     }
   };
-  
+
 
   const handleLocationsChange = (newLocations) => {
     setProfile((prev) => ({ ...prev, locations: newLocations }));

@@ -8,12 +8,17 @@ import {
   BriefcaseIcon,
   BuildingOfficeIcon,
   HomeIcon,
+  IdentificationIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import LogoSrc from "../../assets/logo.svg";
 
 const MobileSideNav = ({ open, onClose, user, handleLogout }) => {
   const { t } = useTranslation();
+
+  const getProfileUrl = () => {
+    return user?.userId ? ROUTES.PROFILE.replace(':userId', user.userId) : ROUTES.LOGIN;
+  };
 
   return (
     <div>
@@ -82,12 +87,24 @@ const MobileSideNav = ({ open, onClose, user, handleLogout }) => {
                   to={ROUTES.PRICING}
                   className={({ isActive }) =>
                     `mb-2 flex p-2 px-6 font-medium text-center rounded-[12px] ${isActive
-                      ? "bg-indigo-600 text-white" 
+                      ? "bg-indigo-600 text-white"
                       : "bg-[#fafafa] text-gray-900 hover:bg-[#EDEBFF] hover:text-indigo-600"
                     }`
                   } >
                   <CurrencyRupeeIcon className="h-5 w-5 mr-3 text-primary" />
                   <span>Pricing</span>
+                </NavLink>
+                <NavLink
+                  onClick={() => onClose(false)}
+                  to={getProfileUrl()}
+                  className={({ isActive }) =>
+                    `mb-2 flex p-2 px-6 font-medium text-center rounded-[12px] ${isActive
+                      ? "bg-indigo-600 text-white"
+                      : "bg-[#fafafa] text-gray-900 hover:bg-[#EDEBFF] hover:text-indigo-600"
+                    }`
+                  } >
+                  <IdentificationIcon className="h-5 w-5 mr-3 text-primary" />
+                  <span>Profile</span>
                 </NavLink>
                 <NavLink
                   onClick={() => onClose(false)}

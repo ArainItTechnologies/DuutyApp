@@ -8,7 +8,7 @@ using SharedKernel.Services;
 namespace Duuty.Server.Features.User.Profile;
 
 [HttpPost("/api/user/profile")]
-[Authorize]
+[AllowAnonymous]
 public class UpdateEndpoint(IUserProfileService userProfileService,
                             UserManager<ArainUser> userManager,
                             ITimeProvider timeProvider): Endpoint<UpdateProfileRequest, UpdateProfileResponse>

@@ -31,7 +31,7 @@ export const ROUTES = {
   BECOME_EMPLOYER: '/become-employer',
   FORGOT_PASSWORD: '/forgot-password',
   RESET_PASSWORD: '/reset-password',
-  PROFILE: '/profile',
+  PROFILE: '/profile/:userId',
   PROFILE_EDIT: '/profile/edit',
   EMAIL_CONFIRM: '/confirm',
   CHANGE_PASSWORD: '/change-password',

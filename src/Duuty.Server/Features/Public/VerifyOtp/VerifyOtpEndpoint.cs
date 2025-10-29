@@ -34,7 +34,7 @@ public class VerifyOtpEndpoint(UserManager<ArainUser> userManager) : Endpoint<Ve
             var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
             await userManager.ConfirmEmailAsync(user, token);
 
-            await Send.OkAsync(new VerifyOtpResponse { IsVerified = true }, ct);
+            await Send.OkAsync(new VerifyOtpResponse { IsVerified = true , UserId = user.Id}, ct);
             return;
         }
         catch (Exception ex)
@@ -50,6 +50,7 @@ public class VerifyOtpResponse
 {
     public bool IsVerified { get; set; }
     public string? Message { get; set; }
+    public required string UserId { get; set; }
 }
 
 public class VerifyOtpRequest
