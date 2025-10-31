@@ -1,11 +1,21 @@
+using Microsoft.Extensions.Options;
+using SharedKernel.Configs;
+using SharedKernel.Services;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
-using SharedKernel.Services;
 
 namespace Application;
 
-public class MessageService(HttpClient client) : IMessageService
+public class MessageService : IMessageService
 {
+    private readonly WhatsAppConfig _config;
+
+    public MessageService(IOptions<WhatsAppConfig> configOptions)
+    {
+        _config = configOptions.Value;
+    }
+
     public async Task<bool> SendWhatsAppMessage(string recipientNumber, string authCode)
     {
         try
@@ -22,8 +32,12 @@ public class MessageService(HttpClient client) : IMessageService
             string jsonPayload = JsonSerializer.Serialize(messagePayload, jsonOptions);
 
             var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+            using var client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _config.ApiKey);
+            client.DefaultRequestHeaders.Add("User-Agent", "WhatsAppAuthSender/1.0");
+            string apiUrl = $"https://graph.facebook.com/v22.0/{_config.PhoneNumberId}/messages";
 
-            var response = await client.PostAsync("/messages", content);
+            var response = await client.PostAsync(apiUrl, content);
             string responseContent = await response.Content.ReadAsStringAsync();
             if (response.IsSuccessStatusCode)
             {

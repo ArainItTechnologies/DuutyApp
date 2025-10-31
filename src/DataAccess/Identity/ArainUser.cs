@@ -10,7 +10,4 @@ public class ArainUser : IdentityUser<string>
     }
     public string? FullName { get; set; }
     public DateTimeOffset? Birthday { get; set; }
-
-    public long? OrganisationId { get; set; }
-    public virtual Organisation? Organisation { get; set; }
 }

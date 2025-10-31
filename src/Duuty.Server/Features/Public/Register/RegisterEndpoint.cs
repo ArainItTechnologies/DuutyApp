@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Services;
 using System.ComponentModel.DataAnnotations;
+using System.Text.RegularExpressions;
 
 namespace Web.Server.Features.Public.Register;
 
@@ -35,15 +36,15 @@ public class RegisterEndpoint : Endpoint<RegistrationRequest, RegistrationRespon
     }
     public override async Task HandleAsync(RegistrationRequest model, CancellationToken ct)
     {
-        if (!string.IsNullOrWhiteSpace(model.PhoneNumber) && !string.IsNullOrWhiteSpace(model.Email))
+        if (!string.IsNullOrWhiteSpace(model.NormalizedPhoneNumber) && !string.IsNullOrWhiteSpace(model.Email))
         {
             AddError("username", "Provide either phone number or email, not both.");
             await Send.ErrorsAsync(cancellation: ct);
             return;
         }
 
-        var userName = !string.IsNullOrWhiteSpace(model.PhoneNumber)
-            ? model.PhoneNumber
+        var userName = !string.IsNullOrWhiteSpace(model.NormalizedPhoneNumber)
+            ? model.NormalizedPhoneNumber
             : model.Email;
 
         if (string.IsNullOrWhiteSpace(userName))
@@ -89,8 +90,8 @@ public class RegisterEndpoint : Endpoint<RegistrationRequest, RegistrationRespon
         {
             UserName = userName,
             FullName = model.FullName,
-            Email = model.Email,
-            PhoneNumber = model.PhoneNumber,
+            Email = string.IsNullOrWhiteSpace(model.Email) ? $"{model.NormalizedPhoneNumber}@duuty.in" : model.Email,
+            PhoneNumber = string.IsNullOrWhiteSpace(model.NormalizedPhoneNumber) ? null : model.NormalizedPhoneNumber,
             TwoFactorEnabled = true,
         };
 
@@ -116,6 +117,7 @@ public class RegisterEndpoint : Endpoint<RegistrationRequest, RegistrationRespon
             var sent = await _messageService.SendWhatsAppMessage(model.PhoneNumber!, otp);
             if (!sent)
             {
+                await _userManager.DeleteAsync(user);
                 AddError("otp", "Failed to send phone OTP.");
                 await Send.ErrorsAsync(cancellation: ct);
                 return;
@@ -124,9 +126,10 @@ public class RegisterEndpoint : Endpoint<RegistrationRequest, RegistrationRespon
 
         if (!string.IsNullOrWhiteSpace(model.Email))
         {
-            var otp = await _userManager.GenerateTwoFactorTokenAsync(user, TokenOptions.DefaultEmailProvider);
+            var otp = await _userManager.GenerateTwoFactorTokenAsync(user, TokenOptions.DefaultPhoneProvider);
             if (string.IsNullOrEmpty(otp))
             {
+                await _userManager.DeleteAsync(user);
                 AddError("otp", "Failed to generate email OTP.");
                 await Send.ErrorsAsync(cancellation: ct);
                 return;
@@ -170,6 +173,8 @@ public class RegistrationRequest
     public string? PreferredRole { get; set; }
     public bool IsEmployer { get; set; } = false;
     public required string FullName { get; set; }
+
+    public string NormalizedPhoneNumber => Regex.Replace(PhoneNumber, @"[^\d+]", "");
 }
 
 public class RegistrationResponse

@@ -31,10 +31,19 @@ public class VerifyOtpEndpoint(UserManager<ArainUser> userManager) : Endpoint<Ve
                 return;
             }
 
-            var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
-            await userManager.ConfirmEmailAsync(user, token);
+            if (isPhone)
+            {
+                user.PhoneNumberConfirmed = true;
+                await userManager.UpdateAsync(user);
+            }
+            else
+            {
+                var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
+                await userManager.ConfirmEmailAsync(user, token);
+            }
 
-            await Send.OkAsync(new VerifyOtpResponse { IsVerified = true , UserId = user.Id}, ct);
+
+            await Send.OkAsync(new VerifyOtpResponse { IsVerified = true, UserId = user.Id }, ct);
             return;
         }
         catch (Exception ex)

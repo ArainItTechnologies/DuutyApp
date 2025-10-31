@@ -1,12 +1,14 @@
 ﻿using DataAccess.Identity;
+using Infrastructure.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace Duuty.Server.Features.Employer.Profile;
 
 [HttpGet("/api/employer/profile")]
 [AllowAnonymous]
-public class GetEndpoint(UserManager<ArainUser> userManager) : Endpoint<EmployerProfileRequest, EmployerProfileResponse>
+public class GetEndpoint(UserManager<ArainUser> userManager, IEmployerProfileService profileService) : Endpoint<EmployerProfileRequest, EmployerProfileResponse>
 {
     public override async Task HandleAsync(EmployerProfileRequest req, CancellationToken ct)
     {
@@ -16,20 +18,22 @@ public class GetEndpoint(UserManager<ArainUser> userManager) : Endpoint<Employer
             await Send.NotFoundAsync(ct);
             return;
         }
-        
+
+        var profile = await profileService.Get(x => x.UserId == req.UserId).SingleOrDefaultAsync();
+
         var response = new EmployerProfileResponse
         {
             UserId = user.Id,
             Phone = user.PhoneNumber,
             Email = user.Email,
-            OrganisationName = user.Organisation?.OranisationName ?? "",
-            WebsiteUrl = user.Organisation?.WebsiteUrl ?? "",
+            OrganisationName = profile?.OrganisationName ?? string.Empty,
+            WebsiteUrl = profile?.WebsiteUrl ?? string.Empty,
 
-            AddressLine1 = user.Organisation?.Address?.AddressLine1 ?? "",
-            City = user.Organisation?.Address?.City ?? "",
-            State = user.Organisation?.Address?.State ?? "",
-            Country = user.Organisation?.Address?.Country ?? "India",
-            PostalCode = user.Organisation?.Address?.PostalCode ?? "",
+            AddressLine1 = profile?.AddressLine1 ?? string.Empty,
+            City = profile?.City ?? string.Empty,
+            State = profile?.State ?? string.Empty,
+            Country = profile?.Country ?? "India",
+            PostalCode = profile?.PostCode ?? string.Empty,
         };
 
         await Send.OkAsync(response, ct);
