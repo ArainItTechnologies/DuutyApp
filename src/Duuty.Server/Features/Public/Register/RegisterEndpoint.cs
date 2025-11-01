@@ -126,7 +126,7 @@ public class RegisterEndpoint : Endpoint<RegistrationRequest, RegistrationRespon
 
         if (!string.IsNullOrWhiteSpace(model.Email))
         {
-            var otp = await _userManager.GenerateTwoFactorTokenAsync(user, TokenOptions.DefaultPhoneProvider);
+            var otp = await _userManager.GenerateTwoFactorTokenAsync(user, TokenOptions.DefaultEmailProvider);
             if (string.IsNullOrEmpty(otp))
             {
                 await _userManager.DeleteAsync(user);

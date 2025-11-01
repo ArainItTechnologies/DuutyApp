@@ -13,8 +13,5 @@ public static class DuutySeedConstants
     public const string UserRoleId = "B2C3D4E5-F678-9012-3456-789ABCDEFA1B";
     public const string EmployerRoleId = "C3D4E5F6-7890-1234-5678-9ABCDEFA1B2C";
     public const string ManagerRoleId = "D4E5F678-9012-3456-789A-BCDEFA1B2C3D";
-
-    public const long AddressId = 00001;
-    public const long OrganisationId = 00001;
 }
 

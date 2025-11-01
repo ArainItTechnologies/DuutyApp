@@ -76,14 +76,11 @@ public static class InfrastructureServiceRegistration
             return new RazorpayClient(keyId, keySecret);
         });
 
-        services.AddScoped<IOrganisationService, OrganisationService>()
-                .AddScoped<IPaymentOrderService, PaymentOrderService>()
+        services.AddScoped<IPaymentOrderService, PaymentOrderService>()
                 .AddScoped<IPaymentTransactionService, PaymentTransactionService>()
                 .AddScoped<IRazorpayService, RazorpayService>()
                 .AddScoped<IJobListingService, JobListingService>()
-                .AddScoped<IAddressService, AddressService>()
                 .AddScoped<IEmployerSubscriptionService, EmployerSubscriptionService>()
-                .AddScoped<IEmployeeJobRoleService, EmployeeJobRoleService>()
                 .AddScoped<IJobApplicationService, JobApplicationService>()
                 .AddScoped<IUserProfileService, UserProfileService>()
                 .AddScoped<IEmployerProfileService, EmployerProfileService>()

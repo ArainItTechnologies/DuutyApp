@@ -1,5 +1,4 @@
-﻿using FastEndpoints;
-using Infrastructure.DTO;
+﻿using Infrastructure.DTO;
 using Infrastructure.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
@@ -12,12 +11,10 @@ public class FetchEmployersEndpoint(IEmployerService employerService) : Endpoint
 {
     public override async Task HandleAsync(CancellationToken ct)
     {
-        var employers = await employerService.Get(x => x.Organisation != null).Select(y => new EmployerDto
+        var employers = await employerService.Get().Select(y => new EmployerDto
         {
             Id = y.Id,
             Email = y.Email,
-            Location = y.Organisation!.Address!.City,
-            RestaurantName = y.Organisation.OranisationName,
             SubscriptionPlan = y.EmployerSubscription!.Plan,
             SubscriptionStatus = y.EmployerSubscription.Status,
             RegistrationDate = y.DateCreated!.Value,

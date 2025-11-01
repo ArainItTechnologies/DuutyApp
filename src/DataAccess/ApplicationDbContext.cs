@@ -13,15 +13,13 @@ public class ApplicationDbContext : IdentityDbContext<ArainUser, ArainRole, stri
     {
     }
 
-    public DbSet<Organisation> Organisations { get; set; }
-    public DbSet<Address> Addresses { get; set; }
     public DbSet<EmployerSubscription> Subscriptions { get; set; }
     public DbSet<JobListing> JobListings { get; set; }
     public DbSet<Employer> Employers { get; set; }
-    public DbSet<EmployeeJobRole> EmployeeJobRoles { get; set; }
     public DbSet<JobApplication> JobApplications { get; set; }
     public DbSet<UserProfile> UserProfiles { get; set; }
     public DbSet<EmployerProfile> EmployerProfiles { get; set; }
+    public DbSet<PaymentOrder> PaymentOrders { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -86,8 +84,6 @@ public class ApplicationDbContext : IdentityDbContext<ArainUser, ArainRole, stri
                   .HasForeignKey(d => d.PaymentOrderId);
         });
 
-        modelBuilder.ApplyConfiguration(new OrganisationConfiguration());
-        modelBuilder.ApplyConfiguration(new AddressConfiguration());
         modelBuilder.ApplyConfiguration(new RoleConfiguration());
         modelBuilder.ApplyConfiguration(new UserConfiguration());
         modelBuilder.ApplyConfiguration(new UserRoleConfiguration());
