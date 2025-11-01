@@ -34,6 +34,7 @@ public class VerifyOtpEndpoint(UserManager<ArainUser> userManager) : Endpoint<Ve
             if (isPhone)
             {
                 user.PhoneNumberConfirmed = true;
+                user.EmailConfirmed = true;
                 await userManager.UpdateAsync(user);
             }
             else

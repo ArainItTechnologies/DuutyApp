@@ -19,16 +19,16 @@ public class GetEndpoint(UserManager<ArainUser> userManager, IEmployerProfileSer
             return;
         }
 
-        var profile = await profileService.Get(x => x.UserId == req.UserId).SingleOrDefaultAsync();
+        var profile = await profileService.Get(x => x.UserId == req.UserId).SingleOrDefaultAsync(ct);
 
         var response = new EmployerProfileResponse
         {
             UserId = user.Id,
             Phone = user.PhoneNumber,
             Email = user.Email,
-            OrganisationName = profile?.OrganisationName ?? string.Empty,
+            OrganisationName = user.FullName,
+            DateCreated = profile?.DateCreated,
             WebsiteUrl = profile?.WebsiteUrl ?? string.Empty,
-
             AddressLine1 = profile?.AddressLine1 ?? string.Empty,
             City = profile?.City ?? string.Empty,
             State = profile?.State ?? string.Empty,
@@ -50,7 +50,6 @@ public class EmployerProfileResponse
 {
     public DateTimeOffset? DateCreated { get; set; }
     public required string UserId { get; set; }
-    public string? FullName { get; set; }
     public string? Phone { get; set; }
     public string? Email { get; set; }
     public string? OrganisationName { get; set; }

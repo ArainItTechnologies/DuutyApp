@@ -4,7 +4,7 @@ import { FormInput, FormPasswordInput, FormSelect, PrimaryButton } from "../cust
 import SelectRole from "../user/SelectRole";
 import { CHEF_OPTIONS, ROUTES } from "../../Constants";
 import { useAppState } from "../../hooks/Hooks";
-import { validateMobileNumber, validateEmail, parseApiError } from "../../utils/ValidationUtils";
+import { validateMobileNumber, validateEmail, parseApiError, validatePassword } from "../../utils/ValidationUtils";
 import publicAPI from "../../api/public";
 import VerifyOtp from "./VerifyOtp";
 import { useNotification } from "../../context/NotificationContext";
@@ -67,8 +67,11 @@ const EmployeeRegister = () => {
 
     if (name === 'password') {
       setPasswordError("");
-      if (value && value.length < 8) {
-        setPasswordError("Password must be at least 8 characters long");
+      if (value) {
+        const validation = validatePassword(value);
+        if (!validation.isValid) {
+          setPasswordError(validation.message);
+        }
       }
     }
 
@@ -136,6 +139,7 @@ const EmployeeRegister = () => {
               name="mobile"
               type="tel"
               id="mobile"
+              placeholder={"+918745478962"}
               value={formData.mobile}
               onChange={handleChange}
               required />
@@ -162,6 +166,7 @@ const EmployeeRegister = () => {
               name="email"
               type="email"
               id="email"
+              placeholder={"example@duuty.in"}
               value={formData.email}
               onChange={handleChange}
               required

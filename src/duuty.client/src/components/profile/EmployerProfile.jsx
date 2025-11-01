@@ -1,7 +1,5 @@
-import React, { useState, useEffect, useMemo } from "react";
-import { Edit3, Building2, Phone, Mail, MapPin, Globe } from "lucide-react";
+import { useState, useEffect, useMemo } from "react";
 import { FormInput, FormTextArea, PrimaryButton } from "../custom/FormElements";
-import { ROUTES } from "../../Constants";
 import { useNotification } from "../../context/NotificationContext";
 import { useAppState, useUser } from "../../hooks/Hooks";
 import userAPI from "../../api/user";
@@ -17,7 +15,6 @@ const EmployerProfile = () => {
   const location = useLocation();
   const { showSuccess, showError } = useNotification();
   const { setIsLoading } = useAppState();
-  const navigate = useNavigate();
 
   const profileUserId = useMemo(() => {
     return userId || user?.userId;
@@ -27,17 +24,20 @@ const EmployerProfile = () => {
 
   // Error states
   const [phoneError, setPhoneError] = useState("");
+  const [emailError, setEmailError] = useState("");
   const [websiteError, setWebsiteError] = useState("");
   const [uploadedFiles, setUploadedFiles] = useState([]);
 
+  const [originalProfile, setOriginalProfile] = useState({});
   const [profile, setProfile] = useState({
-    organisationName: user?.organisationName || "",
+    fullName: user?.organisationName || "",
     addressLine1: user?.addressLine1 || "",
+    email: user?.email || "",
     city: user?.city || "",
     state: user?.state || "",
     country: user?.country || "India",
     postCode: user?.postCode || "",
-    telephone: user?.telephone || "",
+    phone: user?.phone || "",
     websiteUrl: user?.websiteUrl || "",
   });
 
@@ -45,11 +45,24 @@ const EmployerProfile = () => {
   useEffect(() => {
     const getProfile = async () => {
       if (!profileUserId) return;
-      
+
       setIsLoading(true);
       try {
-        const data = await userAPI.fetchProfile(profileUserId, user?.token);
-        setProfile(data);
+        const data = await userAPI.fetchEmployerDetails(profileUserId, user?.token);
+        const profileData = {
+          fullName: data.organisationName || "",
+          addressLine1: data.addressLine1 || "",
+          email: data.email || "",
+          city: data.city || "",
+          state: data.state || "",
+          country: data.country || "India",
+          postCode: data.postalCode || "",
+          phone: data.phone || "",
+          websiteUrl: data.websiteUrl || "",
+        };
+        console.log("Fetched employer profile data:", profileData);
+        setProfile(profileData);
+        setOriginalProfile(profileData);
       } catch (error) {
         const errorMessage = parseApiError(error);
         showError(errorMessage);
@@ -76,7 +89,8 @@ const EmployerProfile = () => {
     }));
 
     // Clear errors when user types
-    if (name === "telephone") setPhoneError("");
+    if (name === "phone") setPhoneError("");
+    if (name === "email") setEmailError("");
     if (name === "websiteUrl") setWebsiteError("");
   };
 
@@ -84,11 +98,11 @@ const EmployerProfile = () => {
     let isValid = true;
 
     // Phone validation
-    if (!profile.telephone) {
-      setPhoneError("Telephone number is required");
+    if (!profile.phone) {
+      setPhoneError("Phone number is required");
       isValid = false;
-    } else if (profile.telephone.length < 10) {
-      setPhoneError("Telephone number must be at least 10 digits");
+    } else if (profile.phone.length < 10) {
+      setPhoneError("Phone number must be at least 10 digits");
       isValid = false;
     }
 
@@ -99,6 +113,15 @@ const EmployerProfile = () => {
         setWebsiteError("Please enter a valid URL");
         isValid = false;
       }
+    }
+
+    // Email validation - matching EmployeeRegister pattern
+    if (!profile.email) {
+      setEmailError("Email is required");
+      isValid = false;
+    } else if (!/\S+@\S+\.\S+/.test(profile.email)) {
+      setEmailError("Email format is invalid");
+      isValid = false;
     }
 
     return isValid;
@@ -114,15 +137,16 @@ const EmployerProfile = () => {
     setIsLoading(true);
 
     try {
-      const response = await userAPI.updateProfile({
+      const response = await userAPI.updateEmployerProfile({
         userId: profileUserId,
-        organisationName: profile.organisationName,
+        fullName: profile.fullName,
         addressLine1: profile.addressLine1,
+        email: profile.email,
         city: profile.city,
         state: profile.state,
         country: profile.country,
         postCode: profile.postCode,
-        telephone: profile.telephone,
+        phoneNumber: profile.phone,
         websiteUrl: profile.websiteUrl,
       }, user?.token);
 
@@ -142,17 +166,9 @@ const EmployerProfile = () => {
 
   const handleCancelEdit = () => {
     // Reset form to original data
-    setProfile({
-      organisationName: user?.organisationName || "",
-      addressLine1: user?.addressLine1 || "",
-      city: user?.city || "",
-      state: user?.state || "",
-      country: user?.country || "India",
-      postCode: user?.postCode || "",
-      telephone: user?.telephone || "",
-      websiteUrl: user?.websiteUrl || "",
-    });
+    setProfile(originalProfile);
     setPhoneError("");
+    setEmailError("");
     setWebsiteError("");
     setIsEditMode(false);
   };
@@ -187,12 +203,22 @@ const EmployerProfile = () => {
             <form onSubmit={handleSubmit} className="space-y-6">
               <FormInput
                 label="Restaurant Name"
-                name="organisationName"
+                name="fullName"
                 type="text"
-                id="organisationName"
-                value={profile.organisationName}
+                id="fullName"
+                value={profile.fullName}
                 onChange={handleChange}
                 placeholder="Enter restaurant name"
+                required
+              />
+
+              <FormTextArea
+                label="Address"
+                name="addressLine1"
+                id="addressLine1"
+                value={profile.addressLine1}
+                onChange={handleChange}
+                placeholder="Enter restaurant address"
                 required
               />
 
@@ -237,7 +263,7 @@ const EmployerProfile = () => {
                   id="postCode"
                   value={profile.postCode}
                   onChange={handleChange}
-                  placeholder="Enter postcode"
+                  placeholder="Enter pin code"
                   required
                 />
               </div>
@@ -245,13 +271,24 @@ const EmployerProfile = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <FormInput
                   label="Telephone Number"
-                  name="telephone"
+                  name="phone"
                   type="tel"
-                  id="telephone"
-                  value={profile.telephone}
+                  id="phone"
+                  value={profile.phone}
                   onChange={handleChange}
-                  placeholder="Enter telephone number"
+                  placeholder="Enter phone number"
                   error={phoneError}
+                  required
+                />
+
+                <FormInput
+                  label="Email Address"
+                  name="email"
+                  type="email"
+                  id="email"
+                  value={profile.email}
+                  onChange={handleChange}
+                  error={emailError}
                   required
                 />
                 <FormInput
@@ -261,22 +298,12 @@ const EmployerProfile = () => {
                   id="websiteUrl"
                   value={profile.websiteUrl}
                   onChange={handleChange}
-                  placeholder="Enter website URL"
+                  placeholder="e.g: https://www.app.duuty.in"
                   error={websiteError}
                 />
               </div>
 
-              <FormTextArea
-                label="Address"
-                name="addressLine1"
-                id="addressLine1"
-                value={profile.addressLine1}
-                onChange={handleChange}
-                placeholder="Enter restaurant address"
-                required
-              />
-
-                            {/* File Upload Section */}
+              {/* File Upload Section */}
               <div className="space-y-3">
                 <label className="block text-sm font-medium text-gray-700">
                   Upload Documents (Optional)
@@ -289,9 +316,8 @@ const EmployerProfile = () => {
                   {/* Choose Files Button */}
                   <label htmlFor="fileInput" className="inline-block">
                     <span
-                      className={`hover:bg-[#ECEFFF] text-[15px] text-[#3B31FF] font-medium inline-block rounded-[11px] px-[25px] py-[10px] border border-[#3B31FF] cursor-pointer transition-colors ${
-                        uploadedFiles.length >= 3 ? 'opacity-50 cursor-not-allowed' : ''
-                      }`}
+                      className={`hover:bg-[#ECEFFF] text-[15px] text-[#3B31FF] font-medium inline-block rounded-[11px] px-[25px] py-[10px] border border-[#3B31FF] cursor-pointer transition-colors ${uploadedFiles.length >= 3 ? 'opacity-50 cursor-not-allowed' : ''
+                        }`}
                     >
                       <CloudArrowUpIcon className="h-5 w-5 inline-block mr-2" />
                       {uploadedFiles.length === 0 ? 'Choose Files' : `Add More (${uploadedFiles.length}/3)`}
@@ -358,7 +384,7 @@ const EmployerProfile = () => {
               <div className="flex gap-4 pt-4">
                 <PrimaryButton
                   type="submit"
-                  disabled={!profile.organisationName || !profile.telephone || !profile.city || !profile.state}
+                  disabled={!profile.fullName || !profile.phone || !profile.city || !profile.state}
                   className="flex-1"
                 >
                   Update Profile

@@ -12,12 +12,22 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import LogoSrc from "../../assets/logo.svg";
+import { useUser } from "../../hooks/Hooks";
 
-const MobileSideNav = ({ open, onClose, user, handleLogout }) => {
+const MobileSideNav = ({ open, onClose, handleLogout }) => {
   const { t } = useTranslation();
+  const { user, isEmployer, isEmployee } = useUser();
 
   const getProfileUrl = () => {
-    return user?.userId ? ROUTES.USER_PROFILE.replace(':userId', user.userId) : ROUTES.LOGIN;
+    if (!user?.userId) return ROUTES.LOGIN;
+
+    if (isEmployer) {
+      return ROUTES.EMPLOYER_PROFILE.replace(':userId', user.userId);
+    } else if (isEmployee) {
+      return ROUTES.USER_PROFILE.replace(':userId', user.userId);
+    }
+
+    return ROUTES.USER_PROFILE.replace(':userId', user.userId);
   };
 
   return (

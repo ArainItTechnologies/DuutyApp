@@ -38,14 +38,21 @@ const EmployerProfileView = ({ profile, onEdit }) => {
                     <Building2 className="w-5 h-5 text-gray-500" />
                     <div>
                       <p className="text-sm text-gray-500">Restaurant Name</p>
-                      <p className="font-medium text-gray-900">{profile.organisationName || "Not provided"}</p>
+                      <p className="font-medium text-gray-900">{profile.fullName || "Not provided"}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg">
                     <Phone className="w-5 h-5 text-gray-500" />
                     <div>
                       <p className="text-sm text-gray-500">Telephone</p>
-                      <p className="font-medium text-gray-900">{profile.telephone || "Not provided"}</p>
+                      <p className="font-medium text-gray-900">{profile.phone || "Not provided"}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg">
+                    <Mail className="w-5 h-5 text-gray-500" />
+                    <div>
+                      <p className="text-sm text-gray-500">Email</p>
+                      <p className="font-medium text-gray-900">{profile.email || "Not provided"}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg">
@@ -106,7 +113,10 @@ const EmployerProfileView = ({ profile, onEdit }) => {
               <div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">Full Address</h3>
                 <div className="p-4 bg-gray-50 rounded-lg">
-                  <p className="text-gray-900">{profile.addressLine1 || "Address not provided"}</p>
+                  <p className="text-gray-900">
+                    {[profile.addressLine1, profile.city, profile.state]
+                      .filter(Boolean)
+                      .join(', ') || "Address not provided"}</p>
                 </div>
               </div>
             </div>

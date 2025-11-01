@@ -45,13 +45,21 @@ export default function Navbar() {
     navigate(ROUTES.LOGIN); // or use navigate if inside react-router
   };
 
-  const getProfileUrl = () => {
-    return user?.userId ? ROUTES.USER_PROFILE.replace(':userId', user.userId) : ROUTES.LOGIN;
+const getProfileUrl = () => {
+    if (!user?.userId) return ROUTES.LOGIN;
+
+    if (isEmployer) {
+      return ROUTES.EMPLOYER_PROFILE.replace(':userId', user.userId);
+    } else if (isEmployee) {
+      return ROUTES.USER_PROFILE.replace(':userId', user.userId);
+    }
+
+    return ROUTES.USER_PROFILE.replace(':userId', user.userId);
   };
 
   return (
     <div className="bg-[#F4F3FF] sticky top-0 z-5">
-      <MobileSideNav open={open} onClose={setOpen} user={user} handleLogout={handleLogout} />
+      <MobileSideNav open={open} onClose={setOpen} handleLogout={handleLogout} />
       <header className="relative bg-white">
         <nav aria-label="Top" className="mx-auto px-0 bg-[#F4F3FF]">
           <div className="container-wrapper">

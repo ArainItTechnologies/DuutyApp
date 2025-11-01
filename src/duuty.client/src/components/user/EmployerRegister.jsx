@@ -3,7 +3,7 @@ import { useState } from "react";
 import AddRestaurantModal from "../AddRestaurantModal";
 import { becomeEmployer } from "../../services/auth";
 import { FormInput, FormPasswordInput, PrimaryButton } from "../custom/FormElements";
-import { validateMobileNumber, validateEmail, parseApiError } from "../../utils/ValidationUtils";
+import { validateMobileNumber, validateEmail, parseApiError, validatePassword } from "../../utils/ValidationUtils";
 import publicAPI from "../../api/public";
 import { ROUTES } from "../../Constants";
 import { useAppState } from "../../hooks/Hooks";
@@ -57,8 +57,11 @@ const EmployerRegister = () => {
 
     if (name === 'password') {
       setPasswordError("");
-      if (value && value.length < 8) {
-        setPasswordError("Password must be at least 8 characters long");
+      if (value) {
+        const validation = validatePassword(value);
+        if (!validation.isValid) {
+          setPasswordError(validation.message);
+        }
       }
     }
 
@@ -115,7 +118,7 @@ const EmployerRegister = () => {
       <div className="">
         <form onSubmit={handleSubmit} className="space-y-6">
           <FormInput
-            label="Full Name"
+            label="Organisation Name"
             name="name"
             type="text"
             id="name"
@@ -131,9 +134,13 @@ const EmployerRegister = () => {
                 name="mobile"
                 type="tel"
                 id="mobile"
+                placeholder={"+918745478962"}
                 value={formData.mobile}
                 onChange={handleChange}
                 required />
+                <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none">
+                  +91
+                </div>
               {phoneError && (
                 <p className="mt-1 text-sm text-red-600" role="alert">
                   {phoneError}
@@ -159,6 +166,7 @@ const EmployerRegister = () => {
                 id="email"
                 value={formData.email}
                 onChange={handleChange}
+                placeholder={"example@duuty.in"}
                 required
               />
               {emailError && (

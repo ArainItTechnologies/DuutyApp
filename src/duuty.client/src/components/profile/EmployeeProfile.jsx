@@ -30,23 +30,43 @@ const EmployeeProfile = () => {
   const [phoneError, setPhoneError] = useState("");
   const [emailError, setEmailError] = useState("");
 
+  const [originalProfile, setOriginalProfile] = useState({});
   const [profile, setProfile] = useState({
-    fullName: user?.fullName || "",
-    phone: user?.phone || "",
-    email: user?.email || "",
-    experience: user?.experience || "",
-    preferredRoles: user?.preferredRoles || [],
-    locations: user?.locations || [],
-    availability: user?.availability || "",
+    fullName: "",
+    phone: "",
+    email: "",
+    experience: "",
+    preferredRoles: [],
+    locations: [],
+    availability: "",
   });
 
   // Initialize role options with user's current role
   useEffect(() => {
     const getProfile = async () => {
       setIsLoading(true);
-      const data = await userAPI.fetchProfile(profileUserId, user?.token);
-      setProfile(data);
-      setIsLoading(false);
+      try {
+        const data = await userAPI.fetchUserDetails(profileUserId, user?.token);
+        console.log("Fetched employee profile data:", data);
+
+        const profileData = {
+          fullName: data.fullName || "",
+          phone: data.phone || "",
+          email: data.email || "",
+          experience: data.experience || "",
+          preferredRoles: data.preferredRoles || [],
+          locations: data.locations || [],
+          availability: data.availability || "",
+        };
+
+        setProfile(profileData);
+        setOriginalProfile(profileData);
+      } catch (error) {
+        const errorMessage = parseApiError(error);
+        showError(errorMessage);
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     getProfile();
@@ -120,7 +140,7 @@ const EmployeeProfile = () => {
     setIsLoading(true);
 
     try {
-      const response = await userAPI.updateProfile({
+      const response = await userAPI.updateUserProfile({
         userId: profileUserId,
         fullName: profile.fullName,
         phoneNumber: profile.phone,
