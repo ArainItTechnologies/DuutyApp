@@ -8,10 +8,15 @@ import {
 const VerifyOtp = ({ isOpen, onClose, onVerify, handleResend }) => {
 
     const [otpCode, setOtpCode] = useState("");
-    const handleSubmit = () => {
-        onVerify(otpCode);
-        onClose();
-        setOtpCode("");
+    const handleSubmit = async () => {
+        try {
+            await onVerify(otpCode);
+            setOtpCode("");
+            onClose();
+        } catch (error) {
+            // Don't close modal or clear OTP if verification fails
+            console.error("OTP verification failed:", error);
+        }
     };
 
     if (!isOpen) return null;

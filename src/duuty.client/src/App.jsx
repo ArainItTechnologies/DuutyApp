@@ -28,7 +28,7 @@ import ManageJobs from "./components/employer/ManageJobs";
 import EmployerDashboard from "./components/employer/EmployerDashboard";
 import AdminDashboard from "./components/admin/AdminDashboard";
 import EmployeeProfile from "./components/profile/EmployeeProfile";
-import EmployerProfile from "./components/profile/Employerprofile";
+import EmployerProfile from "./components/profile/EmployerProfile";
 
 function App() {
   return (

@@ -149,6 +149,10 @@ public class RegisterEndpoint : Endpoint<RegistrationRequest, RegistrationRespon
                 LastUpdated = _timeProvider.UtcNow,
             });
         }
+        else
+        {
+            await _userManager.AddToRoleAsync(user, "Employer");
+        }
 
         await Send.OkAsync(new RegistrationResponse
         {

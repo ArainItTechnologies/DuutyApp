@@ -8,6 +8,7 @@ import publicAPI from "../../api/public";
 import { ROUTES } from "../../Constants";
 import { useAppState } from "../../hooks/Hooks";
 import { useNotification } from "../../context/NotificationContext";
+import VerifyOtp from "./VerifyOtp";
 
 const EmployerRegister = () => {
 
@@ -15,10 +16,8 @@ const EmployerRegister = () => {
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isVerifyOpen, setIsVerifyOpen] = useState(false);
 
   const navigate = useNavigate();
   const { setIsLoading } = useAppState();
@@ -88,23 +87,12 @@ const EmployerRegister = () => {
         isEmployer: true,
       });
 
-      console.log("Registration Response:", response);
-
-      navigate(ROUTES.USER_PROFILE);
-      setError("");
-    } catch (err) {
       setIsLoading(false);
-      const errorMessage = parseApiError(err);
-      showError(errorMessage);
-      return;
-    }
-  };
-
-  const handleSaveRestaurant = async (restaurantData) => {
-    try {
-      await becomeEmployer(restaurantData);
-      setIsModalOpen(false);
-      setSuccess("Restaurant added successfully!");
+      if (response.isSuccess) {
+        setIsVerifyOpen(true);
+      } else {
+        showError(response.message);
+      }
     } catch (err) {
       setIsLoading(false);
       const errorMessage = parseApiError(err);
@@ -138,9 +126,6 @@ const EmployerRegister = () => {
                 value={formData.mobile}
                 onChange={handleChange}
                 required />
-                <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none">
-                  +91
-                </div>
               {phoneError && (
                 <p className="mt-1 text-sm text-red-600" role="alert">
                   {phoneError}
@@ -210,9 +195,6 @@ const EmployerRegister = () => {
             )}
           </div>
 
-          {error && <p className="text-sm text-red-600">{error}</p>}
-          {success && <p className="text-sm text-green-600">{success}</p>}
-
           <PrimaryButton type="submit" disabled={emailError || phoneError || passwordError || confirmPasswordError || !formData.name}>
             Sign Up
           </PrimaryButton>
@@ -227,9 +209,33 @@ const EmployerRegister = () => {
             </Link>
           </p>
         </form>
-      </div>
 
-      <AddRestaurantModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSave={handleSaveRestaurant} />
+        {isVerifyOpen && (
+        <VerifyOtp
+          isOpen={isVerifyOpen}
+          onClose={() => setIsVerifyOpen(false)}
+          onVerify={async (otpCode) => {
+            try {
+              var response = await publicAPI.verifyOtp({ otp: otpCode, phoneNumber: formData.phone, userEmail: formData.email });
+
+              if (response?.isVerified && response?.userId) {
+                const profileUrl = ROUTES.EMPLOYER_PROFILE.replace(':userId', response.userId);
+                navigate(profileUrl, { state: { isEditMode: true } });
+              } else {
+                showError("OTP verification failed. Please try again.");
+                return;
+              }
+            } catch (err) {
+              // Handle different error response formats
+              setIsLoading(false);
+              const errorMessage = parseApiError(err);
+              showError(errorMessage);
+              return;
+            }
+          }}
+        />
+      )}
+      </div>
     </>
   );
 };
