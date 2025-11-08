@@ -39,11 +39,11 @@ const EmployerRegister = () => {
       [name]: value,
     }));
 
-    if (name === 'mobile') {
+    if (name === 'phone') {
       setPhoneError("");
-      // Validate mobile number if value exists
+      // Validate phone number if value exists
       if (value && !validateMobileNumber(value)) {
-        setPhoneError("Please enter a valid mobile number");
+        setPhoneError("Please enter a valid phone number");
       }
     }
 
@@ -118,12 +118,12 @@ const EmployerRegister = () => {
           {!formData.email && (
             <div>
               <FormInput
-                label="Mobile Number"
-                name="mobile"
+                label="Phone Number"
+                name="phone"
                 type="tel"
-                id="mobile"
+                id="phone"
                 placeholder={"+918745478962"}
-                value={formData.mobile}
+                value={formData.phone}
                 onChange={handleChange}
                 required />
               {phoneError && (
@@ -134,7 +134,7 @@ const EmployerRegister = () => {
             </div>
           )}
 
-          {!formData.mobile && !formData.email && (
+          {!formData.phone && !formData.email && (
             <div className="flex items-center my-4">
               <hr className="flex-grow border-t border-gray-300" />
               <span className="mx-4 text-gray-600">OR</span>
@@ -142,7 +142,7 @@ const EmployerRegister = () => {
             </div>
           )}
 
-          {!formData.mobile && (
+          {!formData.phone && (
             <div>
               <FormInput
                 label="Email Address"

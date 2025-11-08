@@ -47,7 +47,6 @@ const EmployeeProfile = () => {
       setIsLoading(true);
       try {
         const data = await userAPI.fetchUserDetails(profileUserId, user?.token);
-        console.log("Fetched employee profile data:", data);
 
         const profileData = {
           fullName: data.fullName || "",
@@ -178,15 +177,7 @@ const EmployeeProfile = () => {
 
   const handleCancelEdit = () => {
     // Reset form to original user data
-    setProfile({
-      fullName: user?.fullName || "",
-      phone: user?.phone || "",
-      email: user?.email || "",
-      experience: user?.experience || "",
-      preferredRoles: user?.preferredRoles || [],
-      locations: user?.locations || [],
-      availability: user?.availability || "",
-    });
+    setProfile(originalProfile);
     setPhoneError("");
     setEmailError("");
     setIsEditMode(false);

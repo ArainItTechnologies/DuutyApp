@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import { FormInput, FormTextArea, PrimaryButton } from "../custom/FormElements";
 import { useNotification } from "../../context/NotificationContext";
 import { useAppState, useUser } from "../../hooks/Hooks";
-import userAPI from "../../api/user";
+import employerAPI from "../../api/employer";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { parseApiError } from "../../utils/ValidationUtils";
 import { CloudArrowUpIcon, XCircleIcon } from "@heroicons/react/24/outline";
@@ -48,7 +48,7 @@ const EmployerProfile = () => {
 
       setIsLoading(true);
       try {
-        const data = await userAPI.fetchEmployerDetails(profileUserId, user?.token);
+        const data = await employerAPI.fetchEmployerDetails(profileUserId, user?.token);
         const profileData = {
           fullName: data.organisationName || "",
           addressLine1: data.addressLine1 || "",
@@ -137,7 +137,7 @@ const EmployerProfile = () => {
     setIsLoading(true);
 
     try {
-      const response = await userAPI.updateEmployerProfile({
+      const response = await employerAPI.updateEmployerProfile({
         userId: profileUserId,
         fullName: profile.fullName,
         addressLine1: profile.addressLine1,

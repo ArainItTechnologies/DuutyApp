@@ -10,7 +10,7 @@ namespace Duuty.Server.Features.Employer.HireNow;
 
 [HttpPost("/api/employer/post-job")]
 [Authorize]
-public class PostJobEndpoint(IJobListingService jobListingService, IEmployerService employerService, ITimeProvider timeProvider) : Endpoint<PostJobRequest, PostJobResponse>
+public class PostJobEndpoint(IJobListingService jobListingService, IEmployerProfileService employerService, ITimeProvider timeProvider) : Endpoint<PostJobRequest, PostJobResponse>
 {
     public override async Task HandleAsync(PostJobRequest request, CancellationToken ct)
     {
@@ -21,7 +21,7 @@ public class PostJobEndpoint(IJobListingService jobListingService, IEmployerServ
                 await Send.ErrorsAsync((int)HttpStatusCode.BadRequest, ct);
                 return;
             }
-            var employer = await employerService.Get(employer => employer.UserId == request.UserId).SingleOrDefaultAsync();
+            var employer = await employerService.Get(employer => employer.UserId == request.UserId).SingleOrDefaultAsync(ct);
 
             if (employer is null)
             {
@@ -38,11 +38,12 @@ public class PostJobEndpoint(IJobListingService jobListingService, IEmployerServ
                 Requirements = request.Requirements,
                 Experience = request.Experience,
                 Benefits = request.Benefits,
-                JobType = JobType.FullTime,
+                JobType = request.JobType,
                 SalaryRange = request.SalaryRange,
                 DatePosted = timeProvider.UtcNow!.Value,
                 ApplicationDeadline = timeProvider.UtcNow!.Value.AddDays(30),
                 EmployerId = employer.Id,
+                UserId = request.UserId
             };
 
             await jobListingService.CreateAsync(jobListingEntity);
@@ -76,6 +77,7 @@ public class PostJobRequest
     public string? Benefits { get; set; }
     public required string SalaryRange { get; set; }
     public required string UserId { get; set; }
+    public JobType JobType { get; set; }
 }
 
 public record PostJobResponse(bool IsSuccess, string? ErrorMessage = default);

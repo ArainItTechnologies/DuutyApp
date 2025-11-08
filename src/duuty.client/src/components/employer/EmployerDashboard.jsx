@@ -14,6 +14,7 @@ import {
     CalendarIcon
 } from "@heroicons/react/24/outline";
 import { ROUTES } from "../../Constants";
+import employerAPI from "../../api/employer";
 
 // Mock data - replace with actual API calls
 const mockStats = {
@@ -24,36 +25,6 @@ const mockStats = {
     hiredCandidates: 15,
     interviewsScheduled: 7
 };
-
-const mockRecentJobs = [
-    {
-        id: 1,
-        title: "Head Chef",
-        location: "Mumbai, Maharashtra",
-        applications: 24,
-        status: "Active",
-        postedDate: "2024-01-15",
-        salary: "50,000 - 70,000"
-    },
-    {
-        id: 2,
-        title: "Sous Chef",
-        location: "Delhi, Delhi",
-        applications: 18,
-        status: "Active",
-        postedDate: "2024-01-12",
-        salary: "35,000 - 45,000"
-    },
-    {
-        id: 3,
-        title: "Line Cook",
-        location: "Bangalore, Karnataka",
-        applications: 31,
-        status: "Closed",
-        postedDate: "2024-01-10",
-        salary: "25,000 - 30,000"
-    }
-];
 
 const mockRecentApplications = [
     {
@@ -85,6 +56,22 @@ const mockRecentApplications = [
 const EmployerDashboard = () => {
     const { user } = useUser();
     const [activeTab, setActiveTab] = useState("overview");
+    const [jobs, setJobs] = useState([]);
+
+    useEffect(() => {
+        const fetchJobs = async () => {
+            try {
+                const response = await employerAPI.fetchJobs(user.userId, user.token);
+                setJobs(response.data);
+            } catch (error) {
+                console.error("Error fetching jobs:", error);
+            }
+        };
+
+        if(activeTab === 'jobs') {
+            fetchJobs();
+        }
+    }, [user.userId, user.token, activeTab]);
 
     const StatCard = ({ title, value, icon: Icon, color, trend }) => (
         <div className="bg-white rounded-[16px] border-[1px] border-[var(--neutral-black)] p-6 shadow-[8px_8px_0_var(--employee-card-border)] hover:shadow-[12px_12px_0_var(--employee-card-border)] transition-all duration-300">
@@ -328,7 +315,7 @@ const EmployerDashboard = () => {
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                {mockRecentJobs.map((job) => (
+                                {jobs.map((job) => (
                                     <JobCard key={job.id} job={job} />
                                 ))}
                             </div>

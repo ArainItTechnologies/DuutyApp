@@ -32,7 +32,7 @@ export const ROUTES = {
   FORGOT_PASSWORD: '/forgot-password',
   RESET_PASSWORD: '/reset-password',
   USER_PROFILE: '/user-profile/:userId',
-  EMPLOYER_PROFILE: '/employer-profile',
+  EMPLOYER_PROFILE: '/employer-profile/:userId',
   EMAIL_CONFIRM: '/confirm',
   CHANGE_PASSWORD: '/change-password',
   PRICING: '/pricing',

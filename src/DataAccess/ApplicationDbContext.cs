@@ -57,11 +57,14 @@ public class ApplicationDbContext : IdentityDbContext<ArainUser, ArainRole, stri
             .HasIndex(a => new { a.UserId, a.JobListingId })
             .IsUnique();
 
-        modelBuilder.Entity<Employer>()
-            .HasOne(e => e.EmployerSubscription)
-            .WithMany(s => s.Employers)
-            .HasForeignKey(e => e.EmployerSubscriptionId)
-            .OnDelete(DeleteBehavior.Cascade);
+        modelBuilder.Entity<JobListing>()
+            .HasOne(j => j.EmployerProfile)
+            .WithMany(e => e.JobListings)
+            .HasForeignKey(j => j.EmployerId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        modelBuilder.Entity<JobListing>()
+            .HasIndex(j => j.EmployerId);
 
         modelBuilder.Entity<PaymentOrder>(entity =>
         {

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 using SharedKernel.BaseEntity;
 
 namespace Domain.Entities;
@@ -15,4 +16,8 @@ public class EmployerProfile: Entity
     public string? Country { get; set; }
     public string? PostCode { get; set; }
     public string? WebsiteUrl { get; set; }
+
+     // Prevent JSON cycles by not serializing back-reference collection
+    [JsonIgnore]
+    public virtual ICollection<JobListing> JobListings { get; set; } = new HashSet<JobListing>();
 }

@@ -14,26 +14,6 @@ namespace DataAccess.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Addresses",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    AddressLine1 = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AddressLine2 = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    City = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    State = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Country = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PostalCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DateCreated = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
-                    LastUpdated = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Addresses", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
                 {
@@ -76,22 +56,6 @@ namespace DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "EmployeeJobRoles",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PreferredRole = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DateCreated = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
-                    LastUpdated = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_EmployeeJobRoles", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "EmployerProfiles",
                 columns: table => new
                 {
@@ -131,34 +95,7 @@ namespace DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "JobListings",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    JobTitle = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    JobDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    JobLocation = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    JobState = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Requirements = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Experience = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Benefits = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    JobType = table.Column<int>(type: "int", nullable: false),
-                    SalaryRange = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DatePosted = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
-                    ApplicationDeadline = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
-                    EmployerId = table.Column<long>(type: "bigint", nullable: true),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false),
-                    DateCreated = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
-                    LastUpdated = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_JobListings", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "PaymentOrder",
+                name: "PaymentOrders",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -175,7 +112,7 @@ namespace DataAccess.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PaymentOrder", x => x.Id);
+                    table.PrimaryKey("PK_PaymentOrders", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -215,28 +152,6 @@ namespace DataAccess.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_UserProfiles", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Organisations",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    OranisationName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    WebsiteUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    AddressId = table.Column<long>(type: "bigint", nullable: true),
-                    DateCreated = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
-                    LastUpdated = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Organisations", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Organisations_Addresses_AddressId",
-                        column: x => x.AddressId,
-                        principalTable: "Addresses",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -346,6 +261,40 @@ namespace DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "JobListings",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    JobTitle = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    JobDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    JobLocation = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    JobState = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Requirements = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Experience = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Benefits = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    JobType = table.Column<int>(type: "int", nullable: false),
+                    SalaryRange = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DatePosted = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    ApplicationDeadline = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    UserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    EmployerId = table.Column<long>(type: "bigint", nullable: true),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    DateCreated = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    LastUpdated = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_JobListings", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_JobListings_EmployerProfiles_EmployerId",
+                        column: x => x.EmployerId,
+                        principalTable: "EmployerProfiles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "PaymentTransaction",
                 columns: table => new
                 {
@@ -366,9 +315,9 @@ namespace DataAccess.Migrations
                 {
                     table.PrimaryKey("PK_PaymentTransaction", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PaymentTransaction_PaymentOrder_PaymentOrderId",
+                        name: "FK_PaymentTransaction_PaymentOrders_PaymentOrderId",
                         column: x => x.PaymentOrderId,
-                        principalTable: "PaymentOrder",
+                        principalTable: "PaymentOrders",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -381,7 +330,6 @@ namespace DataAccess.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    OrganisationId = table.Column<long>(type: "bigint", nullable: false),
                     EmployerSubscriptionId = table.Column<long>(type: "bigint", nullable: true),
                     DateCreated = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     LastUpdated = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true)
@@ -390,23 +338,11 @@ namespace DataAccess.Migrations
                 {
                     table.PrimaryKey("PK_Employers", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Employers_Organisations_OrganisationId",
-                        column: x => x.OrganisationId,
-                        principalTable: "Organisations",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
                         name: "FK_Employers_Subscriptions_EmployerSubscriptionId",
                         column: x => x.EmployerSubscriptionId,
                         principalTable: "Subscriptions",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
-
-            migrationBuilder.InsertData(
-                table: "Addresses",
-                columns: new[] { "Id", "AddressLine1", "AddressLine2", "City", "Country", "DateCreated", "LastUpdated", "PostalCode", "State" },
-                values: new object[] { 1L, "95 Manor Road", "", "Newent", "United Kingdom", new DateTimeOffset(new DateTime(2025, 10, 30, 21, 54, 29, 496, DateTimeKind.Unspecified).AddTicks(4507), new TimeSpan(0, 0, 0, 0, 0)), null, "GL18 1UJ", "Gloucestershire" });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
@@ -425,9 +361,9 @@ namespace DataAccess.Migrations
                 columns: new[] { "Id", "AccessFailedCount", "Birthday", "ConcurrencyStamp", "Email", "EmailConfirmed", "FullName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { "10000000-0000-0000-0000-000000000001", 0, null, "5eba8fe1-42f1-44bc-bcec-63a33ccf1c72", "admin@duuty.in", true, "Admin", false, null, "ADMIN@DUUTY.IN", "ADMIN@DUUTY.IN", "AQAAAAIAAYagAAAAEAXvMtw6A4xefAso0UIbpfQCxN68gxIG5Ne3uhcW2nMdg+gnNv0IFLs1PUzVI6Tqmg==", null, false, "0de240ad-1d8e-4906-a17b-2ca8ecd71257", false, "admin@duuty.in" },
-                    { "10000000-0000-0000-0000-000000000002", 0, null, "d8442293-af7b-4b93-a9cf-5656bc8f3ee1", "employer@duuty.in", true, "Employer", false, null, "EMPLOYER@DUUTY.IN", "EMPLOYER@DUUTY.IN", "AQAAAAIAAYagAAAAEIiRMG2wj2YYXe3FFaeFasTc+rA22LEi93mO/q/XeoMUVD7kjuRDXSjAnggBUikZlA==", null, false, "f2857012-5913-4f9e-a585-1f85b00f8020", false, "employer@duuty.in" },
-                    { "10000000-0000-0000-0000-000000000003", 0, null, "5224ef03-d9cf-4882-a57a-5d78a013f9f0", "superadmin@duuty.in", true, "Super Admin", false, null, "SUPERADMIN@DUUTY.IN", "SUPERADMIN@DUUTY.IN", "AQAAAAIAAYagAAAAEAnxsdfaVY8/PS19AnwamsUOYwlyfp3r88IJC79sfFaIX3PZippcVaVQpg+82ijTag==", null, false, "a417029d-2545-4fd8-8a30-eb61ac6d55a3", false, "superadmin@duuty.in" }
+                    { "10000000-0000-0000-0000-000000000001", 0, null, "e0f56659-78ee-455b-9952-bfb199ee644d", "admin@duuty.in", true, "Admin", false, null, "ADMIN@DUUTY.IN", "ADMIN@DUUTY.IN", "AQAAAAIAAYagAAAAEGowR5Lb7tg8CtqPe7UPoGRsYEtsMJG83KCcWWFMPl5rLbekD5e3UTlXz8wpAYMVmQ==", null, false, "0523c976-6721-4889-99c5-97b2af0ffaa4", false, "admin@duuty.in" },
+                    { "10000000-0000-0000-0000-000000000002", 0, null, "7b4019d7-5d93-485f-8225-85396dac5efc", "employer@duuty.in", true, "Employer", false, null, "EMPLOYER@DUUTY.IN", "EMPLOYER@DUUTY.IN", "AQAAAAIAAYagAAAAEIKBtqtcxPqkERu1nG04gup44MGh9I5gr5lQ2VUazp7GLZ3EeHH6MufTB6z4nbUMug==", null, false, "3169111e-0aab-4993-b055-b7763dddf0c6", false, "employer@duuty.in" },
+                    { "10000000-0000-0000-0000-000000000003", 0, null, "b858a254-04ef-45e1-b744-15b390417c7e", "superadmin@duuty.in", true, "Super Admin", false, null, "SUPERADMIN@DUUTY.IN", "SUPERADMIN@DUUTY.IN", "AQAAAAIAAYagAAAAEOnpnUdbOs4QmAA/NYCpAATBb/gr2ITVcmbHgWGLpFh/kz77/1OXlr8VmAvAhU/wUw==", null, false, "cf7d1553-6043-473d-add7-e1c3b6163de7", false, "superadmin@duuty.in" }
                 });
 
             migrationBuilder.InsertData(
@@ -439,11 +375,6 @@ namespace DataAccess.Migrations
                     { "C3D4E5F6-7890-1234-5678-9ABCDEFA1B2C", "10000000-0000-0000-0000-000000000002" },
                     { "B6B2C3G4-E5F6-7890-1234-56789ABCDEF0", "10000000-0000-0000-0000-000000000003" }
                 });
-
-            migrationBuilder.InsertData(
-                table: "Organisations",
-                columns: new[] { "Id", "AddressId", "DateCreated", "LastUpdated", "OranisationName", "WebsiteUrl" },
-                values: new object[] { 1L, 1L, new DateTimeOffset(new DateTime(2025, 10, 30, 21, 54, 29, 496, DateTimeKind.Unspecified).AddTicks(3636), new TimeSpan(0, 0, 0, 0, 0)), null, "Arain IT Technologies", null });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -490,24 +421,19 @@ namespace DataAccess.Migrations
                 column: "EmployerSubscriptionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Employers_OrganisationId",
-                table: "Employers",
-                column: "OrganisationId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_JobApplications_UserId_JobListingId",
                 table: "JobApplications",
                 columns: new[] { "UserId", "JobListingId" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Organisations_AddressId",
-                table: "Organisations",
-                column: "AddressId");
+                name: "IX_JobListings_EmployerId",
+                table: "JobListings",
+                column: "EmployerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PaymentOrder_RazorpayOrderId",
-                table: "PaymentOrder",
+                name: "IX_PaymentOrders_RazorpayOrderId",
+                table: "PaymentOrders",
                 column: "RazorpayOrderId",
                 unique: true);
 
@@ -542,12 +468,6 @@ namespace DataAccess.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "EmployeeJobRoles");
-
-            migrationBuilder.DropTable(
-                name: "EmployerProfiles");
-
-            migrationBuilder.DropTable(
                 name: "Employers");
 
             migrationBuilder.DropTable(
@@ -569,16 +489,13 @@ namespace DataAccess.Migrations
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "Organisations");
-
-            migrationBuilder.DropTable(
                 name: "Subscriptions");
 
             migrationBuilder.DropTable(
-                name: "PaymentOrder");
+                name: "EmployerProfiles");
 
             migrationBuilder.DropTable(
-                name: "Addresses");
+                name: "PaymentOrders");
         }
     }
 }

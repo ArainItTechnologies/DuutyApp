@@ -12,7 +12,7 @@ import { useUser } from "../hooks/Hooks";
 
 const HomeBanner = () => {
     const [activeTab, setActiveTab] = useState("employeeForm");
-    const { user, isSuperAdmin, isAdmin, isEmployer, isEmployee } = useUser();
+    const { isSuperAdmin, isAdmin, isEmployer, isEmployee } = useUser();
 
     // Function to render content based on user role
     const renderRoleBasedContent = () => {

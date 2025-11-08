@@ -1,4 +1,5 @@
-﻿using Domain.Enums;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using Domain.Enums;
 using SharedKernel.BaseEntity;
 
 namespace Domain.Entities;
@@ -17,6 +18,10 @@ public class JobListing : Entity
     public required string SalaryRange { get; set; }
     public DateTimeOffset DatePosted { get; set; } = DateTimeOffset.UtcNow;
     public DateTimeOffset? ApplicationDeadline { get; set; }
+    public string? UserId { get; set; }
     public long? EmployerId { get; set; }
+    // Explicit FK mapping (optional - EF Core would infer this)
+    [ForeignKey(nameof(EmployerId))]
+    public virtual EmployerProfile? EmployerProfile { get; set; }
     public bool IsActive { get; set; } = true;
 }

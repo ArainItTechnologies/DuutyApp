@@ -17,7 +17,7 @@ import {
     EllipsisVerticalIcon,
     ArrowLeftIcon
 } from "@heroicons/react/24/outline";
-import { FormInput, FormSelect } from "../custom/FormElements";
+import { FormInput } from "../custom/FormElements";
 import AddRestaurentWithEmployer from "../admin/AddRestaurentWithEmployer";
 
 // Mock data - replace with actual API calls
@@ -108,42 +108,6 @@ const SuperAdminDashboard = () => {
     const [showRoleChangeForm, setShowRoleChangeForm] = useState(false);
     const [selectedEmployee, setSelectedEmployee] = useState(null);
     const [actionMenuOpen, setActionMenuOpen] = useState(null);
-
-    // New Employer Registration Form
-    const [newEmployer, setNewEmployer] = useState({
-        name: "",
-        email: "",
-        phone: "",
-        restaurantName: "",
-        location: "",
-        state: "",
-        subscriptionPlan: "Basic"
-    });
-
-    const handleRegisterEmployer = async (e) => {
-        e.preventDefault();
-        try {
-            setIsLoading(true);
-            // Replace with actual API call
-            // await registerEmployer(newEmployer, user?.token);
-
-            showSuccess("Employer registered successfully!");
-            setShowEmployerForm(false);
-            setNewEmployer({
-                name: "",
-                email: "",
-                phone: "",
-                restaurantName: "",
-                location: "",
-                state: "",
-                subscriptionPlan: "Basic"
-            });
-        } catch (error) {
-            showError("Failed to register employer");
-        } finally {
-            setIsLoading(false);
-        }
-    };
 
     const handlePromoteToEmployer = async (employeeId) => {
         try {
@@ -815,18 +779,25 @@ const SuperAdminDashboard = () => {
                                         <span className="font-medium text-xs sm:text-sm text-center">Register Employer</span>
                                     </button>
                                     <button
-                                        onClick={() => setActiveAction('employees')}
-                                        className="flex flex-col items-center p-3 sm:p-4 bg-[var(--employee-card-child1)] rounded-[8px] sm:rounded-[12px] border border-gray-200 hover:shadow-md transition"
-                                    >
-                                        <UserGroupIcon className="h-6 w-6 sm:h-8 sm:w-8 text-blue-600 mb-1 sm:mb-2" />
-                                        <span className="font-medium text-xs sm:text-sm text-center">Manage Roles</span>
-                                    </button>
-                                    <button
                                         onClick={() => setActiveAction('employers')}
                                         className="flex flex-col items-center p-3 sm:p-4 bg-[var(--employee-card-child2)] rounded-[8px] sm:rounded-[12px] border border-gray-200 hover:shadow-md transition"
                                     >
                                         <BuildingOfficeIcon className="h-6 w-6 sm:h-8 sm:w-8 text-green-600 mb-1 sm:mb-2" />
                                         <span className="font-medium text-xs sm:text-sm text-center">View Employers</span>
+                                    </button>
+                                               <button
+                                        onClick={() => setActiveAction('employees')}
+                                        className="flex flex-col items-center p-3 sm:p-4 bg-[var(--employee-card-child1)] rounded-[8px] sm:rounded-[12px] border border-gray-200 hover:shadow-md transition"
+                                    >
+                                        <UserPlusIcon className="h-6 w-6 sm:h-8 sm:w-8 text-blue-600 mb-1 sm:mb-2" />
+                                        <span className="font-medium text-xs sm:text-sm text-center">Register Employee</span>
+                                    </button>
+                                                     <button
+                                        onClick={() => setActiveAction('employers')}
+                                        className="flex flex-col items-center p-3 sm:p-4 bg-[var(--employee-card-child2)] rounded-[8px] sm:rounded-[12px] border border-gray-200 hover:shadow-md transition"
+                                    >
+                                        <BuildingOfficeIcon className="h-6 w-6 sm:h-8 sm:w-8 text-green-600 mb-1 sm:mb-2" />
+                                        <span className="font-medium text-xs sm:text-sm text-center">View Employees</span>
                                     </button>
                                     <button
                                         onClick={() => setActiveAction('subscriptions')}
@@ -870,10 +841,10 @@ const SuperAdminDashboard = () => {
 
                             {/* Recent Activity Overview */}
                             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
-                                {/* Recent Employers */}
+                                {/* Incomplete Employers */}
                                 <div className="bg-white rounded-[12px] sm:rounded-[16px] border-[1px] border-[var(--neutral-black)] p-4 sm:p-6">
                                     <div className="flex justify-between items-center mb-4">
-                                        <h2 className="text-lg sm:text-xl font-[AvenirNextBold]">Recent Employers</h2>
+                                        <h2 className="text-lg sm:text-xl font-[AvenirNextBold]">Incomplete Employers</h2>
                                         <button
                                             onClick={() => setActiveAction('employers')}
                                             className="text-purple-600 hover:underline text-sm"
