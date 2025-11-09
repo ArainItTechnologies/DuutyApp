@@ -41,7 +41,7 @@ const JobDetails = ({ job, onClose }) => {
             
             <div className="mt-4">
               <h3 className="text-lg font-semibold">Description</h3>
-              <p className="text-gray-700 mt-1">{job.jobDescription}</p>
+              <p className="text-gray-700 mt-1">{job.description}</p>
             </div>
             
             <div className="mt-4">

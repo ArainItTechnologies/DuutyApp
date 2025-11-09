@@ -38,7 +38,7 @@ const JobSearch = () => {
 
   // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
-  const [jobsPerPage, setJobsPerPage] = useState(5);
+  const [jobsPerPage, setJobsPerPage] = useState(pageSizeOptions[0].id); // Default to first option
 
   // Calculate pagination values
   const indexOfLastJob = currentPage * jobsPerPage;
@@ -63,7 +63,7 @@ const JobSearch = () => {
 
   // Generate page numbers for pagination
   const pageNumbers = [];
-  const maxPageNumbersShown = 5;
+  const maxPageNumbersShown = 15;
 
   let startPage = Math.max(1, currentPage - Math.floor(maxPageNumbersShown / 2));
   let endPage = Math.min(totalPages, startPage + maxPageNumbersShown - 1);
@@ -79,7 +79,19 @@ const JobSearch = () => {
   useEffect(() => {
     const getJobs = async () => {
       setIsLoading(true);
-      const data = await userAPI.fetchJobs(jobLocation, jobState, selectedRole, user);
+      // Extract city and state from jobLocation
+      let city = "";
+      let state = jobState;
+
+      if (jobLocation) {
+        const locationParts = jobLocation.split(', ');
+        city = locationParts[0] || ""; // "Chennai"
+        if (locationParts.length > 1 && !jobState) {
+          state = locationParts[1] || ""; // "TamilNadu" if no state is selected
+        }
+      }
+
+      const data = await userAPI.fetchJobs(city, state, selectedRole, user);
       setJobs(data.jobs);
       setIsLoading(false);
     };
@@ -185,7 +197,7 @@ const JobSearch = () => {
                 <p className="text-xl font-bold"> &#8377; {job.salaryRange.substring(0, 20)}</p>
                 <p className="flex items-center text-sm text-gray-500 mt-1">
                   <MapPinIcon className="h-5 w-5 mr-1 text-gray-500" />
-                  {job.jobLocation}, {job.jobState}
+                  {job.jobLocation}
                 </p>
 
                 {/* Actions Row */}
@@ -221,7 +233,7 @@ const JobSearch = () => {
                   {/* Apply Job Button */}
 
                   {!job.isApplied ? <CustomButton disabled={job.isApplied}
-                    onClick={() => handleApply(job.id)}
+                    onClick={() => handleApply(job.jobId)}
                     className="flex-grow text-purple-600 border border-purple-400 hover:bg-purple-600 hover:text-white hover:font-bold font-medium py-2 px-4 rounded-[10px] transition cursor-pointer"
                   >
                     Apply Job

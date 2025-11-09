@@ -7,13 +7,13 @@ using SharedKernel.Services;
 
 namespace Duuty.Server.Features.User.ApplyJob;
 
-[HttpPost("/user/api/apply")]
+[HttpPost("/api/user/apply")]
 [Authorize]
 public class ApplyJobEndpoint(IJobListingService jobListingService, IJobApplicationService applicationService, ITimeProvider timeProvider) : Endpoint<ApplyJobRequest, ApplyJobResponse>
 {
     public override async Task HandleAsync(ApplyJobRequest req, CancellationToken ct)
     {
-        var job = await jobListingService.Get(x => x.Id == req.JobListingId && x.IsActive).SingleOrDefaultAsync();
+        var job = await jobListingService.Get(x => x.Id == req.JobListingId && x.IsActive).SingleOrDefaultAsync(ct);
         if (job is null)
         {
             await Send.NotFoundAsync(ct);

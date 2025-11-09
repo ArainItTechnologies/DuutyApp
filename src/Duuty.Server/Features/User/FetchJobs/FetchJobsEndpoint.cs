@@ -83,6 +83,11 @@ public class JobPostDto
     public required string JobLocation { get; set; }
     public required string SalaryRange { get; set; }
     public long? EmployerId { get; set; }
+    public string? Description { get; set; }
+    public string? Requirements { get; set; }
+    public string? Benefits { get; set; }
+    public string? Experience { get; set; }
+
 
     public static JobPostDto ToDto(JobListing job, List<long> appliedJobIds)
     {
@@ -92,8 +97,12 @@ public class JobPostDto
             IsApplied = appliedJobIds.Contains(job.Id),
             IsActive = job.IsActive,
             JobTitle = job.JobTitle,
-            JobLocation = job.JobLocation,
+            JobLocation = $"{job.JobLocation}, {job.JobState}",
+            Description = job.JobDescription,
+            Requirements = job.Requirements,
+            Benefits = job.Benefits,
             SalaryRange = job.SalaryRange,
+            Experience = job.Experience,
             EmployerId = job.EmployerId
         };
     }

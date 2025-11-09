@@ -98,9 +98,9 @@ export const ALL_ROLE_OPTIONS = [
 ];
 
 export const pageSizeOptions = [
-  { id: 5, name: "5 per page" },
-  { id: 10, name: "10 per page" },
   { id: 20, name: "20 per page" },
+  { id: 50, name: "50 per page" },
+  { id: 100, name: "100 per page" },
 ];
 
 export const CITIES = [
