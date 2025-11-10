@@ -33,3 +33,4 @@ plan.json
 **/ServiceDependencies
 **/*.user
 **/*.Development.json
+/src/Duuty.Server/logs

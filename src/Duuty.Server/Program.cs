@@ -1,7 +1,10 @@
 using DataAccess;
+using Duuty.Server;
 using FastEndpoints.Swagger;
 using Infrastructure;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +22,24 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddAuthentication()
     .AddBearerToken(IdentityConstants.BearerScheme);
 
+var environment = builder.Environment;
+
+if (environment.IsDevelopment())
+{
+    var configuration = builder.Configuration;
+
+    // Configure Serilog only for development
+    Log.Logger = new LoggerConfiguration()
+        .ReadFrom.Configuration(configuration)
+        .Enrich.FromLogContext()
+        .WriteTo.Console()
+        .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day)
+        .CreateLogger();
+
+    // Replace default logging with Serilog
+    builder.Host.UseSerilog();
+}
+
 var app = builder.Build();
 
 app.UseDefaultFiles();
@@ -27,6 +48,7 @@ app.UseStaticFiles();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    app.UseMiddleware<RequestResponseLoggingMiddleware>();
 }
 
 app.MapHealthChecks("/health");

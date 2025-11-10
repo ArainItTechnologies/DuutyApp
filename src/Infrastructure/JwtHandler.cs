@@ -40,6 +40,8 @@ public class JwtHandler
         {
             new(ClaimTypes.Name, user.FullName!),
             new(ClaimTypes.Email, user.Email!),
+            new(ClaimTypes.NameIdentifier, user.Id ?? string.Empty),
+            new(JwtRegisteredClaimNames.Sub, user.Id ?? string.Empty),
         };
 
         foreach (var role in roles)

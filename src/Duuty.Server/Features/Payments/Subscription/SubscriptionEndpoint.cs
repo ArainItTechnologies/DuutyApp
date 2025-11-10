@@ -40,6 +40,33 @@ public class SubscriptionEndpoint(UserManager<ArainUser> userManager, IEmployerS
                 _ => new PlanSettings(now.AddMonths(1), 10)
             };
 
+            // Check for existing subscription for this user
+            var existing = service.Get(x => x.UserId == user.Id).FirstOrDefault();
+
+            if (existing is not null)
+            {
+                var isActive = existing.Status == SubscriptionStatus.Active && existing.ExpiryDate > now;
+
+                // If same active plan already exists -> reject
+                if (existing.Plan == request.Plan && isActive)
+                {
+                    AddError("SUBSCRIPTION_ALREADY_EXISTS", "An active subscription with the same plan already exists.");
+                    await Send.ErrorsAsync((int)System.Net.HttpStatusCode.BadRequest, ct);
+                    return;
+                }
+
+                // Different plan (upgrade/downgrade) or existing expired -> update the subscription
+                existing.Plan = request.Plan;
+                existing.StartDate = now;
+                existing.ExpiryDate = planSettings.ExpiryDate;
+                existing.RemainingToView = planSettings.RemainingToView;
+                existing.Status = SubscriptionStatus.Active;
+
+                await service.UpdateAsync(existing);
+
+                await Send.OkAsync(new SubscriptionResponse(true, existing.Id, "Subscription updated successfully."), ct);
+                return;
+            }
 
             var subscription = new EmployerSubscription
             {
