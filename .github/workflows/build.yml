@@ -47,7 +47,7 @@ jobs:
           fi
           echo "solution=$sln" >> $GITHUB_OUTPUT
 
-      - name: Restore (diagnose)
+      - name: Nuget Restore
         run: |
           set -o pipefail
           echo "Restoring solution: ${{ steps.find_sln.outputs.solution }}"
@@ -60,10 +60,10 @@ jobs:
           dotnet restore "${{ steps.find_sln.outputs.solution }}" -v diag
         shell: bash
 
-      - name: Build
+      - name: Dotnet Build
         run: dotnet build "${{ steps.find_sln.outputs.solution }}" -c Release --no-restore
 
-      - name: Test
+      - name: Dotnet Test
         run: dotnet test "${{ steps.find_sln.outputs.solution }}" -c Release --no-build --logger "trx;LogFileName=test_results.trx"
 
       - name: Publish API (Duuty.Server)
@@ -77,3 +77,36 @@ jobs:
         with:
           name: published
           path: ./artifacts
+
+  deploy:
+    name: Deploy to Azure App Service
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && success()
+    steps:
+      - name: Download published artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: published
+          path: ./artifacts
+
+      - name: Prepare package
+        run: |
+          set -e
+          # create a zip from the published output for deployment
+          cd artifacts
+          if [ -d "Duuty.Server" ]; then
+            zip -r duuty-server.zip Duuty.Server
+          else
+            echo "Published folder not found: artifacts/Duuty.Server"
+            ls -la
+            exit 1
+          fi
+        shell: bash
+
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: ./artifacts/duuty-server.zip
