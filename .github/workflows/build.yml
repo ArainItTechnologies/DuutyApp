@@ -2,46 +2,74 @@ name: CI - Build & Test
 
 on:
   push:
-    branches:
-      - main
-      - master
+    branches: [ main, master ]
   pull_request:
-    branches:
-      - main
-      - master
+    branches: [ main, master ]
   workflow_dispatch:
 
 jobs:
   build:
-    name: Build (matrix)
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     strategy:
       matrix:
-        os: [ubuntu-latest]
         dotnet-version: ['8.0.x']
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: ${{ matrix.dotnet-version }}
 
-      - name: Restore
-        run: dotnet restore ./src
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: nuget-${{ runner.os }}-${{ hashFiles('**/*.sln', '**/*.csproj', 'nuget.config') }}
+          restore-keys: |
+            nuget-${{ runner.os }}-
+
+      - name: Locate solution file
+        id: find_sln
+        run: |
+          set -e
+          sln=$(git ls-files '*.sln' | head -n1 || true)
+          if [ -z "$sln" ]; then
+            sln=$(find . -maxdepth 4 -name '*.sln' | head -n1 || true)
+          fi
+          if [ -z "$sln" ]; then
+            echo "No .sln file found in repository (searched git index and up to 4 levels)."
+            exit 1
+          fi
+          echo "solution=$sln" >> $GITHUB_OUTPUT
+
+      - name: Restore (diagnose)
+        run: |
+          set -o pipefail
+          echo "Restoring solution: ${{ steps.find_sln.outputs.solution }}"
+          # show NuGet config if present for debugging
+          if [ -f nuget.config ]; then
+            echo "Found nuget.config:"
+            sed -n '1,200p' nuget.config || true
+          fi
+          # run restore and capture full verbose logs
+          dotnet restore "${{ steps.find_sln.outputs.solution }}" -v diag
+        shell: bash
 
       - name: Build
-        run: dotnet build ./src -c Release --no-restore
+        run: dotnet build "${{ steps.find_sln.outputs.solution }}" -c Release --no-restore
 
       - name: Test
-        run: |
-          dotnet test ./src -c Release --no-build --no-restore --logger "trx;LogFileName=test_results.trx"
-        continue-on-error: false
+        run: dotnet test "${{ steps.find_sln.outputs.solution }}" -c Release --no-build --logger "trx;LogFileName=test_results.trx"
 
       - name: Publish API (Duuty.Server)
         if: success()
-        run: dotnet publish src/Duuty.Server -c Release -o ./artifacts/Duuty.Server --no-build
+        run: |
+          dotnet publish src/Duuty.Server -c Release -o ./artifacts/Duuty.Server --no-build
 
       - name: Upload published artifact
         if: success()
