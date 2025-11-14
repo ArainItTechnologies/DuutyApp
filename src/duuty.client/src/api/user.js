@@ -10,7 +10,12 @@ const userAPI = {
   },
 
   applyJob: async (applicationData, token) => {
-    return await postAsync("/api/user/apply", applicationData, token);
+    try{
+      return await postAsync("/api/user/apply", applicationData, token);
+    } catch (error) {
+      var errorMessage = parseApiError(error);
+      throw error.response?.data || { message: errorMessage };
+    }
   },
 
   fetchUserDetails: async (userId, token) => {

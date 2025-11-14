@@ -54,7 +54,7 @@ public class PostJobEndpoint(IJobListingService jobListingService, IEmployerProf
 
             var activeCount = await jobListingService.Get(x => x.IsActive).CountAsync(ct);
 
-            if(activeCount >= employerSubscription.ActiveJobs) //TODO: Replace with actual subscription plan limit check
+            if(activeCount >= employerSubscription.ActiveJobs)
             {
                 AddError("JOB_POST_LIMIT_REACHED", "You have reached your job posting limit for your current subscription plan. Please upgrade your plan to post more jobs.");
                 await Send.ErrorsAsync((int)HttpStatusCode.Forbidden, ct);

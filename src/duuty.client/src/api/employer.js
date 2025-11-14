@@ -1,3 +1,4 @@
+import { parseApiError } from "../utils/ValidationUtils";
 import { postAsync, getAsync } from "./api-utils";
 
 const employerAPI = {
@@ -21,7 +22,8 @@ const employerAPI = {
       const response = await postAsync("/api/employer/post-job", jobData, token);
       return response.data;
     } catch (error) {
-      throw error.response?.data || { message: "Post job failed" };
+      var errorMessage = parseApiError(error);
+      throw error.response?.data || { message: errorMessage };
     }
   },
 
@@ -33,7 +35,8 @@ const employerAPI = {
       );
       return response;
     } catch (error) {
-      throw error.response?.data || { message: "Fetch jobs failed" };
+      var errorMessage = parseApiError(error);
+      throw error.response?.data || { message: errorMessage };
     }
   }
 };

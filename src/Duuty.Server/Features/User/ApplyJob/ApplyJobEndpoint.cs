@@ -16,7 +16,8 @@ public class ApplyJobEndpoint(IJobListingService jobListingService, IJobApplicat
         var job = await jobListingService.Get(x => x.Id == req.JobListingId && x.IsActive).SingleOrDefaultAsync(ct);
         if (job is null)
         {
-            await Send.NotFoundAsync(ct);
+           AddError("JOB_NOT_FOUND", "The job listing you are trying to apply for does not exist or is no longer active.");
+            await Send.ErrorsAsync((int)HttpStatusCode.NotFound, ct);
             return;
         }
 
@@ -24,6 +25,7 @@ public class ApplyJobEndpoint(IJobListingService jobListingService, IJobApplicat
 
         if (isAlreadyApplied)
         {
+            AddError("JOB_ALREADY_APPLIED", "Your application for this position has already been submitted.");
             await Send.ErrorsAsync((int)HttpStatusCode.Conflict, ct);
             return;
         }

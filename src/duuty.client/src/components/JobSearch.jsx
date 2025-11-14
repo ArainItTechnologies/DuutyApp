@@ -119,10 +119,18 @@ const JobSearch = () => {
       const data = await userAPI.applyJob({ jobListingId: jobId, userId: user.userId }, user?.token);
 
       if (!data.success) {
-        showFailure(data.message || "Failed to apply for the job");
+        showFailure("Failed to apply for the job");
         setIsLoading(false);
         return;
       }
+
+      setJobs(prevJobs =>
+        prevJobs.map(job =>
+          job.jobId === jobId
+            ? { ...job, isApplied: true }
+            : job
+        )
+      );
       showSuccess("Successfully applied for the job");
     } catch (error) {
       showError(error.message || "Error applying for the job");
@@ -322,6 +330,7 @@ const JobSearch = () => {
         {selectedJob && (
           <JobDetails
             job={selectedJob}
+            onApply={handleApply}
             onClose={handleCloseJobDetails}
           />
         )}

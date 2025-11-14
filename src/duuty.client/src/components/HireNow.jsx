@@ -2,10 +2,11 @@ import { useState, useEffect } from "react";
 import { Dialog, DialogBackdrop, DialogPanel } from "@headlessui/react";
 import { ArrowLeftIcon, CheckCircleIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useUser } from "../hooks/Hooks";
+import { useAppState, useUser } from "../hooks/Hooks";
 import { ROUTES, CITIES, STATES } from "../Constants";
 import { FormInput, FormSelect, FormTextArea, PrimaryButton } from "./custom/FormElements";
 import employerAPI from "../api/employer";
+import { useNotification } from "../context/NotificationContext";
 
 const HireNow = () => {
   const [locationOptions] = useState([{ id: "", name: "Select City" }, ...CITIES]);
@@ -13,7 +14,9 @@ const HireNow = () => {
 
   const [jobLocation, setJobLocation] = useState("");
   const [state, setState] = useState("");
+  const { showSuccess, showError } = useNotification();
 
+  const { setIsLoading } = useAppState(false);
   const navigate = useNavigate();
   const { user, isAdmin, isEmployer, isEmployee } = useUser();
 
@@ -34,11 +37,10 @@ const HireNow = () => {
 
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showSuccessDialog, setShowSuccessDialog] = useState(false);
 
   useEffect(() => {
     if (!user) {
-      navigate("/login", { state: { from: location.pathname } });
+      navigate(ROUTES.LOGIN, { state: { from: location.pathname } });
     } else if (!isAdmin && !isEmployer && isEmployee) {
       navigate(ROUTES.BECOME_EMPLOYER, { state: { from: location.pathname } });
     }
@@ -79,7 +81,7 @@ const HireNow = () => {
     e.preventDefault();
 
     if (!validateForm()) return;
-
+    setIsLoading(true);
     setIsSubmitting(true);
 
     try {
@@ -96,33 +98,14 @@ const HireNow = () => {
       };
 
       await employerAPI.postJob(jobData, user.token);
-
-      // Show success dialog
-      setShowSuccessDialog(true);
-
-      // Reset form
-      setFormData({
-        title: "",
-        location: "",
-        state: "",
-        jobType: "full-time",
-        experience: "",
-        salary: "",
-        description: "",
-        requirements: "",
-        benefits: "",
-      });
+      showSuccess("Job posted successfully!");
+      navigate(ROUTES.JOB_LISTING);
     } catch (error) {
-      console.error("Error posting job:", error);
-      alert("Failed to post job. Please try again.");
+      showError(error.message);
     } finally {
       setIsSubmitting(false);
-      setJobRole("");
+      setIsLoading(false);
     }
-  };
-
-  const closeSuccessDialog = () => {
-    setShowSuccessDialog(false);
   };
 
   return (
@@ -131,7 +114,7 @@ const HireNow = () => {
         <h1 className="text-2xl font-semibold mb-2 text-left flex">
           <button
             className="cursor-pointer flex items-center text-gray-700 hover:text-indigo-600"
-            onClick={() => navigate("/job-listing")}
+            onClick={() => navigate(ROUTES.JOB_LISTING)}
           >
             <ArrowLeftIcon className="h-5 w-5 mr-2" />
           </button>{" "}
@@ -258,56 +241,6 @@ const HireNow = () => {
             )}
           </PrimaryButton>
         </form>
-
-        {/* Success Dialog */}
-        <Dialog
-          open={showSuccessDialog}
-          onClose={closeSuccessDialog}
-          className="relative z-50"
-        >
-          <DialogBackdrop
-            transition
-            className="fixed inset-0 bg-black/25 transition-opacity duration-300 ease-linear data-closed:opacity-0"
-          />
-
-          <div className="fixed inset-0 z-10 overflow-y-auto">
-            <div className="flex min-h-full items-center justify-center p-4 text-center">
-              <DialogPanel
-                transition
-                className="w-full max-w-md transform overflow-hidden rounded-lg bg-white p-6 text-left align-middle shadow-xl transition-all data-closed:scale-95 data-closed:opacity-0 data-enter:duration-300"
-              >
-                <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-medium leading-6 text-gray-900">
-                    Job Posted Successfully!
-                  </h3>
-                  <button
-                    onClick={closeSuccessDialog}
-                    className="text-gray-400 hover:text-gray-500"
-                  >
-                    <XMarkIcon className="h-5 w-5" />
-                  </button>
-                </div>
-
-                <div className="mt-4 flex items-center">
-                  <CheckCircleIcon className="h-6 w-6 text-green-500 mr-2" />
-                  <p className="text-sm text-gray-500">
-                    Your job has been posted successfully and is now live!
-                  </p>
-                </div>
-
-                <div className="mt-6 text-center">
-                  <button
-                    type="button"
-                    onClick={closeSuccessDialog}
-                    className="inline-flex justify-center rounded-md border border-transparent bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-                  >
-                    Great, thanks!
-                  </button>
-                </div>
-              </DialogPanel>
-            </div>
-          </div>
-        </Dialog>
       </div>
     </div>
   );
